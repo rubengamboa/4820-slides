@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>The Worlds of Database Systems</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1">
+  <hgroup>
+    
+  </hgroup>
+  <article>
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h1>The Evolution of Database Systems</h1>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-2">
+  <hgroup>
+    <h2>Who Uses Databases?</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>All your student records are in a database
+<br><br></li>
+<li>Every major website is powered by a database</li>
+<li>If a website uses a shopping cart, it&#39;s probably using a database
+<br><br></li>
+<li>Corporations keep databases of their customers</li>
+<li>(and they&#39;re using them to track you)
+<br><br></li>
+<li>Your phone uses a database to store your contacts</li>
+<li>And it may be using one to keep track of your health stats over time
+<br><br></li>
+<li>Scientists store data from experiments or observations in databases</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-3">
+  <hgroup>
+    <h2>Why Do Databases Work So Well?</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Building a database is extremely difficult</li>
+<li>But we&#39;ve figured out how to do it over the last several decades!
+<br><br></li>
+<li>A <strong>Database Management System</strong> or <strong>DBMS</strong> allows us to manage
+large amounts of persistent data</li>
+<li>The DBMS handles a lot of details that are important, but difficult to deal with
+
+<ul>
+<li>persitent data format</li>
+<li>handle crashes and recovery</li>
+<li>support for multiple users</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-4">
+  <hgroup>
+    <h2>What Does a Database Do?</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Allow users to create new database <strong>schemas</strong> through a <strong>data-definition language (DDL)</strong>
+
+<ul>
+<li><strong>schema:</strong> logical structure of the data</li>
+</ul></li>
+<li>Allow users to query or modify the data through a <strong>data-manipulation language (DML)</strong></li>
+<li>Support efficient storage of data (up to petabytes \(10^15\) or exabytes \(10^18\))</li>
+<li>Enforce <strong>durability</strong>, or data recovery after accidents (intentional or otherwise)</li>
+<li>Allow simultaneous access to the data, while ensuring <strong>atomicity</strong> and <strong>isolation</strong>
+
+<ul>
+<li><strong>atomicity:</strong> each user&#39;s action is performed fully or not at all</li>
+<li><strong>isolation:</strong> no unexpected interactions between users, e.g., no partial results</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-5">
+  <hgroup>
+    <h2>Brief History of Databases</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>The history of computers starts with <strong>ballistics</strong>
+
+<ul>
+<li>As in the ballistics equations of hitting a tank with a shell</li>
+<li>Or hitting a stationary target with a bomb</li>
+</ul></li>
+<li>But the <strong>commercial</strong> history of computers starts with databases
+
+<ul>
+<li>Airline reservation systems</li>
+<li>Banking systems</li>
+<li>Corporate records
+<br><br><br></li>
+</ul></li>
+<li>Those database systems asked the programmer to design the links between the data records</li>
+<li>This led to <strong>hierarchical</strong> or <strong>network</strong> databases</li>
+<li>Note: &quot;network&quot; refers to the data model, as in &quot;graph&quot; -- not to a &quot;database on a cloud&quot;</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-6">
+  <hgroup>
+    <h2>Relational Database Systems</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Relational database systems were first proposed by Codd in 1970
+<br><br></li>
+<li>Key concept: data is organized in <strong>tables</strong> or <strong>relations</strong></li>
+<li>These are flat, two-dimensional structures (unlike the hierarchical databases)</li>
+<li>Today, we&#39;d call them spreadsheets
+<br><br></li>
+<li>A DBMS is free to implement relations in any way it wants</li>
+<li>But the programmer sees them as just tables
+<br><br></li>
+<li>In 1980s, relational databases were considered cool, impractical curiosities</li>
+<li>By the 1990s, they were standard
+<br><br></li>
+<li>They became popular because we figured out how to implement tables very
+efficiently</li>
+<li>This is similar to the history of high-level languages</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Who Uses Databases?'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Why Do Databases Work So Well?'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='What Does a Database Do?'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Brief History of Databases'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Relational Database Systems'>
+         6
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

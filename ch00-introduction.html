@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Course Introduction</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1">
+  <hgroup>
+    
+  </hgroup>
+  <article>
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h1>What Is (and Is Not) Covered in This Course</h1>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-2">
+  <hgroup>
+    <h2>Why You Should Take This Course</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>This is the first in a two-course sequence on database systems</li>
+<li>This course is designed to teach you how to use databases effectively</li>
+<li>Almost all professional programmers use database systems</li>
+<li>Every programmer is expected to know
+
+<ul>
+<li>How to design a database schema to store information</li>
+<li>How to add data to a database</li>
+<li>How to use SQL (database query language)</li>
+<li>How to generate reports from a database</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-3">
+  <hgroup>
+    <h2>What You Will Learn</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>You will learn how to use databases <strong>effectively</strong></li>
+<li>That means you will learn
+
+<ul>
+<li>Different ways to map &quot;real world&quot; information into a database and how to evaluate the different solutions</li>
+<li>Different ways to query databases</li>
+<li>How to write database applications (not database systems)</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-4">
+  <hgroup>
+    <h2>What You Will Not Learn in This Class</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>You will <strong>not</strong> learn (in this class) how to use specific databases, e.g., Microsoft SQL Server, MySQL, SQLite, etc.</li>
+<li>You will also <strong>not</strong> learn how to install, maintain, or manage databases</li>
+<li>I.e., you will <strong>not</strong> learn enough to become a database administrator (DBA) just from this class</li>
+<li>But the concepts you learn in this class <strong>will</strong> apply to all databases</li>
+<li>With the knowledge you learn in this class, you will be able to use any of those databases effectively</li>
+<li>That is enough for developers, and is is the first step towards becoming a DBA</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-5">
+  <hgroup>
+    <h2>More Stuff You Will Not Learn (in This Class)</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>You will also <strong>not</strong> learn the details of how databases are implemented and how to write your own database system</li>
+<li>Nor will you learn about large-scale databases, e.g., distributed databases</li>
+<li>And you will <strong>not</strong> learn about the very, very large-scale NoSQL databases that are not relational databases, 
+e.g., Amazon Dynamo, Google BigTable, Facebook Cassandra, MongoDB, etc.</li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>Those topics are covered in the second course (next semester???) of this two-course sequence</p></li>
+<li><p>Finally, you will <strong>not</strong> learn about data mining or data warehousing</p>
+
+<ul>
+<li>Data mining is partially covered in Van Baalen&#39;s AI class</li>
+<li>Data warehousing is partially covered in the College of Business information management courses</li>
+<li>We may do a little bit of data warehousing in Week 14</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-6">
+  <hgroup>
+    <h1>Course Policies</h1>
+  </hgroup>
+  <article>
+      
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-7">
+  <hgroup>
+    <h2>Attendance Policies</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>You must come to class</li>
+<li>Attendance is enforced
+
+<ul>
+<li>by rollcall (at first)</li>
+<li>by inspection (later)
+<br></li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Let&#39;s try it out!</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-8">
+  <hgroup>
+    <h2>Grading Policy</h2>
+  </hgroup>
+  <article>
+      
+    <div class='left' style='float:left;width:48%'>
+     <table><thead>
+<tr>
+<th>Item</th>
+<th>Pct</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Class Participation</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>Assignments</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Project</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Exam 1</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Exam 2</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Final Exam</td>
+<td>20%</td>
+</tr>
+</tbody></table>
+
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     <ul>
+<li>If you can&#39;t take an exam, we can arrange for a makeup</li>
+<li>You do not need an excuse to arrange for a makeup</li>
+<li>Try to be here on the right day!</li>
+<li>Once you start taking an exam, you may not stop for any reason until you turn in the exam for grading</li>
+</ul>
+
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-9">
+  <hgroup>
+    <h2>Assignments, Project, and Exams</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Assignments
+
+<ul>
+<li>The assignments will be similar to exercises from the book </li>
+<li>You will take the assignments through <a href="http://www.gradiance.com">http://www.gradiance.com</a></li>
+<li>Assignments must be turned in on time</li>
+<li>Submission windows close automatically!</li>
+</ul></li>
+<li>Project
+
+<ul>
+<li>The project is the database portion of a web application</li>
+<li>You will be implementing the project in pieces</li>
+<li>You can think of it as a series of related homework problems that you turn in</li>
+</ul></li>
+<li>Exams
+
+<ul>
+<li>The exams will include primarily questions that are similar to those in the assignments</li>
+<li>The exams will also include a few questions that ask you to tie together ideas learned
+in several sections</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-10">
+  <hgroup>
+    <h2>Collaboration Policy</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>In doing the assignments, you may collaborate, search the internet, read different database books, etc.</li>
+<li>Feel free to <strong>learn</strong> with others, but always <strong>do your own work</strong> so you&#39;re prepared for the exams</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-11">
+  <hgroup>
+    <h2>Other Policies</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Academic dishonesty
+
+<ul>
+<li>Zero tolerance</li>
+<li>You will get a zero for the offending work</li>
+<li>You will <strong>also</strong> lose a letter grade at the end of the semester</li>
+<li>Do your own work, and come see me if you need help</li>
+</ul></li>
+<li>WyoCourses Website
+
+<ul>
+<li>Handouts, grades, and announcements</li>
+<li>First task: Update your profile to include your picture</li>
+</ul></li>
+<li>Gradiance Website
+
+<ul>
+<li>Assignments</li>
+<li>First task: Create an account (Access token on syllabus)</li>
+<li>Check early, check often for new assignments</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-12">
+  <hgroup>
+    <h2>Meetings</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Come see me during office hours
+
+<ul>
+<li>MWF 11-11:45am</li>
+<li>MF 1-2:45pm</li>
+<li>or by appointment</li>
+</ul></li>
+<li>Email is OK for private matters</li>
+<li>But I prefer that you ask class-related questions by creating a new discussion thread
+in WyoCourses, so everyone can benefit</li>
+<li>(And check to see if your question has been answered already)</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-13">
+  <hgroup>
+    <h2>Course Outline</h2>
+  </hgroup>
+  <article>
+    <ol>
+<li>The Worlds of Database Systems</li>
+<li>The Relational Model of Data</li>
+<li>Design Theory for Relational Databases</li>
+<li>High-Level Database Models
+<hr></li>
+<li>Algebraic and Logical Query Languages</li>
+<li>The Database Language SQL</li>
+<li>Constraints and Triggers</li>
+<li>Views and Indexes
+<hr></li>
+<li>SQL in a Server Environment</li>
+<li>Advanced Topics in Relational Databases <em>(time permitting)</em></li>
+</ol>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Why You Should Take This Course'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='What You Will Learn'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='What You Will Not Learn in This Class'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='More Stuff You Will Not Learn (in This Class)'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Course Policies'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Attendance Policies'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Grading Policy'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Assignments, Project, and Exams'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Collaboration Policy'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Other Policies'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Meetings'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Course Outline'>
+         13
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
