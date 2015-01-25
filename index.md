@@ -26,7 +26,7 @@ widgets:      [mathjax, bootstrap]
 
 *  [Course Introduction](ch00-introduction.html)
 1. [The Worlds of Database Systems](ch01-worlds-of-dbms.html)
-2. The Relational Model of Data
+2. [The Relational Model of Data](ch02-relational-model.html)
 3. Design Theory for Relational Databases
 4. High-Level Database Models
 <hr>

@@ -91,7 +91,9 @@ widgets:      [mathjax, bootstrap]
 
 > * Let's try it out!
 
----
+---{
+    tpl: twocol
+}
 
 ## Grading Policy
 

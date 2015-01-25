@@ -1,0 +1,3279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>The Relational Model of Data</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h1>An Overview of Data Models</h1>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>What Is a Data Model?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>data model</strong> is a notation for describing data or information
+<br><br></li>
+<li>It consists of three parts
+
+<ol>
+<li><em>Structure</em> of the data</li>
+<li><em>Operations</em> on the data</li>
+<li><em>Constraints</em> on the data
+<br><br></li>
+</ol></li>
+<li>Some important data models
+
+<ul>
+<li>Relational model</li>
+<li>Semistructured data model</li>
+<li>Object data model </li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>The Relational Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>The Relational Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The relational data model is based on <strong>tables</strong> </li>
+<li>A <strong>table</strong> is made up of <strong>cells</strong> arranged into <strong>rows</strong> and <strong>columns</strong> (just like in a spreadsheet)
+<br><br></li>
+<li>The <strong>structure</strong> looks like an array of structs in C++
+
+<ul>
+<li>Column headers are field names</li>
+<li>Each row represents a single struct in the array</li>
+<li>Each column has a type (e.g., string)</li>
+</ul></li>
+<li>The <strong>operations</strong> are described using <strong>relational algebra</strong>
+
+<ul>
+<li>E.g., find all rows in a table that have a certain value in a certain column</li>
+<li>E.g., find all rows where the <em>genre</em> is &quot;comedy&quot;</li>
+</ul></li>
+<li>The <strong>constraints</strong> limit the possible values in the cells
+
+<ul>
+<li>E.g., the only valid <em>genres</em> are &quot;comedy&quot;, &quot;drama&quot;, or &quot;scifi&quot;</li>
+<li>E.g., no two movies may have the same <em>title</em></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>The Semistructured Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>&lt;Movies&gt; 
+    &lt;Movie title=&quot;Gone With the Wind&quot;&gt; 
+        &lt;Year&gt;1939&lt;Year&gt;
+        &lt;Length&gt;231&lt;/Length&gt;
+        &lt;Genre&gt;drama&lt;/Genre&gt;
+    &lt;/Movie&gt;
+    &lt;Movie title=&quot;Star Wars&quot;&gt; 
+        &lt;Year&gt;1977&lt;Year&gt;
+        &lt;Length&gt;124&lt;/Length&gt;
+        &lt;Genre&gt;scifi&lt;/Genre&gt;
+    &lt;/Movie&gt;
+    &lt;Movie title=&quot;Wayne&#39;s World&quot;&gt; 
+        &lt;Year&gt;1992&lt;Year&gt;
+        &lt;Length&gt;95&lt;/Length&gt;
+        &lt;Genre&gt;comedy&lt;/Genre&gt;
+    &lt;/Movie&gt;
+&lt;/Movies&gt;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>The Semistructured Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>[
+    { &quot;title&quot;:&quot;Gone With the Wind&quot;,
+      &quot;year&quot;:1939,
+      &quot;length&quot;:231,
+      &quot;genre&quot;:&quot;drama&quot;
+    },
+    { &quot;title&quot;:&quot;Star Wars&quot;,
+      &quot;year&quot;:1977,
+      &quot;length&quot;:124,
+      &quot;genre&quot;:&quot;scifi&quot;
+    },
+    { &quot;title&quot;:&quot;Wayne&#39;s World&quot;,
+      &quot;year&quot;:1992,
+      &quot;length&quot;:95,
+      &quot;genre&quot;:&quot;comedy&quot;
+    }
+]
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>The Semistructured Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The semistructured data model is based on <strong>documents</strong> </li>
+<li>A <strong>document</strong> is made up of <strong>arrays</strong> and <strong>objects</strong> and <strong>key/value pairs</strong>
+<br><br></li>
+<li>The <strong>structure</strong> looks like an array of structs in C++
+
+<ul>
+<li>The <strong>key/value pairs</strong> are just named fields of the struct</li>
+<li>The values can be scalars, like strings or numbers</li>
+<li>Values can also be nested arrays or objects</li>
+</ul></li>
+<li>The <strong>operations</strong> are described using <strong>path descriptors</strong> on the implied tree
+
+<ul>
+<li>E.g., find all rows where the <em>genre</em> field is equal to &quot;comedy&quot;</li>
+</ul></li>
+<li>The <strong>constraints</strong> limit the possible structures or values
+
+<ul>
+<li>E.g., all objects must have a <em>title</em></li>
+<li>E.g., the &quot;Genre&quot; must be &quot;comedy&quot;, &quot;drama&quot;, or &quot;scifi&quot;</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>The Object-Relational Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The object-relational data model is an extension of the relational model
+<br><br></li>
+<li>Values can have structure, e.g., an <em>address</em> may have a <em>city</em>, <em>state</em>, and <em>zip</em></li>
+<li>Relations can have methods
+<br><br></li>
+<li>The object-relational data model replaced the object data model in RDBMSs</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Other Data Models</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The <strong>hierarchical data model</strong> organizes data into <strong>trees</strong></li>
+<li>Historically an important model</li>
+<li>This was the original data model</li>
+<li>Similar to semistructured data model
+<br><br></li>
+<li>The <strong>network data model</strong> organizes data into <strong>graphs</strong></li>
+<li>The high point of the pre-relational data models, e.g., CODASYL</li>
+<li>This is making a comeback in <strong>graph databases</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>So Which Data Model Is Better?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This is largely a meaningless question
+<br><br></li>
+<li>Traditional databases use the relational or object-relational model
+<br><br></li>
+<li>This is one of the main points of departure for NoSQL databases</li>
+<li>This use more powerful data models, like graphs or documents
+<br><br></li>
+<li>But the relational model offers powerful optimizations</li>
+<li>It is also well understood by programmers</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h1>Basics of the Relational Model</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Relational Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A benefit (limitation?) of the relational data model is that there is only one
+way to represent data</li>
+<li>Data is represented as a two-dimensional table, called a <strong>relation</strong></li>
+<li>The cells in the table are scalars</li>
+<li>All cells in a column have the same type</li>
+</ul>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An <strong>attribute</strong> is the name of a column</li>
+<li>Each <strong>row</strong> consists of a set of attributes and their values
+<br><br></li>
+<li>E.g., the attributes are <em>title</em>, <em>year</em>, <em>length</em>, and <em>genre</em></li>
+</ul>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Tuples</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>tuple</strong> or <strong>row</strong> is one of the rows in the relation</li>
+<li>We write it using the mathematical notation for ordered tuples</li>
+</ul>
+
+<pre><code>(&quot;Star Wars&quot;, 1977, 124, &quot;scifi&quot;)
+</code></pre>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The <strong>schema</strong> for a relation is the name of the relation and its attributes</li>
+<li>It is written as <code>sql Movies(title, year, length, genre)</code></li>
+</ul>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Naming Conventions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Naming conventions are important</li>
+<li>Here are some suggestions
+
+<ul>
+<li>Relation and attribute names are <strong>nouns</strong></li>
+<li>Relation names are <strong>capitalized</strong></li>
+<li>Relation names are <strong>plural</strong></li>
+<li>Attribute names are <strong>lower case</strong></li>
+<li>Attribute names are <strong>singular</strong></li>
+</ul></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Domains</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>domain</strong> specifies the possible values for an attribute</li>
+<li>A more computer-y term would be <strong>type</strong></li>
+<li>But <strong>domain</strong> makes sense mathematically, as in the domain of a function</li>
+<li>It is written as <code>title:string</code></li>
+<li><p>The entire relation is written as </p>
+
+<p><code>Movies(title:string, year:integer, length:integer, genre:string)</code></p></li>
+</ul>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Equivalent Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A relation is a set of rows, so you can reorder the rows and still have the
+same relation</li>
+<li>Since the attributes are names, you can also reorder the columns</li>
+</ul>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Genre</th>
+<th>Year</th>
+<th>Length</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>scifi</td>
+<td>1977</td>
+<td>124</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>drama</td>
+<td>1939</td>
+<td>231</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>comedy</td>
+<td>1992</td>
+<td>95</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Relations and Relation Instances</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Consider a schema like</p>
+
+<p><code>Movies(title:string, year:integer, length:integer, genre:string)</code></p></li>
+<li><p>This describes a <strong>relation</strong>, which is an abstract ideal</p></li>
+<li><p>By abstract, I mean any possible set of rows that follows this schema
+<br><br></p></li>
+<li><p>A specific set of rows makes up a <strong>relation instance</strong>
+<br><br></p></li>
+<li><p>So a relation represents any possible data set that fits into a table,
+e.g., the students enrolled in a class</p></li>
+<li><p>But a relation instance is one concrete data set, e.g., the students in 
+<strong>this</strong> class</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>key</strong> is a type of constraint on the values of a relation</li>
+<li>A set of attributes forms a <strong>key</strong> if two different tuples have to have
+different values for these attributes
+<br><br></li>
+<li>For example, the attributes <em>last_name</em> and <em>first_name</em> may form a key on
+a relation of students</li>
+<li>Or does it?
+<br><br></li>
+<li>The attribute <em>ssn</em> is definitely a key
+<br><br></li>
+<li><p>We note keys by underlining or italicizing the key attributes</p>
+
+<p><code>Movies(_title_:string, _year_:integer, length:integer, genre:string)</code></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Synthetic vs. Semantic Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A key like <strong>title, year</strong> is a <strong>semantic</strong> key, because it&#39;s made up
+of fields that already have meaning
+<br><br></li>
+<li>Many (most?) database administrators prefer <strong>synthetic</strong> or <strong>artificial</strong> keys</li>
+<li>Synthetic keys are made up for the purpose of serving as keys</li>
+<li>It is usually painful to change the key for a record!</li>
+<li>And change is inevitable with semantic keys
+<br><br></li>
+<li>Examples of synthetic keys include <strong>id</strong> or <strong>student_id</strong> or <strong>sid</strong>
+<br><br></li>
+<li>It is also common to have a choice of keys</li>
+<li>In our student database, we could use <strong>ssn</strong> or <strong>sid</strong> as the key, for example</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Example Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+
+MovieStars(_name_:string, address:string, gender:char, birthdate:date)
+
+StarsIn(_movieTitle_:string, _movieYear_:integer, _starName_:string)
+
+MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
+
+Studios(_name_:string, address:string, presC#:integer)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Movies Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+</code></pre>
+
+<ul>
+<li>This is the schema we&#39;ve been using for movies</li>
+<li>The key is <strong>title, year</strong></li>
+<li>We&#39;ve added the studio that made it, and the producer in charge</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>MovieStars Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>MovieStars(_name_:string, address:string, gender:char, birthdate:date)
+</code></pre>
+
+<ul>
+<li>This stores information for movie stars</li>
+<li>The key is just <strong>name</strong></li>
+<li>This is highly unusual, because different people can have the same name</li>
+<li>But movie stars are different -- they would change names rather than share them
+with another star</li>
+<li>Also, notice the new domains <em>char</em> and <em>date</em></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>StarsIn Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>StarsIn(_movieTitle_:string, _movieYear_:integer, _starName_:string)
+</code></pre>
+
+<ul>
+<li>This connects movies with the stars in them</li>
+<li>The key is a combination of the keys for Movies and Stars</li>
+<li>So we have <strong>movieTitle, movieYear, starName</strong></li>
+<li>Each row connects a specific movie with a specific star</li>
+<li>Notice that a movie can have many stars, and that a star can be in many movies</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>MovieExecs Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
+</code></pre>
+
+<ul>
+<li>This stores information about movie executives</li>
+<li>Movie executives work behind the scenes, so they won&#39;t necessarily change their
+names to avoid confusion</li>
+<li>That means we need a synthetic key for them, in this case &quot;certificate number&quot;
+<br><br></li>
+<li>Remember that a movie had a producer</li>
+<li>The producer was identified by the attribute <strong>producerC#</strong>, which must match
+one of the <strong>MovieExecs</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Studios Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="css">Studios(_name_:string, address:string, presC#:integer)
+</code></pre>
+
+<ul>
+<li>This has information about movie studios</li>
+<li>The key is the name (since no two studios would have the same name)</li>
+<li>But wait, studios may change name!
+<br><br></li>
+<li>The studio president is identified by his or her <strong>certificate number</strong></li>
+<li>This must be one of the <strong>MovieExecs</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h1>Defining a Relation Schema in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Structured Query Language (SQL)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL is the main language used to describe and manipulate databases
+<br><br></li>
+<li>It consists of two distinct languages
+
+<ol>
+<li><strong>Data definition language (DDL)</strong> is used to define relations, constraints,
+and other components of the database</li>
+<li><strong>Data manipulation language (DML)</strong> is used to query and modify the
+relation instances in the database
+<br><br></li>
+</ol></li>
+<li>We will consider the DDL in this overview</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Structured Query Language (SQL)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL distinguishes three types of relations
+<br><br></li>
+<li><strong>Tables</strong> are relations that are stored on disk</li>
+<li>These are the usual types of relations
+<br><br></li>
+<li><strong>Views</strong> are relations defined by some computation
+
+<ul>
+<li>E.g., we can make a view of the movies that Kevin Bacon has starred in
+<br><br></li>
+</ul></li>
+<li><strong>Temporary tables</strong> are created to store values during the execution of a query</li>
+<li>These are thrown away after the query is finished
+<br><br></li>
+<li>The SQL <code>CREATE TABLE</code> command is used to define stored relations (aka tables)</li>
+<li>You specify the name of the table, the attributes, the types of the attributes,
+and the keys</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>SQL Caveat</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL is a loose standard</li>
+<li>Yes, there&#39;s an official ANSI standard document</li>
+<li>No, there is not a required test suite to be &quot;SQL-compliant&quot;
+<br><br></li>
+<li>Different vendors will implement different versions of SQL</li>
+<li><strong>Consult your database manual</strong>
+<br><br></li>
+<li>We will cover the standard flavor of SQL, but there are differences</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>SQL Data Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Type</th>
+<th>Explanation</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>CHAR(n)</td>
+<td>Fixed-length string of n characters</td>
+</tr>
+<tr>
+<td>VARCHAR(n)</td>
+<td>Variable-length string of up to n characters</td>
+</tr>
+<tr>
+<td>BIT(n)</td>
+<td>Fixed-length string of n bits</td>
+</tr>
+<tr>
+<td>BIT VARYING(n)</td>
+<td>Variable-length string of up to n bits</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>Can be TRUE, FALSE, or UNKNOWN</td>
+</tr>
+<tr>
+<td>INT or INTEGER</td>
+<td>Integer values, may use underlying C int type</td>
+</tr>
+<tr>
+<td>FLOAT or REAL</td>
+<td>Floating-point values, may use underlying C float or double</td>
+</tr>
+<tr>
+<td>DOUBLE PRECISION</td>
+<td>Floating-point value, may use underlying C double</td>
+</tr>
+<tr>
+<td>DECIMAL(n,d)</td>
+<td>Fixed-point value, with n digits, d of which are after the decimal point</td>
+</tr>
+<tr>
+<td>NUMERIC</td>
+<td>Could be any of the numeric values above</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>Dates, could be in format &#39;2015-01-26&#39;</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>Times, could be in format &#39;12:25:30.6&#39;</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>Date and time, could be in format &#39;2015-01-26 12:25:30.6&#39;</td>
+</tr>
+<tr>
+<td>DURATION</td>
+<td>Period of time, could be in format &#39;1:20:30.6&#39;</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Creating a Table</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Use the <code>CREATE TABLE</code> command</li>
+<li>Include the name of the table</li>
+<li>Also a parenthesized list of attributes and their domains</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <pre><code>CREATE TABLE Movies (
+    title         VARCHAR(100),
+    year          INT,
+    length        INT,
+    genre         VARCHAR(10),
+    studioName    VARCHAR(100),
+    producerC#    INT
+);
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;'>
+  <pre><code>CREATE TABLE MovieStars (
+    name        VARCHAR(100),
+    address     VARCHAR(200),
+    gender      CHAR(1),
+    birthdate   DATE
+);
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Dropping a Table</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can get rid of a table with the <code>DROP TABLE</code> command</li>
+<li>Use with care
+<br><br></li>
+<li>SQL convention:
+
+<ul>
+<li>Use <code>DROP</code> to remove items from the database schema</li>
+<li>Use <code>DELETE</code> to remove items from a relation instance
+<br><br></li>
+</ul></li>
+</ul>
+
+<pre><code>DROP TABLE Movies;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Modifying a Table</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can get change the attributes of a table with the <code>ALTER TABLE</code> command
+<br><br></li>
+</ul>
+
+<pre><code>ALTER TABLE MovieStars ADD phone CHAR(16);
+
+ALTER TABLE MovieStars DROP birthdate;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>NULL Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we add a new actor to MovieStars, but we do not know their phone number
+<br><br></li>
+<li>Databases handle this by supporting NULL values</li>
+<li>Note: All domains support NULL values</li>
+<li>A NULL value is not one of the domain elements</li>
+<li>E.g., there is an integer NULL, but it&#39;s not a &quot;weird&quot; integer, like \(-2^{31}\)
+<br><br></li>
+<li>One problem with NULL values is that they complicate the meaning of queries</li>
+<li>E.g., suppose both John and Sally have NULL in their parent field
+
+<ul>
+<li>Does that mean they&#39;re siblings?</li>
+<li>Does that mean they&#39;re not siblings?</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Default Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An alternative is that we assign <strong>default values</strong> to attributes
+<br><br></li>
+<li>When a row is added, the default value is used unless a value is given explicitly</li>
+<li>E.g., the default for phone may be <strong>unlisted</strong>
+<br><br></li>
+</ul>
+
+<pre><code>CREATE TABLE MovieStars (
+    name        VARCHAR(100),
+    address     VARCHAR(200),
+    gender      CHAR(1) DEFAULT &#39;?&#39;,
+    birthdate   DATE DEFAULT &#39;0000-00-00&#39;
+);
+
+ALTER TABLE MovieStars ADD phone CHAR(16) DEFAULT &#39;unlisted&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Declaring Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are two ways to declare a key in SQL
+
+<ul>
+<li>Specify that a <strong>single</strong> attribute is a key when it is declared</li>
+<li>Specify that <strong>one or more</strong> attributes form a key after all attributes are
+declared
+<br><br></li>
+</ul></li>
+<li>I prefer the second style, but I&#39;ll let you use either, and you should know both</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <pre><code>CREATE TABLE MovieStars (
+    name      VARCHAR(100) PRIMARY KEY,
+    address   VARCHAR(200),
+    gender    CHAR(1) DEFAULT &#39;?&#39;,
+    birthdate DATE DEFAULT &#39;0000-00-00&#39;
+);
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;'>
+  <pre><code>CREATE TABLE Movies (
+    title         VARCHAR(100),
+    year          INT,
+    length        INT,
+    genre         VARCHAR(10),
+    studioName    VARCHAR(100),
+    producerC#    INT,
+    PRIMARY KEY (title, year)
+);
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>UNIQUE vs. PRIMARY KEY</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can also use <code>UNIQUE</code> instead of <code>PRIMARY KEY</code>
+<br><br></li>
+<li>Both specify that two different rows must have different values for the given
+attribute(s)
+<br><br></li>
+<li>In addition, <code>PRIMARY KEY</code> adds a constraint that the values for those attributes
+cannot be NULL
+<br><br></li>
+<li>In practice,
+
+<ul>
+<li>Use <code>PRIMARY KEY</code> for the key</li>
+<li>Use <code>UNIQUE</code> for other candidate keys (that were not chosen)</li>
+<li>E.g., use <code>PRIMARY KEY</code> for <strong>sid</strong> and <code>UNIQUE</code> for <strong>ssn</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h1>An Algebraic Query Language</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Relational Algebra</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Relational algebra</strong> is the &quot;invisible&quot; query language of relational databases</li>
+<li>It is similar to algebra
+\[x + 25y - \frac{xy^3}{5}\]</li>
+<li>Algebra expressions say two things
+
+<ul>
+<li>What value do we want to compute</li>
+<li>How do we want to compute it</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Relational Algebra Is Imperative</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>To compute:
+\[x + 25y - \frac{xy^3}{5}\]
+
+<ol>
+<li>multiply \(25\) times \(y\)</li>
+<li>add the result to \(x\)</li>
+<li>raise \(y\) to power \(3\)</li>
+<li>multiply \(x\) by the result of step 3.</li>
+<li>divide that by 5</li>
+<li>add the result of steps 2. and 5.</li>
+</ol></li>
+<li>The expression says what we want <strong>and</strong> how to do it</li>
+<li>We say that algebra is <strong>imperative</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Imperative vs. Declarative</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Modern databases use <strong>declarative</strong> query languages
+
+<ul>
+<li>The programmer says what he or she wants</li>
+<li>The computer figures out how to do it
+<br><br></li>
+</ul></li>
+<li>The great advantage is that the database can come up with good execution
+plans -- i.e., the how</li>
+<li>Often, orders of magnitude better than what a programmer would do</li>
+<li>This is inevitable, because the &quot;best&quot; execution plan depends on
+
+<ul>
+<li>how data is stored on disk</li>
+<li>the exact distribution of the data in the tables
+<br><br></li>
+</ul></li>
+<li>But, the database uses relational algebra to represent the execution plans!</li>
+<li>And it describes those plans to you using relational algebra</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Relational Algebra Expressions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Relational algebra has two types of &quot;leaves&quot;
+
+<ul>
+<li><strong>variables</strong> stand for relations</li>
+<li><strong>constants</strong> stand for specific relation instances
+<br><br></li>
+</ul></li>
+<li>The internal nodes in relational algebra are <strong>relational operators</strong>
+
+<ul>
+<li>set operations, e.g., <strong>union</strong>, <strong>intersection</strong>, <strong>difference</strong>, <strong>cartesian product</strong></li>
+<li><strong>selections</strong> that filter rows from a relation</li>
+<li><strong>projections</strong> that filter columns from a relation</li>
+<li><strong>join</strong> operations that combine relations by filtering some rows or columns
+from a cartesian product</li>
+<li><strong>rename</strong> operations that change the name of the resulting table or its
+attributes</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Set Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The set operations are written as
+
+<ul>
+<li>\(R \cup S\)</li>
+<li>\(R \cap S\)</li>
+<li>\(R - S\)</li>
+<li>\(R \times S\)
+<br><br></li>
+</ul></li>
+<li>Of course, these can be nested
+
+<ul>
+<li>\(R \cup (S \cap T)\)
+<br><br></li>
+</ul></li>
+<li>We usually make two assumption on \(R\) and \(S\):
+
+<ul>
+<li>\(R\) and \(S\) have the same attributes and domains</li>
+<li>The attributes are in the same order</li>
+</ul></li>
+<li>In this case, we say \(R\) and \(S\) are <strong>union-compatible</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Set Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here are some example relations</li>
+<li>Note that they are union-compatible</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>name</th>
+<th>address</th>
+<th>gender</th>
+<th>birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+</tr>
+<tr>
+<td>Mark Hamill</td>
+<td>456 Oak Rd.</td>
+<td>M</td>
+<td>8/8/88</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Relation \(S\)</h3>
+
+<table><thead>
+<tr>
+<th>name</th>
+<th>address</th>
+<th>gender</th>
+<th>birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+</tr>
+<tr>
+<td>Harrison Ford</td>
+<td>789 Palm Dr.</td>
+<td>M</td>
+<td>7/7/77</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Union and Intersection</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>\(R \cup S\)</h3>
+
+<table><thead>
+<tr>
+<th>name</th>
+<th>address</th>
+<th>gender</th>
+<th>birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+</tr>
+<tr>
+<td>Mark Hamill</td>
+<td>456 Oak Rd.</td>
+<td>M</td>
+<td>8/8/88</td>
+</tr>
+<tr>
+<td>Harrison Ford</td>
+<td>789 Palm Dr.</td>
+<td>M</td>
+<td>7/7/77</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(R \cap S\)</h3>
+
+<table><thead>
+<tr>
+<th>name</th>
+<th>address</th>
+<th>gender</th>
+<th>birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Set Difference</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>\(R - S\)</h3>
+
+<table><thead>
+<tr>
+<th>name</th>
+<th>address</th>
+<th>gender</th>
+<th>birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Mark Hamill</td>
+<td>456 Oak Rd.</td>
+<td>M</td>
+<td>8/8/88</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(S - R\)</h3>
+
+<table><thead>
+<tr>
+<th>name</th>
+<th>address</th>
+<th>gender</th>
+<th>birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Harrison Ford</td>
+<td>789 Palm Dr.</td>
+<td>M</td>
+<td>7/7/77</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Cross Product</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>\(R \times S\)</h3>
+
+<table><thead>
+<tr>
+<th>R.name</th>
+<th>R.address</th>
+<th>R.gender</th>
+<th>R.birthdate</th>
+<th>S.name</th>
+<th>S.address</th>
+<th>S.gender</th>
+<th>S.birthdate</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+<td>Harrison Ford</td>
+<td>789 Palm Dr.</td>
+<td>M</td>
+<td>7/7/77</td>
+</tr>
+<tr>
+<td>Mark Hamill</td>
+<td>456 Oak Rd.</td>
+<td>M</td>
+<td>8/8/88</td>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>F</td>
+<td>9/9/99</td>
+</tr>
+<tr>
+<td>Mark Hamill</td>
+<td>456 Oak Rd.</td>
+<td>M</td>
+<td>8/8/88</td>
+<td>Harrison Ford</td>
+<td>789 Palm Dr.</td>
+<td>M</td>
+<td>7/7/77</td>
+</tr>
+</tbody></table>
+
+<p><br><br></p>
+
+<ul>
+<li>Note that we use \(R.A\) and \(S.A\) to differentiate attributes that have the same name in both relations</li>
+<li>In general, it&#39;s preferable to rename the columns</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Projections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A projection lets you choose which columns to view on the result</li>
+<li>It is given by \(\pi\) with the chosen columns as subscripts, and the relation in parenthesis</li>
+<li>E.g., \(\pi_{\text{title}, \text{length}, \text{year}}(\text{Movies})\) will show only the title, length, and year of the Movies table
+<br><br></li>
+<li>Of course, this can be nested, e.g., \(\pi_{A,B}(R \times S)\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Projection Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Movies</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<h3>\(\pi_{\text{title}, \text{length}, \text{year}}(\text{Movies})\)</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Length</th>
+<th>Year</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>231</td>
+<td>1939</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>124</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>136</td>
+<td>1999</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Notice we also swapped the order of the columns!</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  
+</div>
+<div style='float:right;width:48%;'>
+  
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>Projection Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Movies</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<h3>\(\pi_{\text{genre}}(\text{Movies})\)</h3>
+
+<table><thead>
+<tr>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>drama</td>
+</tr>
+<tr>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Notice we only have two rows, because the last two movies have the same genre</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  
+</div>
+<div style='float:right;width:48%;'>
+  
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h2>Selections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A selection lets you choose which rows to view on the result</li>
+<li>It is given by \(\sigma\) with a condition as a subscript, and the relation in parenthesis</li>
+<li>E.g., \(\sigma_{\text{year} = 1977}(\text{Movies})\) will show only the movies released in 1977
+<br><br></li>
+<li>Of course, this can be nested, e.g., \(\sigma_{A>10}(R \times S)\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>Selection Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Movies</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<h3>\(\sigma_{\text{year} \ge 1975}(\text{Movies})\)</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>Selection Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Movies</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<h3>\(\sigma_{\text{length} \ge 130 \text{ AND } \text{genre} = \text{'scifi'}}(\text{Movies})\)</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>Natural Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A join is a combination of a cross product and a selection</li>
+<li><p>Consider these two tables</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       name:string, producerC#:integer)
+
+Studios(_name_:string, address:string, presC#:integer)
+</code></pre></li>
+<li><p>Note: We&#39;ve modified the schema so that <code>Movies</code> uses <code>name</code> instead of <code>studioName</code>
+<br><br></p></li>
+<li><p>We want to find the studio that makes each movie</p></li>
+<li><p>We can do this with this relational algebra expression:
+\[\sigma_{\text{Movies.name} = \text{Studios.name}}(Movies \times Studios)\]</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Natural Joins Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3>Movies</h3>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>Name</th>
+<th>ProducerC#</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<h3>Studios</h3>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Address</th>
+<th>PresC#</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>Natural Joins Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Step 1: \(\text{Movies} \times \text{Studios}\)</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>Movies.Name</th>
+<th>ProducerC#</th>
+<th>Studios.Name</th>
+<th>Address</th>
+<th>PresC#</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h2>Natural Joins Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Step 2: \(\sigma_{\text{Movies.name} = {Studios.name}}(\text{Movies} \times \text{Studios})\)</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>Movies.Name</th>
+<th>ProducerC#</th>
+<th>Studios.Name</th>
+<th>Address</th>
+<th>PresC#</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h2>Natural Joins Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Step 3: \(\text{Movies} \bowtie \text{Studios}\)</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>Movies.Name</th>
+<th>ProducerC#</th>
+<th>Studios.Name</th>
+<th>Address</th>
+<th>PresC#</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>What&#39;s <strong>natural</strong> about the join is that attributes in <code>Movies</code> with the same name as an attribute in <code>Studios</code> are
+filtered to have equal values</li>
+<li>I.e., the selection is implied by the attribute names</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Theta Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>theta join</strong> (also \(\theta\)-join) allows an arbitrary condition on the selection</li>
+<li>A natural join assumes that the condition is an equality check on attributes with the same name</li>
+<li>A theta join lets you pick the selection condition</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Theta Join Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Now consider the original schema</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+
+Studios(_name_:string, address:string, presC#:integer)
+</code></pre></li>
+<li><p>We can join it as follows:
+\[\text{Movies} \bowtie_{\text{studioName} = \text{name}} \text{Studios}\]</p></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>Movies.Name</th>
+<th>ProducerC#</th>
+<th>Studios.Name</th>
+<th>Address</th>
+<th>PresC#</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>1234</td>
+<td>MGM</td>
+<td>101 Mogul St.</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Lucasfilm</td>
+<td>2345</td>
+<td>Lucasfilm</td>
+<td>1 Jedi Way</td>
+<td>6789</td>
+</tr>
+<tr>
+<td>The Matrix</td>
+<td>1999</td>
+<td>136</td>
+<td>scifi</td>
+<td>Warner</td>
+<td>3456</td>
+<td>Warner</td>
+<td>200 Brothers Pl.</td>
+<td>4567</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #1</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose \(S\) has \(m\) rows and \(R\) has \(n\) rows
+<br><br></li>
+<li>Then \(S \times R\) has exactly \(m \cdot n\) rows
+<br><br></li>
+<li>What about \(S \bowtie R\)?
+
+<ol>
+<li>It could be \(0\)</li>
+<li>It could be \(m\) or \(n\) (if exactly one row in \(R\) matches a row in \(S\))</li>
+<li>It could be as large as \(m \cdot n\)</li>
+<li>Or any number in between</li>
+</ol></li>
+<li>It depends on the characteristics of the data</li>
+<li>E.g., consider joining on
+
+<ol>
+<li>\(\text{Student.id} = \text{EnrolledIn.sid}\)</li>
+<li>\(\text{Student.gender} = \text{Advisor.gender}\)</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You must learn how to execute your own join expressions
+<br><br></li>
+<li>The easiest way is to follow the algorithm above (called a <strong>naive nested loop join</strong>)</li>
+<li>I.e., to compute \(R \bowtie S\)
+
+<ol>
+<li>Pick the first row of \(R\)</li>
+<li>Find all the rows in \(S\) that join with that one row in \(R\), and write those down</li>
+<li>Now consider the second row</li>
+<li>Then the third row</li>
+<li>Etc.</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #3</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Databases are very, very good at executing joins
+<br><br></li>
+<li>Suppose we need to compute \(S \bowtie S\), where \(S\) is the Students table at UW</li>
+<li>Since \(|S| \approx 13000\), the naive method takes up \(13000^2 =\) 1.69 &times; 10<sup>8</sup> steps</li>
+<li>Each step is a disk access, so even if disk I/O is 1ms, that works out to 1.69 &times; 10<sup>5</sup> seconds</li>
+<li>Which is 2816.6667 minutes</li>
+<li>Which is 46.9444 hours</li>
+<li>Which is 1.956 days
+<br><br></li>
+<li>UW&#39;s database can probably join those in a matter of seconds, or minutes at most
+<br><br></li>
+<li>So use the optimizer</li>
+<li>And never, ever, ever try to do joins in your own code</li>
+<li>E.g., by doing a nested loop with two different database queries</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #3</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>By the way, the naive execution resulted in 2 days</li>
+<li>The optimal execution plan may take 20 seconds
+<br><br></li>
+<li>What the query optimizer does is to find an execution plan that is much closer to 20 seconds than to 2 days</li>
+<li>It doesn&#39;t guarantee that it&#39;ll find the <strong>best</strong> execution plan</li>
+<li>But it tries to avoid the absolute worst!</li>
+<li>And, if you&#39;re lucky, it finds one that&#39;s in the same order of magnitude as the best plan</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose you want to find all <code>Movies</code> and their producers
+<br><br></li>
+<li><p>We can do this by joining the tables</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+
+MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
+</code></pre></li>
+</ul>
+
+<p>\[\text{Movies} \bowtie_{\text{producerC#} = \text{cert#}} \text{MovieExecs}\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now suppose we want to find all producers</li>
+<li>This is not everybody in <code>MovieExecs</code></li>
+<li>Only the folks who have actually produced a movie
+<br><br></li>
+<li><p>We can do this by joining the tables</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+
+MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
+</code></pre></li>
+</ul>
+
+<p>\[\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies} \bowtie_{\text{producerC#} = \text{cert#}} \text{MovieExecs})\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now suppose we want to find all producers who have produced more than 1 movie</li>
+<li>This is not everybody in <code>MovieExecs</code></li>
+<li>Only the folks who have actually produced two or more movies</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>We can do this by joining the tables</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+
+MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
+</code></pre></li>
+<li><p>Basic strategy:
+\[\text{MovieExecs} \bowtie \text{Movies}_1 \bowtie \text{Movies}_2\]</p></li>
+<li><p>The executive produces movie #1 and movie #2</p></li>
+<li><p>Movies #1 and #2 are <strong>different movies</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now suppose we want to find all <code>Movies</code> and the <code>MovieStars</code> in them
+<br><br></li>
+<li><p>We can do this by joining the tables</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+     studioName:string, producerC#:integer)
+
+MovieStars(_name_:string, address:string, gender:char, birthdate:date)
+
+StarsIn(_movieTitle_:string, _movieYear_:integer, _starName_:string)
+</code></pre></li>
+<li><p>Make sure you know how to do this!</p></li>
+<li><p>Very important: <strong>Make sure you know how to do this!</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now suppose we want to play the Kevin Bacon game</li>
+<li>Find all <code>MovieStars</code> in <code>Movies</code> that Kevin Bacon stars in
+<br><br></li>
+<li><p>We can do this by joining the tables</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+
+MovieStars(_name_:string, address:string, gender:char, birthdate:date)
+
+StarsIn(_movieTitle_:string, _movieYear_:integer, _starName_:string)
+</code></pre></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Basic strategy:
+\[\text{Movies} \bowtie \text{StarsIn}_1 \bowtie \sigma(\text{MovieStars}_1) \bowtie \text{StarsIn}_2 \bowtie \text{MovieStars}_2\]</li>
+<li>The selection on the first <code>MovieStars</code> filters for Kevin Bacon</li>
+<li>Joining the first <code>StarsIn</code> and <code>MovieStars</code> finds <code>Movies</code> that Kevin Bacon stars in</li>
+<li>Joining the second <code>StarsIn</code> and <code>MovieStars</code> finds the other <code>MovieStars</code> in those <code>Movies</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h2>Join Lesson #4</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Key Lesson: Join is extremely useful, easily the most useful relational algebra operator</li>
+<li>It can be helpful to join a table with itself!</li>
+<li>Whenever you want to find &quot;all Employees who supervise other Employees&quot;, for example, think in terms of
+joining Employees with itself</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
+    <h2>Renaming</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The <strong>rename</strong> operation allows us to change the name and attributes of a relational algebra expression</li>
+<li>It&#39;s written as \(\rho\) with the new schema as a subscript</li>
+<li><p>If you only want to rename the relation (and leave the attributes the same), you can just leave the new relation name in the subscript</p>
+
+<pre><code>Movies(_title_:string, _year_:integer, length:integer, genre:string,
+       studioName:string, producerC#:integer)
+</code></pre>
+
+<ul>
+<li>\(\rho_{\text{M2}(\text{title}, \text{year}, \text{length}, \text{genre}, \text{sname}, \text{prod})} (\text{Movies})\)</li>
+<li>\(\rho_{\text{M2}} (\text{Movies})\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-76" style="background:;">
+  <hgroup>
+    <h2>Renaming Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>This is the missing piece to doing a query like </p>
+
+<ul>
+<li>Basic strategy:
+\[\text{MovieExecs} \bowtie \text{Movies}_1 \bowtie \text{Movies}_2\]</li>
+<li>The executive produces movie #1 and movie #2</li>
+<li>Movies #1 and #2 are <strong>different movies</strong></li>
+</ul>
+
+<p>\(\text{MovieExecs} \bowtie_{\text{M1.producerC#} = \text{cert#}} \rho_{\text{M1}}(\text{Movies})\)</p>
+
+<p>\(\qquad\qquad\quad \bowtie_{\text{M2.producerC#} = \text{cert#} \text{ AND } (\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year})} \rho_{\text{M2}}(\text{Movies})\)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-77" style="background:;">
+  <hgroup>
+    <h2>Linear Notation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>As the previous example showed, relational expressions can get very unwieldy</li>
+<li>There is a simple linear notation that can come in very handy</li>
+<li><p>We introduce <strong>assignment statements</strong>:
+\[R(A,B,C) := S \bowtie T \cap U\]</p></li>
+<li><p>The previous expression is easier to write as follows:</p>
+
+<ol>
+<li>\(MM := \rho_\text{M1}(\text{Movies}) \bowtie_{\text{M1.producerC#} = \text{M2.producerC#}} \rho_\text{M2}(\text{Movies})\)</li>
+<li>\(FMM := \sigma_{\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year}}(MM)\)</li>
+<li>\(\text{Answer} := \text{MovieExec} \bowtie_{\text{M1.producerC#} = \text{cert#}}(FMM)\)</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-78" style="background:;">
+  <hgroup>
+    <h2>Relationships Among Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;ve seen a lot of relational operators</li>
+<li>Actually, we don&#39;t need all of them</li>
+<li>Assuming the schemas \(R(x,y)\) and \(S(y,z)\):
+
+<ul>
+<li>\(R \cup S = R - (R - S)\)</li>
+<li>\(R \bowtie_\theta S = \sigma_\theta (R \times S)\)</li>
+<li>\(R \bowtie S = \rho_{(x,y,z)}(\pi_{x,R,y,z}(\sigma(R.y = S.y)(R \times S)))\)</li>
+</ul></li>
+<li>It turns out we only need \(\cup\), \(-\), \(\pi\), \(\sigma\), \(\times\), and \(\rho\)</li>
+<li>But having the others is very convenient!</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Also, there are other equations that always hold, e.g.,
+
+<ul>
+<li>\(R \bowtie (S \cup T) = (R \bowtie S) \cup (R \bowtie T)\)</li>
+<li>\(R \bowtie_{\theta_1 \text{ AND } \theta_2} S = \sigma_{\theta_2}(R \bowtie_{\theta_1} S)\)</li>
+<li>This is good -- it gives the optimizer lots of choices so it can find a good execution plan</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-79" style="background:;">
+  <hgroup>
+    <h1>Constraints on Relations</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='What Is a Data Model?'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Relational Data Model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='The Relational Data Model'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='The Semistructured Data Model'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='The Semistructured Data Model'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='The Semistructured Data Model'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='The Object-Relational Data Model'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Other Data Models'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='So Which Data Model Is Better?'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Basics of the Relational Model'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Relational Data Model'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Attributes'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Tuples'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Schema'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Naming Conventions'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Domains'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Equivalent Relations'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Relations and Relation Instances'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Keys'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Synthetic vs. Semantic Keys'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Example Schema'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Movies Schema'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='MovieStars Schema'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='StarsIn Schema'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='MovieExecs Schema'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Studios Schema'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Defining a Relation Schema in SQL'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Structured Query Language (SQL)'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Structured Query Language (SQL)'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='SQL Caveat'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='SQL Data Types'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Creating a Table'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Dropping a Table'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Modifying a Table'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='NULL Values'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Default Values'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Declaring Keys'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='UNIQUE vs. PRIMARY KEY'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='An Algebraic Query Language'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Relational Algebra'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Relational Algebra Is Imperative'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Imperative vs. Declarative'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Relational Algebra Expressions'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Set Operations'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Set Operations'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Union and Intersection'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Set Difference'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Cross Product'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Projections'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Projection Example'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='Projection Example'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='Selections'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='Selection Example'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='Selection Example'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Natural Joins'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Natural Joins Example'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='Natural Joins Example'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Natural Joins Example'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Natural Joins Example'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Theta Joins'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Theta Join Example'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Join Lesson #1'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='Join Lesson #2'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='Join Lesson #3'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='Join Lesson #3'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='Join Lesson #4'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='Join Lesson #4'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='Join Lesson #4'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='Join Lesson #4'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='Join Lesson #4'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='Join Lesson #4'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='Join Lesson #4'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='Join Lesson #4'>
+         74
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=75 title='Renaming'>
+         75
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=76 title='Renaming Example'>
+         76
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=77 title='Linear Notation'>
+         77
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=78 title='Relationships Among Operations'>
+         78
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=79 title='Constraints on Relations'>
+         79
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

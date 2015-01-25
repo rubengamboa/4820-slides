@@ -1,7 +1,7 @@
 title:        COSC 4820 Database Systems
 subtitle:     The Worlds of Database Systems
 author:       Ruben Gamboa
-$logo:         uw-logo-small.png
+#logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
 job:          Associate Professor
 highlighter:  highlight.js
@@ -102,4 +102,99 @@ widgets:      [mathjax, bootstrap]
 * They became popular because we figured out how to implement tables very
   efficiently
 * This is similar to the history of high-level languages
+
+---
+
+## Current Trends
+
+* Relational databases are **everywhere**
+* Programmers can use database queries to process in-memory data structures!
+  <br><br>
+* Databases are getting bigger and more complex
+* This creates a new problem: how can we **integrate** data that comes different databases?
+  * One database deals with historical beer sales
+  * Another has historical weather data
+  <br><br>
+* Solid-State Drives (SSDs) are very different than disks
+* Some databases exploit these characteristics
+
+---
+
+## Beyond Relational Databases
+
+* Some people are pushing the state-of-the-art on relational database technology
+  * query language is not sufficiently expressive
+  * special (e.g., multi-media) data types
+  * implementation is just too slow
+  <br><br>
+* This has resulted in an explosion of **NoSQL** databases
+  * But here, history is repeating itself
+  * Early NoSQL databases were very similar to hierarchical databases
+  * Major innovation was distributing data across 1000s of machines via hashing
+  * Actually, that trick is based on relational database technology, too!
+  * The other big innovation was breaking some of the traditional guarantees that
+    relational databases make
+  * But more modern NoSQL databases are reinventing query languages, transactions, 
+    and all the other pieces of relational databases!
+
+---
+
+# Overview of a Database Management System
+
+---
+
+<p class="centered">
+    <img src="assets/img/database-components.png" alt="Database Components" title="Database Components" class="img-responsive">
+</p>
+
+---
+
+## Two Classes of Users
+
+* Users can be broadly categorized into
+  * *Conventional users* (and programs) that manipulate data
+  * *Database administrators* who set up and modify the structure (or *schema*) of the database
+* Both users submit *queries*
+
+---
+
+## Query Processing Stages
+
+1. Query is compiled by the **query optimizer**
+2. The "optimal" query plan is executed by the **query engine**
+3. The **transaction manager** wraps execution steps into a single transaction, and preserves ACID properties
+   * Atomicity
+   * Consistency
+   * Isolation
+   * Durability
+4. This requires both *logging* and *concurrency control*, usually via *locking*
+   * The **log manager** takes care of **durability**
+   * The **concurrency-control manager** takes care of **isolation**
+5. The data is stored on disk files with sophisticated index and record structures, and is accessed by a **record manager**
+6. Data is loaded onto main memory into a **buffer pool**
+
+---
+
+# Studying Database Systems
+
+---
+
+## Studying Database Systems
+
+1. Relational Database Modeling
+   * basic concepts
+   * functional dependencies
+   * normalization
+   * high-level notations
+   * SQL notations
+2. Relational Database Programming
+   * abstract query languages
+   * SQL
+   * database application programs
+3. Semistructured Data Modeling and Programming
+4. Database System Implementation
+5. Modern Database Issues
+
+
+
 

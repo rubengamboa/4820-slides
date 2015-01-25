@@ -216,6 +216,208 @@ efficiently</li>
     </div>
   </article>
 </slide>
+<slide class="" id="slide-7">
+  <hgroup>
+    <h2>Current Trends</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Relational databases are <strong>everywhere</strong></li>
+<li>Programmers can use database queries to process in-memory data structures!
+<br><br></li>
+<li>Databases are getting bigger and more complex</li>
+<li>This creates a new problem: how can we <strong>integrate</strong> data that comes different databases?
+
+<ul>
+<li>One database deals with historical beer sales</li>
+<li>Another has historical weather data
+<br><br></li>
+</ul></li>
+<li>Solid-State Drives (SSDs) are very different than disks</li>
+<li>Some databases exploit these characteristics</li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-8">
+  <hgroup>
+    <h2>Beyond Relational Databases</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Some people are pushing the state-of-the-art on relational database technology
+
+<ul>
+<li>query language is not sufficiently expressive</li>
+<li>special (e.g., multi-media) data types</li>
+<li>implementation is just too slow
+<br><br></li>
+</ul></li>
+<li>This has resulted in an explosion of <strong>NoSQL</strong> databases
+
+<ul>
+<li>But here, history is repeating itself</li>
+<li>Early NoSQL databases were very similar to hierarchical databases</li>
+<li>Major innovation was distributing data across 1000s of machines via hashing</li>
+<li>Actually, that trick is based on relational database technology, too!</li>
+<li>The other big innovation was breaking some of the traditional guarantees that
+relational databases make</li>
+<li>But more modern NoSQL databases are reinventing query languages, transactions, 
+and all the other pieces of relational databases!</li>
+</ul></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-9">
+  <hgroup>
+    <h1>Overview of a Database Management System</h1>
+  </hgroup>
+  <article>
+      
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-10">
+  <hgroup>
+    
+  </hgroup>
+  <article>
+    <p class="centered">
+    <img src="assets/img/database-components.png" alt="Database Components" title="Database Components" class="img-responsive">
+</p>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-11">
+  <hgroup>
+    <h2>Two Classes of Users</h2>
+  </hgroup>
+  <article>
+    <ul>
+<li>Users can be broadly categorized into
+
+<ul>
+<li><em>Conventional users</em> (and programs) that manipulate data</li>
+<li><em>Database administrators</em> who set up and modify the structure (or <em>schema</em>) of the database</li>
+</ul></li>
+<li>Both users submit <em>queries</em></li>
+</ul>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-12">
+  <hgroup>
+    <h2>Query Processing Stages</h2>
+  </hgroup>
+  <article>
+    <ol>
+<li>Query is compiled by the <strong>query optimizer</strong></li>
+<li>The &quot;optimal&quot; query plan is executed by the <strong>query engine</strong></li>
+<li>The <strong>transaction manager</strong> wraps execution steps into a single transaction, and preserves ACID properties
+
+<ul>
+<li>Atomicity</li>
+<li>Consistency</li>
+<li>Isolation</li>
+<li>Durability</li>
+</ul></li>
+<li>This requires both <em>logging</em> and <em>concurrency control</em>, usually via <em>locking</em>
+
+<ul>
+<li>The <strong>log manager</strong> takes care of <strong>durability</strong></li>
+<li>The <strong>concurrency-control manager</strong> takes care of <strong>isolation</strong></li>
+</ul></li>
+<li>The data is stored on disk files with sophisticated index and record structures, and is accessed by a <strong>record manager</strong></li>
+<li>Data is loaded onto main memory into a <strong>buffer pool</strong></li>
+</ol>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-13">
+  <hgroup>
+    <h1>Studying Database Systems</h1>
+  </hgroup>
+  <article>
+      
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-14">
+  <hgroup>
+    <h2>Studying Database Systems</h2>
+  </hgroup>
+  <article>
+    <ol>
+<li>Relational Database Modeling
+
+<ul>
+<li>basic concepts</li>
+<li>functional dependencies</li>
+<li>normalization</li>
+<li>high-level notations</li>
+<li>SQL notations</li>
+</ul></li>
+<li>Relational Database Programming
+
+<ul>
+<li>abstract query languages</li>
+<li>SQL</li>
+<li>database application programs</li>
+</ul></li>
+<li>Semistructured Data Modeling and Programming</li>
+<li>Database System Implementation</li>
+<li>Modern Database Issues</li>
+</ol>
+  
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
     <slide class="backdrop"></slide>
   </slides>
   <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
@@ -254,6 +456,54 @@ efficiently</li>
       <a href="#" target="_self" rel='tooltip' 
         data-slide=6 title='Relational Database Systems'>
          6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Current Trends'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Beyond Relational Databases'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Overview of a Database Management System'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title=''>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Two Classes of Users'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Query Processing Stages'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Studying Database Systems'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Studying Database Systems'>
+         14
       </a>
     </li>
   </ul>
