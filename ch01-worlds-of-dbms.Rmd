@@ -61,7 +61,7 @@ widgets:      [mathjax, bootstrap]
 * Allow users to create new database **schemas** through a **data-definition language (DDL)**
   * **schema:** logical structure of the data
 * Allow users to query or modify the data through a **data-manipulation language (DML)**
-* Support efficient storage of data (up to petabytes $10^15$ or exabytes $10^18$)
+* Support efficient storage of data (up to petabytes $10^{15}$ or exabytes $10^{18}$)
 * Enforce **durability**, or data recovery after accidents (intentional or otherwise)
 * Allow simultaneous access to the data, while ensuring **atomicity** and **isolation**
   * **atomicity:** each user's action is performed fully or not at all

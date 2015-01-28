@@ -127,7 +127,7 @@ Wayne's World       | 1992   |     95 | comedy
   * The values can be scalars, like strings or numbers
   * Values can also be nested arrays or objects
 * The **operations** are described using **path descriptors** on the implied tree
-  * E.g., find all rows where the *genre* field is equal to "comedy"
+  * E.g., find all objects where the *genre* field is equal to "comedy"
 * The **constraints** limit the possible structures or values
   * E.g., all objects must have a *title*
   * E.g., the "Genre" must be "comedy", "drama", or "scifi"
@@ -233,7 +233,7 @@ Wayne's World       | 1992   |      95 | comedy
 ## Schema
 
 * The **schema** for a relation is the name of the relation and its attributes
-* It is written as `sql Movies(title, year, length, genre)`
+* It is written as `Movies(title, year, length, genre)`
 
 <br>
 
@@ -250,7 +250,7 @@ Wayne's World       | 1992   |      95 | comedy
 
 * Naming conventions are important
 * Here are some suggestions
-  * Relation and attribute names are **nouns**
+  * Relation and attribute names are **nouns** or **noun phrases**
   * Relation names are **capitalized**
   * Relation names are **plural**
   * Attribute names are **lower case**
@@ -288,7 +288,7 @@ Wayne's World       | 1992   |      95 | comedy
 
 * A relation is a set of rows, so you can reorder the rows and still have the
   same relation
-* Since the attributes are names, you can also reorder the columns
+* Since the attributes are named, you can also reorder the columns
 
 <br>
 
@@ -516,8 +516,8 @@ DOUBLE PRECISION   | Floating-point value, may use underlying C double
 DECIMAL(n,d)       | Fixed-point value, with n digits, d of which are after the decimal point
 NUMERIC            | Could be any of the numeric values above
 DATE               | Dates, could be in format '2015-01-26'
-TIME               | Times, could be in format '12:25:30.6'
-DATETIME           | Date and time, could be in format '2015-01-26 12:25:30.6'
+TIME               | Times, could be in format '14:25:30.6'
+DATETIME           | Date and time, could be in format '2015-01-26 14:25:30.6'
 DURATION           | Period of time, could be in format '1:20:30.6'
 
 ---&twocol
@@ -572,7 +572,7 @@ DROP TABLE Movies;
 
 ## Modifying a Table
 
-* You can get change the attributes of a table with the `ALTER TABLE` command
+* You can change the attributes of a table with the `ALTER TABLE` command
   <br><br>
 
 ```
