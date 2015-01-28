@@ -747,7 +747,7 @@ CREATE TABLE Movies (
 * Of course, these can be nested
   * $R \cup (S \cap T)$
   <br><br>
-* We usually make two assumption on $R$ and $S$:
+* For union, intersection, and set difference, we make two assumption on $R$ and $S$:
   * $R$ and $S$ have the same attributes and domains
   * The attributes are in the same order
 * In this case, we say $R$ and $S$ are **union-compatible**
@@ -947,7 +947,7 @@ The Matrix          | 1999   |    136 | scifi
 
 <br>
 
-### $\sigma_{\text{length} \ge 130 \text{ AND } \text{genre} = \text{'scifi'}}(\text{Movies})$
+### $\sigma_{\text{length} \ge 130 \text{ AND } \text{genre} = \text{'scifi' }}(\text{Movies})$
 
 Title               | Year   | Length | Genre 
 --------------------|--------|--------|-------
@@ -1061,7 +1061,7 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 * We can join it as follows:
   $$\text{Movies} \bowtie_{\text{studioName} = \text{name}} \text{Studios}$$
 
-Title               | Year   | Length | Genre  | Movies.Name | ProducerC# | Studios.Name  | Address          | PresC#
+Title               | Year   | Length | Genre  | StudioName  | ProducerC# | Name          | Address          | PresC#
 --------------------|--------|--------|--------|-------------|------------|---------------|------------------|------------
 Gone With the Wind  | 1939   |    231 | drama  | MGM         | 1234       | MGM           | 101 Mogul St.    | 5678
 Star Wars           | 1977   |    124 | scifi  | Lucasfilm   | 2345       | Lucasfilm     | 1 Jedi Way       | 6789

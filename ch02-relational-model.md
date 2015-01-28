@@ -747,7 +747,7 @@ CREATE TABLE Movies (
 * Of course, these can be nested
   * $R \cup (S \cap T)$
   <br><br>
-* We usually make two assumption on $R$ and $S$:
+* For union, intersection, and set difference, we make two assumption on $R$ and $S$:
   * $R$ and $S$ have the same attributes and domains
   * The attributes are in the same order
 * In this case, we say $R$ and $S$ are **union-compatible**
@@ -947,7 +947,7 @@ The Matrix          | 1999   |    136 | scifi
 
 <br>
 
-### $\sigma_{\text{length} \ge 130 \text{ AND } \text{genre} = \text{'scifi'}}(\text{Movies})$
+### $\sigma_{\text{length} \ge 130 \text{ AND } \text{genre} = \text{'scifi' }}(\text{Movies})$
 
 Title               | Year   | Length | Genre 
 --------------------|--------|--------|-------
