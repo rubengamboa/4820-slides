@@ -2243,7 +2243,7 @@ Studios(_name_:string, address:string, presC#:integer)
 <th>Year</th>
 <th>Length</th>
 <th>Genre</th>
-<th>Movies.Name</th>
+<th>Name</th>
 <th>ProducerC#</th>
 <th>Studios.Name</th>
 <th>Address</th>
@@ -2333,9 +2333,9 @@ Studios(_name_:string, address:string, presC#:integer)
 <th>Year</th>
 <th>Length</th>
 <th>Genre</th>
-<th>Movies.Name</th>
+<th>StudioName</th>
 <th>ProducerC#</th>
-<th>Studios.Name</th>
+<th>Name</th>
 <th>Address</th>
 <th>PresC#</th>
 </tr>
@@ -2686,9 +2686,11 @@ joining Employees with itself</li>
 <li>Movies #1 and #2 are <strong>different movies</strong></li>
 </ul>
 
-<p>\(\text{MovieExecs} \bowtie_{\text{M1.producerC#} = \text{cert#}} \rho_{\text{M1}}(\text{Movies})\)</p>
-
-<p>\(\qquad\qquad\quad \bowtie_{\text{M2.producerC#} = \text{cert#} \text{ AND } (\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year})} \rho_{\text{M2}}(\text{Movies})\)</p></li>
+<p>\[\begin{eqnarray}
+ \text{MovieExecs} && \bowtie_{\text{M1.producerC#} = \text{cert#}} \rho_{\text{M1}}(\text{Movies})\\
+                   && \bowtie_{\text{M2.producerC#} = \text{cert#} \text{ AND } (\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year})} \rho_{\text{M2}}(\text{Movies}) \\
+\end{eqnarray}
+\]</p></li>
 </ul>
 
   </article>
@@ -2705,13 +2707,13 @@ joining Employees with itself</li>
 <li>There is a simple linear notation that can come in very handy</li>
 <li><p>We introduce <strong>assignment statements</strong>:
 \[R(A,B,C) := S \bowtie T \cap U\]</p></li>
-<li><p>The previous expression is easier to write as follows:</p>
-
-<ol>
-<li>\(MM := \rho_\text{M1}(\text{Movies}) \bowtie_{\text{M1.producerC#} = \text{M2.producerC#}} \rho_\text{M2}(\text{Movies})\)</li>
-<li>\(FMM := \sigma_{\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year}}(MM)\)</li>
-<li>\(\text{Answer} := \text{MovieExec} \bowtie_{\text{M1.producerC#} = \text{cert#}}(FMM)\)</li>
-</ol></li>
+<li><p>The previous expression is easier to write as follows:
+\[\begin{eqnarray}
+ MM            & := & \rho_\text{M1}(\text{Movies}) \bowtie_{\text{M1.producerC#} = \text{M2.producerC#}} \rho_\text{M2}(\text{Movies}) \\
+ FMM           & := & \sigma_{\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year}}(MM) \\
+ \text{Answer} & := & \text{MovieExec} \bowtie_{\text{M1.producerC#} = \text{cert#}}(FMM) \\
+\end{eqnarray}
+\]</p></li>
 </ul>
 
   </article>
@@ -2757,6 +2759,177 @@ joining Employees with itself</li>
   </hgroup>
   <article data-timings="">
     
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-80" style="background:;">
+  <hgroup>
+    <h2>About Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>constraint</strong> limits the values that are allowed in a column</li>
+<li>E.g., <em>genre</em> must be one of &quot;scifi&quot;, &quot;comedy&quot;, or &quot;drama&quot; 
+<br><br></li>
+<li>The important point is that <strong>constraints can be specified as queries</strong></li>
+<li>This means that we can use relational algebra to describe constraints</li>
+<li>(Later, we&#39;ll use SQL to do this)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-81" style="background:;">
+  <hgroup>
+    <h2>Formulas for Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are two ways to use relational algebra for constraints:
+
+<ul>
+<li>\(\alpha = \emptyset\), meaning &quot;\(\alpha\) is not allowed&quot;</li>
+<li>\(\alpha \subset \beta\), meaning &quot;All \(\alpha\) must have property \(\beta\)&quot;
+<br><br></li>
+</ul></li>
+<li>In general, the formula just needs to be a Boolean formula</li>
+<li>It doesn&#39;t much matter which style is used, but you should be comfortable
+with both styles above</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-82" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>referential integrity</strong> constraints asserts that
+** a value appearing in one context
+** must also appear in another context
+<br><br></li>
+<li>E.g., if a person \(p\) appears in the <code>StarsIn.starName</code>,
+then that person must also appear in <code>MovieStars.name</code></li>
+<li>In other words, a person who stars in a movie must be a movie star!</li>
+</ul>
+
+<ul class = "build incremental">
+<li>More generally, we write
+\[\pi_A(R) \subset \pi_B(S)\]</li>
+<li>Equivalently, we can write
+\[\pi_A(R) - \pi_B(S) = \emptyset\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-83" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity Constraint Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>\(\pi_{\text{starName}}(\text{StarsIn}) \subset \pi_{\text{name}}(\text{MovieStars})\)</li>
+<li>\(\pi_{\text{starName}}(\text{StarsIn}) - \pi_{\text{name}}(\text{MovieStars}) = \emptyset\)
+<br><br></li>
+<li>\(\pi_{\text{producerC#}}(\text{Movies}) \subset \pi_{\text{cert#}}(\text{MovieExecs})\)
+<br><br></li>
+<li>\(\pi_{\text{movieTitle,movieYear}}(\text{StarsIn}) \subset \pi_{\text{title,year}}(\text{Movies})\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-84" style="background:;">
+  <hgroup>
+    <h2>Key Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We have already seen <strong>key constraints</strong></li>
+<li>A <strong>key constraint</strong> says that no two rows can have the same values in one or more attributes
+<br><br></li>
+<li>Suppose that attribute \(A\) is a key for relation \(R(A,B)\)</li>
+<li>To express this constraint
+
+<ul>
+<li>Consider the cross product of \(R\) with itself (renaming one copy, of course)</li>
+<li>If \((a,b_1)\) and \((a, b_2)\) are two tuples of \(R\), then \(b_1\) and \(b_2\) must be the same</li>
+<li>I.e., they must be the same tuple</li>
+<li>Equivalently, there are no rows with the same value for \(A\) but different values for \(B\)
+\[\sigma_{R.A = R2.A \text{ AND } R.B \ne R2.B}(R \times \rho_{R2}(R)) = \emptyset\]</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-85" style="background:;">
+  <hgroup>
+    <h2>Key Constraint Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[\sigma_{\text{M1.title} = \text{M2.title} \text{ AND } \text{M1.year} = \text{M2.year}
+          \text{ AND } \text{M1.length} \ne \text{M2.length}
+          \text{ AND } \text{M1.genre} \ne \text{M2.genre}
+          \text{ AND } \dots}(\rho_{\text{M1}}(\text{Movies}) \times \rho_{\text{M2}}(\text{Movies})) = \emptyset\]</p>
+
+<p>What a mess!</p>
+
+<p>This is far easier to read as follows:</p>
+
+<p>\[\begin{eqnarray}
+  XP  & := & \rho_{\text{M1}}(\text{Movies}) \times \rho_{\text{M2}}(\text{Movies}) \\
+  SK  & := & \sigma_{\text{M1.title} = \text{M2.title} \text{ AND } \text{M1.year} = \text{M2.year}}(XP) \\
+  SNK & := & \sigma_{\text{M1.length} \ne \text{M2.length} \text{ AND } \text{M1.genre} \ne \text{M2.genre} \text{ AND } \dots}(SK) \\
+  SNK & = & \emptyset
+  \end{eqnarray}
+\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-86" style="background:;">
+  <hgroup>
+    <h2>Domain Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>domain constraint</strong> provides additional constraints on the type of an attribute</li>
+<li>E.g., gender is character, but it must also be either &#39;M&#39; or &#39;F&#39;
+\[\sigma_{\text{gender} \ne \text{'M'} \text{ AND } \text{gender} \ne \text{'F'}}(\text{MovieStars}) = \emptyset\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-87" style="background:;">
+  <hgroup>
+    <h2>Domain Constraint Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here is a more complex exmple</li>
+<li>Presidents of a movie studio must have a net worth of at least $10,000,000.
+<br><br></li>
+<li>Here&#39;s an idea that doesn&#39;t work:
+\[\sigma_{\text{netWorth} < 10000000}(\text{MovieExecs}) = \emptyset\]</li>
+<li>The problem is that one can be a movie executive without being a studio president!
+<br><br></li>
+<li>Here&#39;s how we limit the condition to just movie presidents
+\[\sigma_{\text{netWorth} < 10000000}(\text{MovieExecs} \bowtie_{\text{presC#} = \text{cert#}} \text{MovieExecs}) = \emptyset\]</li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -3237,6 +3410,54 @@ joining Employees with itself</li>
       <a href="#" target="_self" rel='tooltip' 
         data-slide=79 title='Constraints on Relations'>
          79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='About Constraints'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title='Formulas for Constraints'>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='Referential Integrity Constraints'>
+         82
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=83 title='Referential Integrity Constraint Examples'>
+         83
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=84 title='Key Constraints'>
+         84
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=85 title='Key Constraint Example'>
+         85
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=86 title='Domain Constraints'>
+         86
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=87 title='Domain Constraint Example'>
+         87
       </a>
     </li>
   </ul>

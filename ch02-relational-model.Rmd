@@ -1029,7 +1029,7 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 
 * Step 3: $\text{Movies} \bowtie \text{Studios}$
 
-Title               | Year   | Length | Genre  | Movies.Name | ProducerC# | Studios.Name  | Address          | PresC#
+Title               | Year   | Length | Genre  | Name        | ProducerC# | Studios.Name  | Address          | PresC#
 --------------------|--------|--------|--------|-------------|------------|---------------|------------------|------------
 Gone With the Wind  | 1939   |    231 | drama  | MGM         | 1234       | MGM           | 101 Mogul St.    | 5678
 Star Wars           | 1977   |    124 | scifi  | Lucasfilm   | 2345       | Lucasfilm     | 1 Jedi Way       | 6789
@@ -1270,9 +1270,11 @@ $$\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movi
   * The executive produces movie \#1 and movie \#2
   * Movies \#1 and \#2 are **different movies**
   
-  $\text{MovieExecs} \bowtie_{\text{M1.producerC#} = \text{cert#}} \rho_{\text{M1}}(\text{Movies})$
-
-  $\qquad\qquad\quad \bowtie_{\text{M2.producerC#} = \text{cert#} \text{ AND } (\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year})} \rho_{\text{M2}}(\text{Movies})$
+  $$\begin{eqnarray}
+     \text{MovieExecs} && \bowtie_{\text{M1.producerC#} = \text{cert#}} \rho_{\text{M1}}(\text{Movies})\\
+                       && \bowtie_{\text{M2.producerC#} = \text{cert#} \text{ AND } (\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year})} \rho_{\text{M2}}(\text{Movies}) \\
+    \end{eqnarray}
+  $$
 
 ---
 
@@ -1284,9 +1286,12 @@ $$\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movi
   $$R(A,B,C) := S \bowtie T \cap U$$
 
 * The previous expression is easier to write as follows:
-  1. $MM := \rho_\text{M1}(\text{Movies}) \bowtie_{\text{M1.producerC#} = \text{M2.producerC#}} \rho_\text{M2}(\text{Movies})$
-  2. $FMM := \sigma_{\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year}}(MM)$
-  3. $\text{Answer} := \text{MovieExec} \bowtie_{\text{M1.producerC#} = \text{cert#}}(FMM)$
+  $$\begin{eqnarray}
+     MM            & := & \rho_\text{M1}(\text{Movies}) \bowtie_{\text{M1.producerC#} = \text{M2.producerC#}} \rho_\text{M2}(\text{Movies}) \\
+     FMM           & := & \sigma_{\text{M1.title} \ne \text{M2.title} \text{ OR } \text{M1.year} \ne \text{M2.year}}(MM) \\
+     \text{Answer} & := & \text{MovieExec} \bowtie_{\text{M1.producerC#} = \text{cert#}}(FMM) \\
+    \end{eqnarray}
+  $$
 
 ---
 
@@ -1311,3 +1316,114 @@ $$\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movi
 
 # Constraints on Relations
 
+---
+
+## About Constraints
+
+* A **constraint** limits the values that are allowed in a column
+* E.g., *genre* must be one of "scifi", "comedy", or "drama" 
+  <br><br>
+* The important point is that **constraints can be specified as queries**
+* This means that we can use relational algebra to describe constraints
+* (Later, we'll use SQL to do this)
+
+---
+
+## Formulas for Constraints
+
+* There are two ways to use relational algebra for constraints:
+  * $\alpha = \emptyset$, meaning "$\alpha$ is not allowed"
+  * $\alpha \subset \beta$, meaning "All $\alpha$ must have property $\beta$"
+  <br><br>
+* In general, the formula just needs to be a Boolean formula
+* It doesn't much matter which style is used, but you should be comfortable
+  with both styles above
+
+---
+
+## Referential Integrity Constraints
+
+* A **referential integrity** constraints asserts that
+  ** a value appearing in one context
+  ** must also appear in another context
+  <br><br>
+* E.g., if a person $p$ appears in the `StarsIn.starName`,
+  then that person must also appear in `MovieStars.name`
+* In other words, a person who stars in a movie must be a movie star!
+
+> * More generally, we write
+    $$\pi_A(R) \subset \pi_B(S)$$
+* Equivalently, we can write
+    $$\pi_A(R) - \pi_B(S) = \emptyset$$
+    
+
+
+---
+
+## Referential Integrity Constraint Examples
+
+* $\pi_{\text{starName}}(\text{StarsIn}) \subset \pi_{\text{name}}(\text{MovieStars})$
+* $\pi_{\text{starName}}(\text{StarsIn}) - \pi_{\text{name}}(\text{MovieStars}) = \emptyset$
+  <br><br>
+* $\pi_{\text{producerC#}}(\text{Movies}) \subset \pi_{\text{cert#}}(\text{MovieExecs})$
+  <br><br>
+* $\pi_{\text{movieTitle,movieYear}}(\text{StarsIn}) \subset \pi_{\text{title,year}}(\text{Movies})$
+
+---
+
+## Key Constraints
+
+* We have already seen **key constraints**
+* A **key constraint** says that no two rows can have the same values in one or more attributes
+  <br><br>
+* Suppose that attribute $A$ is a key for relation $R(A,B)$
+* To express this constraint
+  * Consider the cross product of $R$ with itself (renaming one copy, of course)
+  * If $(a,b_1)$ and $(a, b_2)$ are two tuples of $R$, then $b_1$ and $b_2$ must be the same
+  * I.e., they must be the same tuple
+  * Equivalently, there are no rows with the same value for $A$ but different values for $B$
+  $$\sigma_{R.A = R2.A \text{ AND } R.B \ne R2.B}(R \times \rho_{R2}(R)) = \emptyset$$
+
+---
+
+## Key Constraint Example
+
+$$\sigma_{\text{M1.title} = \text{M2.title} \text{ AND } \text{M1.year} = \text{M2.year}
+          \text{ AND } \text{M1.length} \ne \text{M2.length}
+          \text{ AND } \text{M1.genre} \ne \text{M2.genre}
+          \text{ AND } \dots}(\rho_{\text{M1}}(\text{Movies}) \times \rho_{\text{M2}}(\text{Movies})) = \emptyset$$
+
+What a mess!
+
+This is far easier to read as follows:
+
+$$\begin{eqnarray}
+  XP  & := & \rho_{\text{M1}}(\text{Movies}) \times \rho_{\text{M2}}(\text{Movies}) \\
+  SK  & := & \sigma_{\text{M1.title} = \text{M2.title} \text{ AND } \text{M1.year} = \text{M2.year}}(XP) \\
+  SNK & := & \sigma_{\text{M1.length} \ne \text{M2.length} \text{ AND } \text{M1.genre} \ne \text{M2.genre} \text{ AND } \dots}(SK) \\
+  SNK & = & \emptyset
+  \end{eqnarray}
+$$
+
+
+---
+
+## Domain Constraints
+
+* A **domain constraint** provides additional constraints on the type of an attribute
+* E.g., gender is character, but it must also be either 'M' or 'F'
+  $$\sigma_{\text{gender} \ne \text{'M'} \text{ AND } \text{gender} \ne \text{'F'}}(\text{MovieStars}) = \emptyset$$
+
+---
+
+## Domain Constraint Example
+
+* Here is a more complex exmple
+* Presidents of a movie studio must have a net worth of at least \$10,000,000.
+  <br><br>
+* Here's an idea that doesn't work:
+  $$\sigma_{\text{netWorth} < 10000000}(\text{MovieExecs}) = \emptyset$$
+* The problem is that one can be a movie executive without being a studio president!
+  <br><br>
+* Here's how we limit the condition to just movie presidents
+  $$\sigma_{\text{netWorth} < 10000000}(\text{MovieExecs} \bowtie_{\text{presC#} = \text{cert#}} \text{MovieExecs}) = \emptyset$$

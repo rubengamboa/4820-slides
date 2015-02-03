@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Design Theory for Relational Databases</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>About this Chapter</h2>
+
+<ul>
+<li>The focus of this chapter is on <strong>designing database schemas</strong></li>
+<li>This is the problem of <strong>modeling</strong></li>
+<li>I.e., how do we represent the real world inside a database?
+<br><br></li>
+<li>Remember, all we have to work with is tables!</li>
+<li>So how do we encode the real world in a bunch of tables?
+<br><br></li>
+<li>There are many pitfalls and traps</li>
+<li>Luckily, there is a well understood theory of relational database design
+<br><br></li>
+<li>This is a very <strong>mathematical</strong> theory</li>
+<li>But don&#39;t be fooled: It&#39;s tremendously useful</li>
+<li>(Actually, that&#39;s the reason we study math -- it&#39;s tremendously useful!)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Functional Dependencies</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Functional Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The most fundamental property to describe table design is that of <strong>functional dependency</strong></li>
+<li>This is a generalization of the idea of <strong>(primary) key</strong>
+<br><br></li>
+<li>Consider a relation \(R(A,B,C)\)</li>
+<li>We say that \(A\) is a key if
+
+<ul>
+<li>Suppose we know that \(A\) is equal to \(a\)</li>
+<li>Then we also &quot;know&quot; the values of \(B\) and \(C\)</li>
+</ul></li>
+<li>By &quot;know&quot; \(B\) and \(C\), we mean that they are <strong>determined</strong> by the value of \(A\)
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Similarly, we say that \(A\) <strong>functionally determines</strong> \(B\), written \(A \rightarrow B\), if
+
+<ul>
+<li>Suppose we know that \(A\) is equal to \(a\)</li>
+<li>Then we also &quot;know&quot; the value of \(B\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Functional Dependency Sanity Check</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Check your understanding
+<br><br></li>
+<li>We have the relation \(R(A,B,C)\)
+<br><br></li>
+<li>\(A\) is a key if and only if \(A\) functionally determines \(B\) and \(C\)</li>
+<li>I.e., \(A \rightarrow B, C\)
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>By the way, this can also be written as
+\[\begin{eqnarray}
+A & \rightarrow & B \\
+A & \rightarrow & C \\
+\end{eqnarray}
+\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>A Sample Table</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Dana Carvey</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Would you agree that \(\text{title}, \text{year} \rightarrow \text{Length}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{Genre}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{StudioName}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{StarName}\)?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Another Sample Table</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Carrie Fisher</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Harrison Ford</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Dana Carvey</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Mike Meyers</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Would you agree that \(\text{title}, \text{year} \rightarrow \text{Length}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{Genre}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{StudioName}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{StarName}\)?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>About Functional Dependencies and Relation Instances</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Functional dependencies are constraints on <strong>relations</strong></li>
+<li>They are not constraints on <strong>relation instances</strong>
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>Trick question:</p>
+
+<ul>
+<li>Here&#39;s a relation instance</li>
+<li>What are the keys?</li>
+<li>What are the functional dependencies?
+<br><br></li>
+</ul></li>
+<li><p>A relation instance can <strong>rule out</strong> a possible functional dependency</p></li>
+<li><p>But it can never <strong>rule in</strong> a functional dependency</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>A Formal Definition of Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We now have the mathematical machinery to define formally what it means to be a key
+<br><br></li>
+<li>Suppose we have a relation \(R(A_1, A_2, \dots, A_n)\)</li>
+<li>Let \(\mathcal{A} = \{A_1, A_2, \dots, A_n\}\)</li>
+<li>Now, let \(\mathcal{S} \subset \mathcal{A}\)</li>
+<li>I.e., \(\mathcal{S}\) is a subset of the attributes</li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>We say that \(\mathcal{S}\) is a <strong>key</strong> if and only if </p>
+
+<ol>
+<li>\(\mathcal{S} \rightarrow \mathcal{A} - \mathcal{S}\)</li>
+<li>If \(\mathcal{S'} \subsetneq \mathcal{S}\), then \(\mathcal{S'} \nrightarrow \mathcal{A} - \mathcal{S'}\)</li>
+</ol></li>
+<li><p>If only the first condition holds, we call \(\mathcal{S}\) a <strong>superkey</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>A Formal Definition of Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relation \(R(A, B, C, D, E)\)</li>
+<li>Suppose that
+
+<ul>
+<li>\(A \rightarrow B, C\)</li>
+<li>\(B \rightarrow D, E\)</li>
+<li>\(C \rightarrow D, E\)</li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>\(\{A, B, C\}\) is a pseudo-key, because \(A, B, C \rightarrow D, E\)</li>
+<li><p>But it is not a key, because \(A, B \rightarrow C, D, E\) and \(\{A, B\} \subsetneq \{A, B, C\}\)</p></li>
+<li><p>\(\{A, B\}\) is a key, because</p>
+
+<ol>
+<li>\(A, B \rightarrow C, D, E\)</li>
+<li>\(A \nrightarrow B, C, D, E\)</li>
+<li>\(B \nrightarrow A, C, D, E\)</li>
+<li>\(\emptyset \nrightarrow A, B, C, D, E\) (and there&#39;s no need to check this, since it&#39;s implied by the previous two)</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>A Formal Definition of Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relation \(R(A, B, C, D, E)\)</li>
+<li>Suppose that
+
+<ul>
+<li>\(A \rightarrow B, C\)</li>
+<li>\(B \rightarrow D, E\)</li>
+<li>\(C \rightarrow D, E\)</li>
+</ul></li>
+<li>We already know that \(\{A, B\}\) is a key</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Similarly, \(\{A, C\}\) is also a key</li>
+<li><p>We would choose either \(\{A, B\}\) or \(\{A, C\}\) as the primary key</p></li>
+<li><p>There are many (14) superkeys, but no more keys</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h1>Rules about Functional Dependencies</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Reasoning about Functional Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we know that \(A \rightarrow B\)</li>
+<li>And we also know that \(B \rightarrow C\)</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Isn&#39;t it obvious that \(A \rightarrow C\)?</li>
+<li><p>That&#39;s the idea behind reasoning about functional dependencies</p></li>
+<li><p>In general, we can say that a particular set \(S\) of FDs implies some other FD \(F\), which we write as \(S \vdash F\)</p></li>
+<li><p>Or a set \(S\) of functional dependencies may imply some other set \(T\) of FDs, which we write as \(S \vdash T\)</p>
+
+<ul>
+<li>In this case, We also say that \(T\) follows from \(S\)</li>
+</ul></li>
+<li><p>And, whenever \(S \vdash T\) and \(T \vdash S\), we say that \(S\) and \(T\) are <strong>equivalent</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Splitting Rule</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we know that \(A \rightarrow B, C\)</li>
+</ul>
+
+<ul class = "build incremental">
+<li>We can write this instead as
+
+<ol>
+<li>\(A \rightarrow B\)</li>
+<li>\(A \rightarrow C\)</li>
+</ol></li>
+<li>In fact, we sometimes prefer to write FDs so that they only have one attribute on the right-hand side</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Combining Rule</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>We can go the other way</p></li>
+<li><p>Suppose we know that </p>
+
+<ol>
+<li>\(A \rightarrow B\)</li>
+<li>\(A \rightarrow C\)</li>
+</ol></li>
+</ul>
+
+<ul class = "build incremental">
+<li>We can write this instead as \(A \rightarrow B, C\)</li>
+<li>And for some purposes, we want to write FDs to have the maximum number of attributes on the right-hand side</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Trivial Functional Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relation \(R(A, B, C)\)</li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>Then all of these hold</p>
+
+<ol>
+<li>\(A \rightarrow A\)</li>
+<li>\(B \rightarrow B\)</li>
+<li>\(A, B, C \rightarrow A\)</li>
+</ol></li>
+<li><p>More formally, if \(\mathcal{A}\) is the set of attributes of relation \(R\), then</p>
+
+<ul>
+<li>\(\mathcal{A}' \rightarrow \mathcal{A}''\) whenever \(\mathcal{A}'' \subset \mathcal{A}' \subset \mathcal{A}\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Trivial Dependency Rule</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relation \(R(A, B, C)\)</li>
+<li>And suppose that \(A, B \rightarrow B, C\)</li>
+</ul>
+
+<ul class = "build incremental">
+<li>This is not a trivial dependency, but there&#39;s something strange about it</li>
+<li><p>In fact, it is easy to see that \(A, B \rightarrow C\) is a simpler version that is equivalent to it</p></li>
+<li><p>More formally, if \(\mathcal{A}\) is the set of attributes of relation \(R\), and \(\mathcal{A'} \rightarrow \mathcal{A''}\)</p>
+
+<ul>
+<li>\(\mathcal{A}' \rightarrow \mathcal{A}'' - \mathcal{A'}\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Closure of a Set of Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relation \(R\) with attributes \(\mathcal{A}\)</li>
+<li><p>Let \(\{A_1, A_2, \dots, A_n\} \subset \mathcal{A}\)</p></li>
+<li><p>The <strong>closure</strong> of \(\{A_1, A_2, \dots, A_n\}\), written \(\{A_1, A_2, \dots, A_n\}^+\) is the set of all attributes that
+are functionally determined by \(\{A_1, A_2, \dots, A_n\}\)</p></li>
+<li><p>Notice that \(\{A_1, A_2, \dots, A_n\} \subset \{A_1, A_2, \dots, A_n\}^+\), because of trivial FDs</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Closure of a Set of Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/closure-attributes.png" alt="Closure of a Set of Attributes" title="Closure of a Set of Attributes" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Closure of a Set of Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>INPUT: A set \(A\) of attributes of a relation \(R\), and a set \(F\) of FDs </p>
+
+<p>OUTPUT: \(A^+\)</p>
+
+<ol>
+<li>Use the splitting on rule on \(S\), so that all FDs have a single attribute on the right-hand side</li>
+<li>Let \(X\) be the set of attributes that will become the closure</li>
+<li>Initially, \(X=A\)</li>
+<li>While there is some FD \(B_1, B_2, \dots, B_m \rightarrow C\) such that \(\{B_1, B_2, \dots, B_m\} \subset X\) but \(C \not\in X\)
+
+<ol>
+<li>Let \(X = X \cup \{C\}\)</li>
+</ol></li>
+</ol>
+
+<p><br>
+Note that this algorithm terminates</p>
+
+<ul>
+<li>At each step in the loop, \(X\) grows by one attribute</li>
+<li>\(X\) can be no larger than the attributes of \(R\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Suppose we have a relation \(R(A,B,C,D,E)\) with the following FDs:</p>
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(B, C \rightarrow A, D\)</li>
+<li>\(D \rightarrow E\)</li>
+<li>\(C, F \rightarrow B\)</li>
+</ul>
+
+<p>Let&#39;s find the closure of \(\{A, B\}\)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Step 1: Use the splitting rule, and replace the FDs with:</p>
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(B, C \rightarrow A\)</li>
+<li>\(B, C \rightarrow D\)</li>
+<li>\(D \rightarrow E\)</li>
+<li>\(C, F \rightarrow B\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(B, C \rightarrow A\)</li>
+<li>\(B, C \rightarrow D\)</li>
+<li>\(D \rightarrow E\)</li>
+<li>\(C, F \rightarrow B\)</li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Algorithm Trace</h3>
+
+<table><thead>
+<tr>
+<th>Step</th>
+<th>\(X\)</th>
+<th>FD</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>\(A, B\)</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>\(A, B, C\)</td>
+<td>\(A, B \rightarrow C\)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>\(A, B, C, D\)</td>
+<td>\(B, C \rightarrow D\)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>\(A, B, C, D, E\)</td>
+<td>\(D \rightarrow E\)</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose that we have a set \(A\) of attributes from a relation \(R\)</li>
+<li>The closure algorithm returns \(X\)</li>
+<li>We claim that \(X \subset A^+\)
+<br><br></li>
+<li>By induction on the number of steps</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Basis:</strong> If there are 0 steps, then \(X=A\), so it follows that \(A \subset A^+\)
+<br><br></li>
+<li><strong>Induction:</strong>
+
+<ul>
+<li>Suppose \(B \in X\)</li>
+<li>\(B\) was added because of some FD \(B_1, B_2, \dots, B_n \rightarrow B\)</li>
+<li>By the inductive hypothesis, all of the \(B_i\) are in \(X\) and in \(A^+\)</li>
+<li>So \(R\) satisfies \(A \rightarrow B_1, B_2, \dots, B_n\)</li>
+<li>If \(R\) has two tuples with the same values of \(A\), then they must also have the values of \(B_1, B_2, \dots, B_n\)</li>
+<li>And since \(R\) satisfies \(B_1, B_2, \dots, B_n \rightarrow B\), those two tuples also have the same values of \(B\)</li>
+<li>So \(A \rightarrow B\) and \(B \in A^+\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose that we have a set \(A\) of attributes from a relation \(R\)</li>
+<li>The closure algorithm returns \(X\)</li>
+<li>We claim that \(A^+ \subset X\)</li>
+<li>Which means that \(A = X^+\) (from Part 1)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose that \(B \not\in X\)</li>
+<li>We need to show that \(A_1, A_2, \dots, A_n \rightarrow B\) does not hold</li>
+<li>To do this, we create a relation instance for \(R\) in which this FD does not hold</li>
+<li>The instance has two tuples
+
+<ul>
+<li>\(t\): 1&#39;s on all attributes in \(A^+\), and 0&#39;s on all other attributes</li>
+<li>\(s\): 1&#39;s on all attributes</li>
+</ul></li>
+<li>Notice that \(t\) and \(s\) agree on an attribute \(C\) if and only \(C \in X\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The instance has two tuples
+
+<ul>
+<li>\(t\): 1&#39;s on all attributes in \(X\), and 0&#39;s on all other attributes</li>
+<li>\(s\): 1&#39;s on all attributes</li>
+</ul></li>
+<li>We claim that this instance satisfies all of the FDs in \(S\)
+<br><br></li>
+<li>Consider some FD \(C_1, C_2, \dots, C_k \rightarrow D\) in \(S\)</li>
+<li>If one of the \(C_i\) is not among the \(C_i\), then we&#39;re done</li>
+<li>Otherwise, the algorithm would have added \(D\) to \(X\) because of this FD</li>
+<li>So we conclude that this case cannot happen</li>
+<li>I.e., the instance satisfies all of the FDs in \(S\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The instance has two tuples
+
+<ul>
+<li>\(t\): 1&#39;s on all attributes in \(X\), and 0&#39;s on all other attributes</li>
+<li>\(s\): 1&#39;s on all attributes</li>
+</ul></li>
+<li>We claim that this instance does not satisfy the FD \(A_1, A_2, \dots, A_n \rightarrow B\)
+<br><br></li>
+<li>But this is easy</li>
+<li>All the \(A_i\) are in \(X\), so the tuples \(t\) and \(s\) agree on those values</li>
+<li>But we know that \(B\) is not in \(X\), to \(t\) and \(s\) disagree on \(B\)</li>
+<li>That means that this instance does not satisfy the FD \(A_1, A_2, \dots, A_n \rightarrow B\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Why the Closure Algorithm Works, Part 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a table \(R\), a subset of the attributes \(A\), and some functional dependencies \(F\)</li>
+<li>If we run the closure algorithm on \(A\), we get a result \(X\)</li>
+<li>For each \(B \in X\), we know that \(A \rightarrow B\)</li>
+<li>And for any \(C \not\in X\), we know that \(A \nrightarrow B\)
+<br><br></li>
+<li>In other words, \(X = A^+\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Example: Transitive Rule</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The <strong>transitive rule</strong> says that if \(\mathcal{A} \rightarrow \mathcal{B}\) and \(\mathcal{B} \rightarrow \mathcal{C}\),
+then \(\mathcal{A} \rightarrow \mathcal{C}\)</li>
+<li>Remember that \(\mathcal{A}\), \(\mathcal{B}\), and \(\mathcal{C}\) are all <strong>sets</strong> of attributes
+<br><br></li>
+<li>It&#39;s easy to see that this rule holds using the closure algorithm</li>
+<li>We know that \(\mathcal{A}^+\) must include \(\mathcal{B}\)</li>
+<li>I.e., \(\mathcal{B} \subset \mathcal{A}^+\)
+<br><br></li>
+<li>But then, using \(\mathcal{B} \rightarrow \mathcal{C}\), we see that \(\mathcal{A}^+\) must include \(\mathcal{C}\)</li>
+<li>I.e., \(\mathcal{C} \subset \mathcal{A}^+\)
+<br><br></li>
+<li>So indeed, \(\mathcal{A} \rightarrow \mathcal{C}\) holds</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>All the (Needed) Inference Rules</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;ve seen trivial rules and transitivity</li>
+<li><p>Here is a full set of inference rules</p>
+
+<ol>
+<li><strong>Reflexivity.</strong> This is just a fancy name for trivial rules</li>
+<li><strong>Augmentation.</strong> If \(\mathcal{A} \rightarrow \mathcal{B}\), then \(\mathcal{A}, \mathcal{C} \rightarrow \mathcal{B}, \mathcal{C}\)</li>
+<li><strong>Transitivity.</strong> \(\mathcal{A} \rightarrow \mathcal{B}\) and \(\mathcal{B} \rightarrow \mathcal{C}\),
+then \(\mathcal{A} \rightarrow \mathcal{C}\)</li>
+</ol></li>
+<li><p>That&#39;s it!</p></li>
+<li><p>All valid inference rules for FDs follow from the above!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Minimal Functional Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An important application of the inference rules for FDs is the idea of <strong>minimal basis</strong>
+<br><br></li>
+<li>Suppose \(S\) is a set of FDs</li>
+<li>If some other set \(S'\) of FDs is equivalent to \(S\), we call \(S'\) a <strong>basis</strong> for \(S\)</li>
+<li>We restrict ourselves here to bases that have FDs with only one attribute on the right-hand sides
+<br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>A <strong>minimal basis</strong> is a basis \(S'\) where
+
+<ol>
+<li>All FDs have singleton right-hand sides</li>
+<li>If any FD is removed from \(S'\), the result is no longer a basis</li>
+<li>If any attribute is removed from the left-hand side of any FD in \(S'\), the result is not a basis</li>
+</ol></li>
+<li>I.e., we need all the FDs, and no FD can be smaller</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Functional Dependencies and Projections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose that \(S\) is a set of FDs for relation \(R\)
+<br><br></li>
+<li>What are the FDs for \(\pi_{\mathcal{B}}(R)\), where \(\mathcal{B}\) is some subset of the attributes of \(R\)?
+<br></li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>We can follow the <strong>projection of functional dependencies</strong> \(S'\), which are all the FDs in \(S\) such that</p>
+
+<ol>
+<li>they follow from \(S\)</li>
+<li>they involve only attributes in \(\mathcal{B}\)</li>
+</ol></li>
+<li><p>Note that we&#39;re talking about FDs that <strong>follow from</strong> \(S\)</p></li>
+<li><p>This is not the same as the FDs in \(S\)</p></li>
+<li><p>Because of this, the algorithm is actually complex (and expensive)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>INPUT: A relation \(R\), a set of attributes \(\mathcal{B}\), and a set (basis) of FDs \(S\) for \(R\)</p>
+
+<p>OUTPUT: A set (basis) \(S'\) of FDs for \(\pi_{\mathcal{B}}(R)\)</p>
+
+<ol>
+<li>\(S' = \emptyset\)</li>
+<li>For each \(X \subset \mathcal{B}\)
+
+<ol>
+<li>Compute \(X^+\) using \(S\)</li>
+<li>For each \(A \in X^+ \cap \mathcal{B}\)
+
+<ol>
+<li>Add \(X \rightarrow A\) to \(S'\)</li>
+</ol></li>
+</ol></li>
+<li>Repeat until no more changes can be made
+
+<ol>
+<li>If there is an FD in \(S'\) that follows from the other FDs in \(S'\), remove it</li>
+<li>If there is an FD \(LHS \rightarrow B\) in \(S'\) such that after removing an attribute \(A\) from \(LHS\), the resulting
+FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \rightarrow B\) with \(LHS - A \rightarrow B\)</li>
+</ol></li>
+<li>Return \(S'\)</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies and Pragmatics</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The algorithm is OK if you&#39;re a computer</li>
+<li>But it&#39;s very expensive, i.e., the loop iterates over <strong>all subsets</strong> of \(\mathcal{B}\)</li>
+</ul>
+
+<ul class = "build incremental">
+<li>As a practical matter, we use these observations
+
+<ul>
+<li>Don&#39;t worry about the empty set or the set \(\mathcal{B}\) (but that still leaves \(2^n - 2\) subsets)</li>
+<li>Once we find that \(X^+ \rightarrow Y\), there&#39;s no point in considering supersets of \(X\) for attributes already in \(Y\)</li>
+<li>In particular, if \(X^+ \rightarrow \mathcal{B}\), then we can ignore all supersets of \(X\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h1>Design of Relational Database Schemas</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Designing Relational Database Schemas</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose you want to model some real-world situation in a relational database</li>
+<li>Chances are there will be more than one way to do it
+<br><br></li>
+<li>And some ways <strong>will be better</strong> than others!
+<br><br></li>
+<li>This is not a matter of opinion</li>
+<li>This is a <strong>technical</strong> matter</li>
+<li>There can be <strong>technical</strong> problems with a database schema</li>
+<li>The problems are called <strong>anomalies</strong>
+<br><br></li>
+<li>The root of all evil is usually <strong>redundancy</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Anomalies</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Carrie Fisher</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Harrison Ford</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Dana Carvey</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Mike Meyers</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li><strong>Redundancy:</strong> Information is stored in multiple places</li>
+<li><strong>Update Anomalies:</strong> Information is updated in one place, but not in others</li>
+<li><strong>Deletion Anomalies:</strong> When some rows are deleted, we unexpectedly lose extra information</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Decompositions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The solution to the anomalies is <strong>decomposition</strong></li>
+<li>Suppose \(R\) is a relation with attributes \(\mathcal{A}\)</li>
+<li>Let \(\mathcal{B}\) and \(\mathcal{C}\) be subsets of \(\mathcal{A}\) that cover \(\mathcal{A}\)
+
+<ul>
+<li>\(\mathcal{B} \subset \mathcal{A}\)</li>
+<li>\(\mathcal{C} \subset \mathcal{A}\)</li>
+<li>\(\mathcal{B} \cup \mathcal{C} = \mathcal{A}\)</li>
+</ul></li>
+<li>Then \(R\) can be decomposed into
+
+<ul>
+<li>\(R_1 = \pi_{\mathcal{B}}(R)\)</li>
+<li>\(R_2 = \pi_{\mathcal{C}}(R)\)
+<br><br></li>
+</ul></li>
+<li>In general, we may decompose \(R\) into \(k\) different relations \(R_1, R_2, \dots, R_k\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Decompositions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>For example, suppose we have the relation \(R(A,B,C)\)
+<br><br></li>
+<li>One possible decomposition is
+
+<ul>
+<li>\(R_1(A, B)\)</li>
+<li>\(R_2(B, C)\)
+<br><br></li>
+</ul></li>
+<li>Of course, there are many other possible decompositions!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Decompositions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Carrie Fisher</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Harrison Ford</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Dana Carvey</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Mike Meyers</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<div style='float:left;width:48%;'>
+  <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>Carrie Fisher</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>Harrison Ford</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>Dana Carvey</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>Mike Meyers</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Boyce-Codd Normal Form</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Boyce-Codd Normal Form</strong> (BCNF) is a condition that can tell us when a schema does not suffer from anomalies
+<br><br></li>
+<li>A relation \(R\) is in BCNF if
+
+<ul>
+<li>for each nontrivial FD \(X \rightarrow A\), the left-hand side \(X\) is a superkey for \(R\)
+<br><br></li>
+</ul></li>
+<li>That is, the left-hand side of every FD must contain a key
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>If there are more than one key, the requirement is for the FD to contain <strong>one of them</strong></li>
+<li>It is not necessary for the FD to contain all keys</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Boyce-Codd Normal Form</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Carrie Fisher</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+<td>Harrison Ford</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Dana Carvey</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+<td>Mike Meyers</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Not in BCNF</li>
+<li>The key is title, year, starName</li>
+<li>But there is an FD title, year \(\rightarrow\) Length
+<br><br></li>
+<li>Notice that to tell if \(R\) is in BCNF, you must be able to find the keys for \(R\) first</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Boyce-Codd Normal Form</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>Length</th>
+<th>Genre</th>
+<th>StudioName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>124</td>
+<td>scifi</td>
+<td>Fox</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>231</td>
+<td>drama</td>
+<td>MGM</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>95</td>
+<td>comedy</td>
+<td>Paramount</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>This is in BCNF</li>
+<li>The key is title, year</li>
+<li>The only real nontrivial FD is title, year \(\rightarrow\) length, genre, studioName
+<br><br></li>
+<li>All other FDs must include title, year in the left-hand side</li>
+<li>So all FDs include a key in the left-hand-side</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Boyce-Codd Normal Form</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+<th>StarName</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>Carrie Fisher</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>Mark Hamill</td>
+</tr>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>Harrison Ford</td>
+</tr>
+<tr>
+<td>Gone With the Wind</td>
+<td>1939</td>
+<td>Vivien Leigh</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>Dana Carvey</td>
+</tr>
+<tr>
+<td>Wayne&#39;s World</td>
+<td>1992</td>
+<td>Mike Meyers</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Again, this is in BCNF</li>
+<li>The key is title, year</li>
+<li>The only real nontrivial FD is title, year \(\rightarrow\) starName</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Functional Dependencies'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Functional Dependencies'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Functional Dependency Sanity Check'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='A Sample Table'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Another Sample Table'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='About Functional Dependencies and Relation Instances'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='A Formal Definition of Keys'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='A Formal Definition of Keys'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='A Formal Definition of Keys'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Rules about Functional Dependencies'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Reasoning about Functional Dependencies'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Splitting Rule'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Combining Rule'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Trivial Functional Dependencies'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Trivial Dependency Rule'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Closure of a Set of Attributes'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Closure of a Set of Attributes'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Closure of a Set of Attributes'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Example'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Example'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Example'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Why the Closure Algorithm Works, Part 1'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Why the Closure Algorithm Works, Part 1'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Why the Closure Algorithm Works, Part 2'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Why the Closure Algorithm Works, Part 2'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Why the Closure Algorithm Works, Part 2'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Why the Closure Algorithm Works, Part 2'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Why the Closure Algorithm Works, Part 2'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Example: Transitive Rule'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='All the (Needed) Inference Rules'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Minimal Functional Dependencies'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Functional Dependencies and Projections'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Projection of Functional Dependencies'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Projection of Functional Dependencies and Pragmatics'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Design of Relational Database Schemas'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Designing Relational Database Schemas'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Anomalies'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Decompositions'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Decompositions'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Decompositions'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Boyce-Codd Normal Form'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Boyce-Codd Normal Form'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Boyce-Codd Normal Form'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Boyce-Codd Normal Form'>
+         45
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
