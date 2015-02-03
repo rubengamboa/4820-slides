@@ -697,3 +697,7 @@ Wayne's World      | 1992 | Mike Meyers
 * The key is title, year
 * The only real nontrivial FD is title, year $\rightarrow$ starName
 
+---
+
+## Decomposing into BCNF
+
