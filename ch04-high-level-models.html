@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>High-Level Database Models</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>About this Chapter</h2>
+
+<ul>
+<li>The focus of this chapter is on <strong>modeling the real world using database schemas</strong></li>
+<li>So we have a specific real-world situation</li>
+<li>The goal is to find a schema that can be used to describe this situation
+<br><br></li>
+<li>Remember, all we have to work with is tables!</li>
+<li>That&#39;s bad, because the real world is much more complex than a bunch of tables
+<br><br></li>
+<li>In practice, we use higher-level data models</li>
+<li>The reason is that we want to have more flexibility during modeling</li>
+<li>So we want more powerful languages to describe the real world, but still be able to
+convert designs into a relational schema</li>
+<li>Among the choices are <strong>Entity-Relationship (E/R) Diagrams</strong>, the <strong>Unified Modeling
+Language (UML)</strong>,  and the <strong>Object Description Language (ODL)</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Entity/Relationship Model</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>The Entity/Relationship Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The <strong>Entity/Relationship (E/R) Model</strong> is the classic high-level database design tool</li>
+<li>The model is represented using an <strong>E/R Diagram</strong>
+<br><br></li>
+<li>There are three different concepts in E/R Diagrams
+
+<ol>
+<li>Entity (sets)</li>
+<li>Attributes</li>
+<li>Relationships</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Entity Sets</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An <strong>entity</strong> is an abstract object</li>
+<li>Generally, this will correspond to a concrete object in the real world, e.g., a contract,
+a person, a car
+<br><br></li>
+<li>An <strong>entity set</strong> is a collection of similar entities, e.g., all UW contracts, 
+all persons working at UW, etc.
+<br><br></li>
+<li>There is a very clear analogy between
+
+<ul>
+<li>entity sets and classes</li>
+<li>entities and objects</li>
+</ul></li>
+<li>You can get far using your intuition from object-oriented programming here</li>
+<li>The only difference is that entities have data, but no methods</li>
+<li>Go ahead, think of them as C structs!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Entity sets have <strong>attributes</strong>, which are the properties of the entities in that entity set</li>
+<li>All entities in an entity set have the same attributes</li>
+<li>That&#39;s what we mean by &quot;similar entities&quot; in an entity set
+<br><br></li>
+<li>Of course, attributes of entity sets are just like attributes of relations</li>
+<li>This is one place where it&#39;s easier to think of the tables than the entity sets, because we
+can think in terms of rows and columns
+<br><br></li>
+<li>Note that entities have values for the attributes in their entity set</li>
+<li>The values are of a given type or domain</li>
+<li>We will only consider scalar types (e.g., integer, string, date)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Relationships</strong> are connections among two or more entity sets</li>
+<li>A relationship could also be a connection between an entity set and itself
+<br><br></li>
+<li>For example, we have the entity sets
+
+<ul>
+<li><code>Movies</code></li>
+<li><code>MovieStars</code></li>
+</ul></li>
+<li>A relationship between them could be called <code>StarsIn</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>E/R Diagrams</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An <strong>E/R Diagram</strong> is a graph that shows entity sets, attributes and relationships
+
+<ul>
+<li>Entity sets are represented by <strong>rectangles</strong></li>
+<li>Attributes are <strong>ovals</strong></li>
+<li>Relationships are <strong>diamonds</strong>
+<br><br></li>
+</ul></li>
+<li>Edges connect
+
+<ul>
+<li>Entity sets and their attributes</li>
+<li>Relationships and the entity sets involved in them</li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Note in particular
+
+<ul>
+<li>There is <strong>never</strong> an edge between two entity sets</li>
+<li>There is <strong>never</strong> an edge between two relationships</li>
+<li>There is <strong>never</strong> an edge between two attributes</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>E/R Diagram for Movies Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-movies.png" title="E/R Diagram for Movies Schema" alt="E/R Diagram for Movies Schema">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Multiplicity of Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relationship between entity sets</li>
+<li>How many entities on each entity set can be involved in a single instance of the relationship?
+<br><br></li>
+<li>E.g., suppose we have a relationship between <code>Advisors</code> and <code>Students</code>
+
+<ul>
+<li>An advisor may have many students they advise</li>
+<li>A student should have only one advisor
+<br><br></li>
+</ul></li>
+<li>Or suppose we have a relationship between <code>Students</code> and <code>Courses</code>
+
+<ul>
+<li>A student may be taking many courses </li>
+<li>And a course may (should?) have many students
+<br><br></li>
+</ul></li>
+<li>Or suppose we have a relationship between <code>Universities</code> and <code>Presidents</code>
+
+<ul>
+<li>A university can have at most one president</li>
+<li>And a president can work in only one university</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Multiplicity of Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>These cases lead to the following notation</li>
+<li>Suppose \(R\) is a relationship between entity sets \(E\) and \(F\)
+
+<ul>
+<li>If each entity in \(E\) can be connected to at most one member of \(F\), we say
+\(R\) is <strong>many-to-one</strong> from \(E\) to \(F\)</li>
+<li>Likewise, if each entity in \(F\) can be connected to at most one member of \(E\),
+we say that \(R\) is <strong>many-to-one</strong> from \(F\) to \(E\)</li>
+<li>If \(R\) is many-to-one from \(E\) to \(F\) and from \(F\) to \(E\), we call it <strong>one-to-one</strong></li>
+<li>If none of these hold, we say \(R\) is <strong>many-to-many</strong></li>
+</ul></li>
+<li>This possibilities describe the possible <strong>multiplicity</strong> of entities in a relationship</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Multiplicity of Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Arrows are used in the E-R diagram to indicate multiplicity in relationships</li>
+<li>The arrow always goes <strong>from</strong> the relationship <strong>to</strong> an entity set</li>
+<li>The arrow indicates that that entity set is on the <strong>one</strong> side of the relationship</li>
+<li>But the arrow means <strong>at most one</strong></li>
+<li>There is no guarantee that there is actually one right now (e.g., a university may
+(temporarily) not have a president)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Multiplicity of Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-movies.png" title="Many-to-One Relationship" alt="Many-to-One Relationship">
+    <br>
+    <br>
+    <img src="assets/img/erd-one-to-one.png" title="One-to-One Relationship" alt="One-to-One Relationship">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Ternary (and Higher) Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Occasionally, we will want to model a relationship among three (or more) entity sets
+
+<ul>
+<li>Law firms organize their records (and billing) under <strong>Attorney-Client-Matter</strong>a</li>
+<li>A studio may hire an actor to appear in a movie, resulting in <strong>Studio-MovieStar-Movie</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>E/R Diagram for Ternary (and Higher) Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-ternary.png" title="Ternary Relationship" alt="Ternary Relationship">
+</div>
+
+<ul>
+<li>Note the meaning of the arrow into <code>Studios</code></li>
+<li>If you know the <code>Movie</code> and the <code>MovieStar</code>, then only one <code>Studio</code> can be associated with them</li>
+<li>But a different <code>Studio</code> may have a contract with the same <code>MovieStar</code> but in a different <code>Movie</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Unary Relationships and Roles</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It is fairly common to have relationships between an entity set <strong>and itself</strong></li>
+<li>For example, movies have sequels</li>
+<li>Or students can be advisors of other students</li>
+<li>Or a person have be a spouse of another person
+<br><br></li>
+<li>Usually, the relationship is <strong>asymmetric</strong>
+
+<ul>
+<li>E.g., <em>Empire Strikes Back</em> is a sequel of <em>Star Wars</em></li>
+<li>But <em>Star Wars</em> is <strong>not</strong>* a sequel of <em>Empire Strikes Back</em>
+<br><br></li>
+</ul></li>
+<li>So when we draw the E/R diagram, we have to label each edge, to show the <strong>role</strong> of the given participant
+
+<ul>
+<li>E.g., the role may be <em>sequel</em> and <em>original</em></li>
+<li>Or <em>advisor</em> and <em>advisee</em></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Unary Relationships and Roles</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-roles.png" title="Relationship Roles" alt="Relationship Roles">
+    <br><br>
+    <img src="assets/img/erd-roles-2.png" title="Relationship Roles" alt="Relationship Roles">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Converting Ternary (and Higher) Relationships to Binary Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Although the E/R model supports ternary (and higher) relationships, it is sometimes useful to convert such relationships
+to binary relationships only</li>
+<li>Partly, this is because binary relationships are simpler</li>
+<li>It&#39;s also because some other notations only allow binary relationships
+<br><br></li>
+<li>Luckily, it&#39;s easy to do the conversion</li>
+<li>Suppose \(R\) is a relationship among \(E\), \(F\), and \(G\)</li>
+<li>Create a new entity set \(R_E\)</li>
+<li>Connect \(R_E\) with the entity sets \(E\), \(F\), and \(G\)</li>
+<li>Each of those connections is binary</li>
+<li>And each entity in \(R_E\) corresponds to a relationship in \(R\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Converting Ternary (and Higher) Relationships to Binary Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-roles-2.png" title="Relationship Roles" alt="Relationship Roles">
+    <img src="assets/img/erd-ternary-to-binary.png" title="Converting Ternary to Binary Relationships" 
+         alt="Converting Ternary to Binary Relationships">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Attributes on Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Although it may appear unnatural at first, it is very common to have attributes on relationships, not just entity sets</li>
+<li>Examples:
+
+<ul>
+<li>The <code>WorksIn</code> relationship may have an associated <code>Salary</code> attribute</li>
+<li>The <code>ProjectMember</code> relationship may have <code>PctEffort</code></li>
+<li>The <code>RecipeIngredient</code> relationship may have <code>Amount</code>
+<br><br></li>
+</ul></li>
+<li>These are indicated the same way as attributes on entity sets</li>
+<li>I.e., there is an edge between the attribute and the relationship</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Attributes on Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-relationship-attribute.png" title="Relationship Attributes" alt="Relationship Attributes">
+</div>
+
+<ul>
+<li>Note: You can always avoid relationship attributes by adding extra entity sets</li>
+<li>But this is seldom necessary (or wise)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Subclasses in the E/R Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It is extremely common for an entity set to be just like another entity set, but with some more attributes</li>
+<li>For example, in the university, there may be entity sets for <code>Students</code> and <code>Faculty</code></li>
+<li>Both entity sets will have name, address, phone number, etc.</li>
+<li><strong>In addition</strong>, 
+
+<ul>
+<li>Students may have a major, degree program, etc.</li>
+<li>Faculty may have salary, highest degree earned, etc.
+<br><br></li>
+</ul></li>
+<li>It&#39;s natural to represent this using subclasses</li>
+<li>The attributes in common are placed in <code>Person</code></li>
+<li>Then the entity sets <code>Students</code> and <code>Faculty</code> <strong>extend</strong> <code>Person</code>, adding their own attributes
+<br><br></li>
+<li>In the E/R diagram, this is signified by a special type of relationship that is a <strong>triangle</strong> instead of a diamond</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Subclasses in the E/R as Opposed to the Object-Oriented Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There is a major difference between subclasses in the E/R and OO models
+<br><br></li>
+<li>Suppose \(A\) is a superclass, and \(A_1\), \(A_2\), and \(A_3\) are subclasses</li>
+<li>You have to make two decisions
+
+<ul>
+<li><strong>Coverage:</strong> Does every \(A\) have to be one of \(A_1\), \(A_2\), or \(A_3\)?</li>
+<li><strong>Exclusivity:</strong> Can an \(A_1\) also be an \(A_2\) or an \(A_3\)?
+<br><br></li>
+</ul></li>
+<li>In OOP, we can actually do this
+
+<ul>
+<li><strong>Coverage:</strong> If \(A\) is abstract, then yes -- otherwise, no</li>
+<li><strong>Exclusivity:</strong> Typically not, but in C++, yes (by further subclassing)</li>
+<li>Oh, and Java (and modern OO languages) uses interfaces to get around <strong>exclusivity</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Subclasses in the E/R Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In databases, the assumptions are that
+
+<ul>
+<li><strong>Coverage:</strong> No, an \(A\) does not have to be one of the \(A_i\)</li>
+<li><strong>Exclusivity:</strong> No, an entity can be an \(A\), an \(A_i\) and an \(A_j\) all at the same time</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Subclasses in the E/R Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/erd-subclasses.png" title="E/R Subclasses" alt="E/R Subclasses">
+</div>
+
+<ul>
+<li>Note that a movie may be something other than a cartoon or a murder-mystery</li>
+<li>Also, a movie may be <strong>both</strong> a cartoon and a murder-mystery!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h1>Design Principles</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Design Principles</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now we&#39;ll turn our attention to <strong>design principles</strong></li>
+<li>E/R diagrams are a tool to describe different designs
+<br><br></li>
+<li>The same real-world situation may be modeled in radically different E/R diagrams</li>
+<li>The important question is, <strong>how can we compare different designs?</strong></li>
+<li>In other words, <strong>what makes one design better than another?</strong>
+<br><br></li>
+<li>We&#39;ll (try to) answer these questions by identifying important design principles</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Entity/Relationship Model'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Entity/Relationship Model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Entity Sets'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Attributes'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Relationships'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='E/R Diagrams'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='E/R Diagram for Movies Schema'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Multiplicity of Relationships'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Multiplicity of Relationships'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Multiplicity of Relationships'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Multiplicity of Relationships'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Ternary (and Higher) Relationships'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='E/R Diagram for Ternary (and Higher) Relationships'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Unary Relationships and Roles'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Unary Relationships and Roles'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Converting Ternary (and Higher) Relationships to Binary Relationships'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Converting Ternary (and Higher) Relationships to Binary Relationships'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Attributes on Relationships'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Attributes on Relationships'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Subclasses in the E/R Model'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Subclasses in the E/R as Opposed to the Object-Oriented Model'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Subclasses in the E/R Model'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Subclasses in the E/R Model'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Design Principles'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Design Principles'>
+         26
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

@@ -28,7 +28,7 @@ widgets:      [mathjax, bootstrap]
 1. [The Worlds of Database Systems](ch01-worlds-of-dbms.html)
 2. [The Relational Model of Data](ch02-relational-model.html)
 3. [Design Theory for Relational Databases](ch03-design-theory.html)
-4. High-Level Database Models
+4. [High-Level Database Models](ch04-high-level-models.html)
 <hr>
 5. Algebraic and Logical Query Languages
 6. The Database Language SQL

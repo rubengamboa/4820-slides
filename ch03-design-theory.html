@@ -188,10 +188,10 @@ A & \rightarrow & C \\
 </tbody></table>
 
 <ul>
-<li>Would you agree that \(\text{title}, \text{year} \rightarrow \text{Length}\)?</li>
-<li>How about \(\text{title}, \text{year} \rightarrow \text{Genre}\)?</li>
-<li>How about \(\text{title}, \text{year} \rightarrow \text{StudioName}\)?</li>
-<li>How about \(\text{title}, \text{year} \rightarrow \text{StarName}\)?</li>
+<li>Would you agree that \(\text{title}, \text{year} \rightarrow \text{length}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{genre}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{studioName}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{starName}\)?</li>
 </ul>
 
   </article>
@@ -264,10 +264,10 @@ A & \rightarrow & C \\
 </tbody></table>
 
 <ul>
-<li>Would you agree that \(\text{title}, \text{year} \rightarrow \text{Length}\)?</li>
-<li>How about \(\text{title}, \text{year} \rightarrow \text{Genre}\)?</li>
-<li>How about \(\text{title}, \text{year} \rightarrow \text{StudioName}\)?</li>
-<li>How about \(\text{title}, \text{year} \rightarrow \text{StarName}\)?</li>
+<li>Would you agree that \(\text{title}, \text{year} \rightarrow \text{length}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{genre}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{studioName}\)?</li>
+<li>How about \(\text{title}, \text{year} \rightarrow \text{starName}\)?</li>
 </ul>
 
   </article>
@@ -1300,7 +1300,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
 
 <slide class="" id="slide-42" style="background:;">
   <hgroup>
-    <h2>Boyce-Codd Normal Form</h2>
+    <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
   <article data-timings="">
     <ul>
@@ -1327,7 +1327,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
 
 <slide class="" id="slide-43" style="background:;">
   <hgroup>
-    <h2>Boyce-Codd Normal Form</h2>
+    <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
   <article data-timings="">
     <table><thead>
@@ -1406,7 +1406,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
 
 <slide class="" id="slide-44" style="background:;">
   <hgroup>
-    <h2>Boyce-Codd Normal Form</h2>
+    <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
   <article data-timings="">
     <table><thead>
@@ -1458,7 +1458,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
 
 <slide class="" id="slide-45" style="background:;">
   <hgroup>
-    <h2>Boyce-Codd Normal Form</h2>
+    <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
   <article data-timings="">
     <table><thead>
@@ -1517,7 +1517,1909 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
     <h2>Decomposing into BCNF</h2>
   </hgroup>
   <article data-timings="">
+    <ul>
+<li>We now have a goal</li>
+<li>We want to <strong>turn a schema into BCNF</strong>
+<br><br></li>
+<li>We can do this by <strong>decomposition</strong></li>
+<li>With care, we can decompose any relation \(R\) into a set of relations \(R_1, R_2, \dots, R_k\) such that
+
+<ul>
+<li>the \(R_i\) are all in BCNF</li>
+<li>the data in \(R\) can be reproduced from the data in the \(R_i\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Decomposing into BCNF</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The trick is to use the FDs of \(R\) to guide its decomposition
+<br><br></li>
+<li>Consider <code>Movies(title, year, length, genre, studioName, starName)</code></li>
+<li>The key is <code>title, year, starName</code></li>
+<li>But we have an FD <code>title, year</code> \(\rightarrow\) <code>length, genre, studioName</code></li>
+<li>This is a BCNF violation
+<br><br></li>
+<li>We fix the violation by decomposing <code>Movies</code> into
+
+<ul>
+<li><code>Movies1(title, year, length, genre, studioName)</code> </li>
+<li><code>Movies2(title, year, starName)</code> </li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Decomposing into BCNF</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The FD <code>title, year</code> \(\rightarrow\) <code>length, genre, studioName</code> suggested decomposing
+<code>Movies(title, year, length, genre, studioName, starName)</code> into
+
+<ul>
+<li><code>Movies1(title, year, length, genre, studioName)</code> </li>
+<li><code>Movies2(title, year, starName)</code> 
+<br><br></li>
+</ul></li>
+<li>This follows a simple strategy
+
+<ul>
+<li><code>Movies1</code>: All attributes from \(LHS \rightarrow RHS\)</li>
+<li><code>Movies2</code>: Attributes from \(LHS\) and any attribute not in \(RHS\)
+<br><br></li>
+</ul></li>
+<li>Repeatedly applying this strategy guarantees that we&#39;ll end up with a schema in BCNF</li>
+<li><strong>Judicious</strong> use of this strategy ensures that we end up with a reasonable schema, 
+i.e., one with a small number of relations</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Decomposing into BCNF</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>INPUT: A relation \(R\) with attributes \(\mathcal{A}\) and a set of FDs \(S\)</p>
+
+<p>OUTPUT: A decomposition of \(R\) into relations \(R_1, R_2, \dots, R_n\), all of which are in BCNF</p>
+
+<ol>
+<li>If \(R\) is in BCNF, return \(\{R\}\)</li>
+<li>Let \(X \rightarrow Y\) be a FD in \(S\) that violates BCNF</li>
+<li>Decompose \(R\) into \(R_1(X^+)\) and \(R_2(X, \mathcal{A}-X^+)\)</li>
+<li>Let \(S_1\) be the projection of the FDs \(S\) for \(R_1\)</li>
+<li>Let \(S_2\) be the projection of the FDs \(S\) for \(R_2\)</li>
+<li>Recursively decompose \(R_1\) with \(S_1\) into a set of BCNF relations</li>
+<li>Recursively decompose \(R_1\) with \(S_1\) into a set of BCNF relations</li>
+<li>Return the union of the decompositions of \(R_1\) and \(R_2\)</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Decomposing into BCNF</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Why does this algorithm terminate?</li>
+</ul>
+
+<ul class = "build incremental">
+<li>When it calls itself recursively after decomposing on \(X \rightarrow Y\), it always does with a smaller relation
+
+<ul>
+<li>\(R_1(X^+)\) has fewer attributes than \(R\); otherwise, \(X\) would be a key for \(R\) and there is no BCNF violation</li>
+<li>\(R_2(X, \mathcal{A}-X^+)\) also has fewer attributes than \(R\), since \(Y\in X^+\) but \(Y \not\in X\)</li>
+</ul></li>
+<li>And when we get to binary relations, we&#39;re done</li>
+<li>All binary relations are in BCNF!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h1>Consequences of Decomposition into BCNF</h1>
+  </hgroup>
+  <article data-timings="">
     
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>(Wanted) Properties of BCNF Decomposition</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We start with a relation \(R\) and decompose it into \(R_1, R_2, \dots, R_n\), all of which are in BCNF
+<br><br></li>
+<li>What properties do we want of this decomposition?
+<br><br></li>
+</ul>
+
+<ol>
+<li><strong>No anomalies</strong> in the \(R_i\)</li>
+<li><strong>Recoverability of information</strong>, meaning that we can recreate \(R\) from the \(R_i\)</li>
+<li><strong>Preservation of dependencies</strong>, meaning that any FD about \(R\) somehow translates into FDs for some of the \(R_i\)
+<br><br></li>
+</ol>
+
+<ul class = "build incremental">
+<li>With BCNF decomposition, we get the first two, but not necessarily the third</li>
+<li>Actually, you can&#39;t (always) get all three properties with any decomposition strategy!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h2>No Anomalies: Redundancy</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider any of the \(R_i\)</li>
+<li>It&#39;s in BCNF</li>
+<li>Let&#39;s say the key is \(A\), and \(X\) and \(Y\) are two <strong>other</strong> attributes</li>
+<li>Consider any row of \(R_i\)</li>
+<li>It is possible to have another row with the same value of \(X\) but a different value of \(Y\)</li>
+<li>This is because \(X \rightarrow Y\) cannot be a FD</li>
+<li>So there are no redundancies</li>
+<li>The same value may appear in multiple cells, but <strong>not because it has to</strong></li>
+<li>I.e., any repeated values are there because they are providing <strong>new information</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>No Anomalies: Redundancy</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>E.g., consider <code>Student(name, major, address, college)</code> with FDs</p>
+
+<ul>
+<li><code>name</code> is a key</li>
+<li><code>major</code> \(\rightarrow\) <code>college</code>
+<br><br></li>
+</ul></li>
+<li><p>We decompose it into</p>
+
+<ul>
+<li><code>Student1(major, college)</code></li>
+<li><code>Student2(name, major, address)</code>
+<br><br></li>
+</ul></li>
+<li><p>There may be duplicate entries in <code>address</code></p></li>
+<li><p>But these are not <strong>redundant</strong> entries</p></li>
+<li><p>They simply indicate more than one student living in the same place</p></li>
+<li><p>The same goes for duplicate entries in the <code>major</code> column</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>No Anomalies: Update</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Because there are no redundancies, it is impossible to update a value in one place but forget to do so in some other place
+<br><br></li>
+<li>The only exception to this is in <strong>keys</strong></li>
+<li>If you have up update a key, you must update it in every place it appears
+<br><br></li>
+<li>This is yet one more reason why <strong>synthetic keys are best</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>No Anomalies: Deletion</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>If you delete a tuple, may you lose more information than necessary?
+<br><br></li>
+<li>Well, this can still happen
+<br><br></li>
+<li>Suppose you want to delete Carrie Fisher&#39;s phone number</li>
+<li>Doing so may also delete her address, etc.
+<br><br></li>
+<li>I.e., if \(R(A,B,C)\) and \(A \rightarrow B, C\), if you delete the row because the value of \(C\) is wrong, you are losing the
+information about \(B\)</li>
+<li>The answer, of course, is to write a NULL into the \(C\) column, instead of deleting the entire row</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Recoverability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>How do we get \(R\) back from the \(R_i\)
+<br><br></li>
+<li>The answer is to consider \(R_1 \bowtie R_2 \bowtie \dots \bowtie R_n\)
+<br><br></li>
+<li>That looks plausible, but there are two questions
+
+<ul>
+<li>If a tuple is in \(R\), is it also in \(R_1 \bowtie R_2 \bowtie \dots \bowtie R_n\)?</li>
+<li>If a tuple is in \(R_1 \bowtie R_2 \bowtie \dots \bowtie R_n\), is it also in \(R\)?</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>Recoverability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we start with \(R(A,B,C)\) and the FD \(B \rightarrow C\)</li>
+<li>Then we split \(R\) into
+
+<ul>
+<li>\(R(A, B)\)</li>
+<li>\(R(B, C)\)</li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Now suppose \((a, b, c) \in R\)</li>
+<li>This means that \((a, b) \in R_1\) and \((b, c) \in R_2\)</li>
+<li><p>But then, this also means that \((a, b, c) \in R_1 \bowtie R_2\)</p></li>
+<li><p>In general, any tuple in \(R\) is also in \(R_1 \bowtie R_2 \bowtie \dots \bowtie R_n\)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h2>Recoverability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we start with \(R(A,B,C)\) and the FD \(B \rightarrow C\)</li>
+<li>Then we split \(R\) into
+
+<ul>
+<li>\(R(A, B)\)</li>
+<li>\(R(B, C)\)</li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Now suppose \((a, b, c) \in R\) and \((d, b, e) \in R\)</li>
+<li>This means that \((a, b)\) and \((d, b)\) are in \(R_1\), and \((b, c)\) and \((b, e)\) are in R_2$</li>
+<li>But then, this also means that all of these are in \(R_1 \bowtie R_2\):
+
+<ul>
+<li>\((a, b, c)\)</li>
+<li>\((d, b, e)\)</li>
+<li>\((a, b, e)\)</li>
+<li>\((d, b, c)\)</li>
+</ul></li>
+<li>Are all of these in \(R\)?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h2>Recoverability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Are all of these in \(R\)?
+
+<ul>
+<li>\((a, b, c)\)</li>
+<li>\((d, b, e)\)</li>
+<li>\((a, b, e)\)</li>
+<li>\((d, b, c)\)</li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>The answer is yes!</li>
+<li>Since \(B \rightarrow C\), it must be that \(c = e\)</li>
+<li>So there are only two tuples, not four:
+
+<ul>
+<li>\((a, b, c)\), which is the same as \((a, b, e)\)</li>
+<li>\((d, b, e)\), which is the same as \((d, b, c)\)</li>
+</ul></li>
+<li><p>So all tuples are in \(R\)</p></li>
+<li><p>In general, any tuple in \(R_1 \bowtie R_2 \bowtie \dots \bowtie R_n\) is also in \(R\)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Recoverability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>The FD \(B \rightarrow C\) is crucial</p></li>
+<li><p>Consider the following table, which does not have this FD</p></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>It&#39;s decomposed as follows</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <table><thead>
+<tr>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recoverability is also called a <strong>lossless join</strong>
+<br><br></li>
+<li>This means that when we decompose, the join does not <strong>lose information</strong>
+<br><br></li>
+<li>There is never any danger that we lose some tuple \(t\) that was in the original relation \(R\)</li>
+<li>The real danger is that we get some extra tuples in the join that were not in the original relation \(R\) 
+<br><br></li>
+<li>I.e., without <strong>lossless join</strong>, we get extra tuples</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a relation \(R\) and a set of dependencies \(S\)</li>
+<li>We decompose \(R\) into \(R_1, R_2, \dots, R_n\)</li>
+<li>Is this decomposition lossless?
+<br><br></li>
+<li>One way to answer this question is with the <strong>chase test</strong></li>
+<li>The idea is to use the FDs in S to show that any join of the \(R_i\) must result in a tuple originally in \(R\)</li>
+<li>We do this by considering a tuple in the join and looking at the tuples in \(R\) that must have generated the
+corresponding tuples in the \(R_i\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider \(R(A,B,C,D)\)</li>
+<li>Suppose it&#39;s decomposed into \(R_1(A,D)\), \(R_2(A,C)\), and \(R_3(B, C, D)\)
+<br><br></li>
+<li>Let \((a,b,c,d) \in R\)</li>
+<li>Then \((a,d) \in R_1\), \((a,c) \in R_2\) and \((b,c,d) \in R_3\)</li>
+<li>So \((a,b,c,d) \in R_1 \bowtie R_2 \bowtie R_3\)</li>
+<li>Which means \(R \subset R_1 \bowtie R_2 \bowtie R_3\)
+<br><br></li>
+<li>That&#39;s the easy direction</li>
+<li>The hard part is going the other way</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider \(R(A,B,C,D)\)</li>
+<li>Suppose it&#39;s decomposed into \(R_1(A,D)\), \(R_2(A,C)\), and \(R_3(B, C, D)\)
+<br><br></li>
+<li>Let \((a,b,c,d) \in R_1 \bowtie R_2 \bowtie R_3\)</li>
+<li>Then there must be tuples \(t_1\), \(t_2\), and \(t_3\) in \(R\) that look like the following</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c_1\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b_2\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+<tr>
+<td>\(t_3\)</td>
+<td>\(a_3\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>This is called a <strong>tableaux</strong>, not a table (for obvious reasons)</li>
+<li>Our goal is to show that one of the \(t_i\) is actually \((a,b,c,d)\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Next, we use the FDs to &quot;chase&quot; the symbols in the tableauxa</li>
+<li>The goal is to to see which symbols must be the same, e.g., \(b_1 = b_2 = b\)
+<br><br></li>
+<li>So suppose that the FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
+<br><br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c_1\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b_2\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+<tr>
+<td>\(t_3\)</td>
+<td>\(a_3\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Ah! Since \(A \rightarrow B\), \(b_1 = b_2\)</li>
+<li>We&#39;ll rename and <strong>keep the lowest subscript</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
+<br><br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c_1\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+<tr>
+<td>\(t_3\)</td>
+<td>\(a_3\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Ah! Since \(B \rightarrow C\), \(c_1 = c\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
+<br><br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+<tr>
+<td>\(t_3\)</td>
+<td>\(a_3\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>And since \(C, D \rightarrow A\), \(a_3 = a\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
+<br><br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+<tr>
+<td>\(t_3\)</td>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Back to \(A \rightarrow B\), \(b_1 = b\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
+<br><br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+<tr>
+<td>\(t_3\)</td>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>We can get rid of one of the duplicate rows</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>The Chase Test for Lossless Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
+<br><br></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(t_i \in R\)</th>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(t_1\)</td>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+</tr>
+<tr>
+<td>\(t_2\)</td>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d_2\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>And now we&#39;re done</li>
+<li>Notice that \(t_1\) is exactly \((a,b,c,d)\)</li>
+<li>We started with a tuple in \(R_1 \bowtie R_2 \bowtie R_3\) and shown that it must also be in \(R\)</li>
+<li>So \(R_1 \bowtie R_2 \bowtie R_3 \subset R\)</li>
+<li>And therefore \(R_1 \bowtie R_2 \bowtie R_3 = R\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>Dependency Preservation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have \(R(A, B, C, D)\) with FDs
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(C \rightarrow D\)</li>
+<li>\(D \rightarrow A\)</li>
+</ul></li>
+<li>First, notice that \(A, B\) is a key, and that the other FDs violate BCNF
+<br><br></li>
+<li>We decompose \(R\) using \(C \rightarrow D\) into
+
+<ul>
+<li>\(R_1(A,B,C)\)</li>
+<li>\(R_2(C,D)\)</li>
+</ul></li>
+<li>In this case, we do not have to decompose any more, since both relations are in BCNF
+<br><br></li>
+<li>But, we lost the FD \(D \rightarrow A\)!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h1>Third Normal Form (3NF)</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h2>Third Normal Form (3NF)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In practice, decomposition into BCNF is
+
+<ul>
+<li>free of redundancy anomalies</li>
+<li>mostly free of other anomalies</li>
+<li>guaranteed lossless</li>
+<li>usually dependency-preserving
+<br><br></li>
+</ul></li>
+<li>But what about those few times when it is not dependency-preserving
+<br><br></li>
+<li>A solution is to decompose into a weaker normal form, called <strong>Third Normal Form</strong> or <strong>3NF</strong>
+<br><br></li>
+<li>Note: 3NF came first, so interview questions are often about 3NF</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
+    <h2>Third Normal Form (3NF)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A relation \(R\) is in third normal form if for every non-trivial FD \(A_1, A_2, \dots, A_n \rightarrow B_1, B_2, \dots B_m\)
+
+<ul>
+<li>Either \(\{A_1, A_2, \dots, A_n\}\) is a <strong>superkey</strong></li>
+<li>Or each of the \(B_i\) is equal to one of the \(A_j\) or is part of a <strong>key</strong> (not necessarily the same key)
+<br><br></li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Notice that the first condition is equivalent to BCNF</li>
+<li>So any relation in \(BCNF\) is automatically in \(3NF\)</li>
+<li>But there are \(3NF\) relations that are not in \(BCNF\)</li>
+<li>That&#39;s what we mean when we say 3NF is a weaker normal form than BCNF</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-76" style="background:;">
+  <hgroup>
+    <h2>Third Normal Form Guarantees</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We will now show how to decompose a relation into 3NF
+<br><br></li>
+<li>In practice, decomposition into 3NF is
+
+<ul>
+<li>not necessarily free of redundancy anomalies</li>
+<li>mostly free of other anomalies</li>
+<li>guaranteed lossless</li>
+<li>guaranteed dependency-preserving</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-77" style="background:;">
+  <hgroup>
+    <h2>Decomposition into 3NF</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>INPUT: A relation \(R\) with attributes \(\mathcal{A}\) and a set of FDs \(S\)</p>
+
+<p>OUTPUT: A decomposition of \(R\) into relations \(R_1, R_2, \dots, R_n\), all of which are in 3NF</p>
+
+<ol>
+<li>Let \(G\) be a minimal basis for the FDs \(S\)</li>
+<li>For each \(X \rightarrow A\) in \(G\), create a relation with attributes \(X, A\)</li>
+<li>If the attributes in one of the resulting relations is a superkey for \(R\), we&#39;re done</li>
+<li>Otherwise, add an extra relation whose schema is a key for \(R\)</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-78" style="background:;">
+  <hgroup>
+    <h2>Example Decomposition into 3NF</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall \(R(A, B, C, D)\) with FDs
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(C \rightarrow D\)</li>
+<li>\(D \rightarrow A\)</li>
+</ul></li>
+<li>Remember that we failed to decompose it into BCNF in a way that was dependency preserving
+<br><br></li>
+<li>Now we&#39;ll decompose it into 3NF instead</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-79" style="background:;">
+  <hgroup>
+    <h2>Example Decomposition into 3NF: Step 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We have these FDs
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(C \rightarrow D\)</li>
+<li>\(D \rightarrow A\)
+<br><br></li>
+</ul></li>
+<li>No FD follows from the others, so we cannot remove any of the FDs without changing the constraints
+<br><br></li>
+<li>The only FD with more than one attribute in the left-hand side is \(A, B \rightarrow C\), but removing
+either \(A\) or \(B\) changes the constraints
+<br><br></li>
+<li>We conclude that this set of FDs is already a minimal basis</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-80" style="background:;">
+  <hgroup>
+    <h2>Example Decomposition into 3NF: Step 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We have these FDs
+
+<ul>
+<li>\(A, B \rightarrow C\)</li>
+<li>\(C \rightarrow D\)</li>
+<li>\(D \rightarrow A\)
+<br><br></li>
+</ul></li>
+<li>So we decompose the relation \(R\) into
+
+<ul>
+<li>\(R_1(A, B, C)\)</li>
+<li>\(R_2(C, D)\)</li>
+<li>\(R_3(D, A)\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-81" style="background:;">
+  <hgroup>
+    <h2>Example Decomposition into 3NF: Step 3</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We have a relation from each FD:</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>FD</th>
+<th>Table</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(A, B \rightarrow C\)</td>
+<td>\(R_1(A, B, C)\)</td>
+</tr>
+<tr>
+<td>\(C \rightarrow D\)</td>
+<td>\(R_2(C, D)\)</td>
+</tr>
+<tr>
+<td>\(D \rightarrow A\)</td>
+<td>\(R_3(D, A)\)</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<ul>
+<li>Are we done?</li>
+<li>We have to consider all the keys of \(R\):
+
+<ul>
+<li>\(A, B\)</li>
+<li>\(B, C\)</li>
+<li>\(B, D\)</li>
+</ul></li>
+<li>That means the attributes of \(R_1\) are a superkey for \(R\), so we&#39;re done</li>
+<li>Otherwise, we could have picked any of the key candidates and turned it into \(R_4\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-82" style="background:;">
+  <hgroup>
+    <h2>Why the Decomposition into 3NF Works</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Clearly, all FDs are preserved
+
+<ul>
+<li>Each FD becomes one of the \(R_i\), so no FD can be lost
+<br><br></li>
+</ul></li>
+<li>The decomposition is lossless
+
+<ul>
+<li>Start with a tuple \(t \in R_1 \bowtie R_2 \bowtie \dots R_k\)</li>
+<li>One of the \(R_i\) contains a key for \(R\)</li>
+<li>Let \(t_i\) be the projection of \(t\) onto \(R_i\)</li>
+<li>Now that we know the tuple \(t_i \in R_i\), all the other attributes are determined</li>
+<li>So only one tuple from each of the other \(R_j\) will join with that \(t_i\)</li>
+<li>I.e., no &quot;extra&quot; tuples can sneak in the join</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-83" style="background:;">
+  <hgroup>
+    <h2>Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-84" style="background:;">
+  <hgroup>
+    <h2>Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider the following table</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Street</th>
+<th>City</th>
+<th>Title</th>
+<th>Year</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Obviously there are many redundancies</li>
+<li>But there is no BCNF violation!</li>
+<li>The reason is that there are no non-trivial dependencies</li>
+<li>There are three different real-world entity types here: actors, addresses, and movies</li>
+<li>But none of them functionally determine any of the others</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-85" style="background:;">
+  <hgroup>
+    <h2>Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>So what&#39;s wrong with this table?</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Street</th>
+<th>City</th>
+<th>Title</th>
+<th>Year</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>There are no BCNF violations</li>
+<li>But the street/city entries are totally independent from the title/year entries</li>
+<li>So the table must contain the cross product of street/city and title/year</li>
+<li>To address this problem, we must capture that street/city <strong>is independent of</strong> title/year</li>
+<li>This is called a <strong>multivalued dependency (MVD)</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-86" style="background:;">
+  <hgroup>
+    <h2>Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Name</th>
+<th>Street</th>
+<th>City</th>
+<th>Title</th>
+<th>Year</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>The MVD for this table is \(\text{name} \twoheadrightarrow \text{street}, \text{city}\)
+<br><br></li>
+<li>Suppose there are two tuples \(t\) and \(u\) that agree on name</li>
+<li>Then there must be another tuple \(v\) that
+
+<ol>
+<li>agrees with \(t\) and \(u\) on name</li>
+<li>agrees with \(t\) on street and city</li>
+<li>agrees with \(u\) on title and year</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-87" style="background:;">
+  <hgroup>
+    <h2>Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Name</th>
+<th>Street</th>
+<th>City</th>
+<th>Title</th>
+<th>Year</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Empire Strikes Back</td>
+<td>1980</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>123 Maple St.</td>
+<td>Hollywood</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+<tr>
+<td>Carrie Fisher</td>
+<td>5 Locust Ln.</td>
+<td>Malibu</td>
+<td>Return of the Jedi</td>
+<td>1983</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Consider \(\text{name} \twoheadrightarrow \text{street}, \text{city}\)
+
+<ul>
+<li>\(t = (\text{Carrie Fisher}, \text{123 Maple St.}, \text{Hollywood}, \text{Star Wars}, 1977)\)</li>
+<li>\(u = (\text{Carrie Fisher}, \text{5 Locust Ln.}, \text{Malibu}, \text{Empire Strikes Back}, 1980)\)
+<br><br></li>
+<li>\(v = (\text{Carrie Fisher}, \text{123 Maple St.}, \text{Hollywood}, \text{Empire Strikes Back}, 1980)\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-88" style="background:;">
+  <hgroup>
+    <h2>Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In general, suppose we have a relation \(R\) with attributes \(\mathcal{A}\)</li>
+<li>An MVD \(X \twoheadrightarrow Y\) holds if whenever we find two tuples \(t\) and \(u\) that agree on \(X\), we can find
+another tuple \(v\) that
+
+<ol>
+<li>agrees with \(t\) and \(u\) on \(X\)</li>
+<li>agrees with \(t\) on \(Y\)</li>
+<li>agrees with \(u\) on \(\mathcal{A}-(X \cup Y)\)</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-89" style="background:;">
+  <hgroup>
+    <h2>Rules for Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Trivial MVDs</strong> 
+
+<ul>
+<li>\(A_1, A_2, \dots, A_m \twoheadrightarrow B_1, B_2, \dots, B_n\) holds if
+\(\{B_1, B_2, \dots, B_n\} \subset \{A_1, A_2, \dots, A_m\}\)
+<br><br></li>
+</ul></li>
+<li><strong>Transitive Rule</strong>
+
+<ul>
+<li>If \(A_1, A_2, \dots, A_m \twoheadrightarrow B_1, B_2, \dots, B_n\) and
+\(B_1, B_2, \dots, B_n \twoheadrightarrow C_1, C_2, \dots, C_k\), then
+\(A_1, A_2, \dots, A_m \twoheadrightarrow C_1, C_2, \dots, C_k\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-90" style="background:;">
+  <hgroup>
+    <h2>Caveat on Rules for Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The use of an arrow \(\twoheadrightarrow\) is suggestive, but potentially misleading</li>
+<li>It makes it very natural to believe that, say, the transitive rule holds
+<br><br></li>
+<li>The problem is that our intuition can fail us</li>
+<li>E.g., the splitting rule does not hold!</li>
+<li>\(A \twoheadrightarrow B, C\) does not mean
+
+<ul>
+<li>\(A \twoheadrightarrow B\)</li>
+<li>\(A \twoheadrightarrow C\)</li>
+</ul></li>
+<li>The reason is that \(A \twoheadrightarrow B, C\) says something about the columns \(A\), \(B\), \(C\),
+but also <strong>all other columns</strong> in the relation</li>
+<li>E.g., \(\text{name} \twoheadrightarrow \text{street}, \text{city}\) actually says something about
+the relationship between street/city and title/year</li>
+<li>But \(\text{name} \twoheadrightarrow \text{street}\) says something about the relationship between
+street and city/title/year (which is bogus)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-91" style="background:;">
+  <hgroup>
+    <h2>More Rules for Multivalued Dependencies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>FD Promotion</strong> 
+
+<ul>
+<li>If \(X \rightarrow Y\), then \(X \twoheadrightarrow Y\)</li>
+<li>To see why, choose \(t\) and \(u\), and then let \(v = u\)
+<br><br></li>
+</ul></li>
+<li><strong>Complementation Rule</strong>
+
+<ul>
+<li>If \(X \twoheadrightarrow Y\), then \(X \twoheadrightarrow \mathcal{A} - Y\)</li>
+<li>To see why, consider the symmetry in the definition of \(X \twoheadrightarrow Y\)
+<br><br></li>
+</ul></li>
+<li><strong>Trivial MVDs</strong>
+
+<ul>
+<li>\(X \twoheadrightarrow \mathcal{A}-X\)</li>
+<li>To see why, choose \(t\) and \(u\), and then let \(v = t\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-92" style="background:;">
+  <hgroup>
+    <h2>Fourth Normal Form (4NF)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A relation \(R\) is in <strong>fourth normal form (4NF)</strong> if 
+
+<ul>
+<li>whenever \(A_1, A_2, \dots, A_m \twoheadrightarrow B_1, B_2, \dots, B_n\) is a nontrivial MVD for \(R\),</li>
+<li>\(\{A_1, A_2, \dots, A_m\}\) is a superkey for \(R\)
+<br><br></li>
+</ul></li>
+<li>Since all FDs are also MVDs, any relation in 4NF is also in BCNF, so it&#39;s also in 3NF</li>
+<li>I.e., \(\text{4NF} \subset \text{BCNF} \subset \text{3NF}\)</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Good news!</li>
+<li>The algorithm for decomposing into BCNF just works for decomposing into 4NF</li>
+<li>The only difference is that it decomposes on MVDs that violate 4NF instead of on FDs that violate BCNF</li>
+<li>Minor complication: Projecting MVDs is not as easy as projecting FDs</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-93" style="background:;">
+  <hgroup>
+    <h2>Relationship among Normal Forms</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Property</th>
+<th>3NF</th>
+<th>BCNF</th>
+<th>4NF</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Eliminates FD redundancies</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Eliminates MVD redundancies</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Preserves FDs</td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Preserves MVDs</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-94" style="background:;">
+  <hgroup>
+    <h1>Algorithms for MVDs</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-95" style="background:;">
+  <hgroup>
+    <h2>The Closure Algorithm</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Earlier we discussed the <strong>closure algorithm</strong> that computes \(X^+\)</li>
+<li>We also discussed the <strong>chase algorithm</strong> for proving lossless decompositions
+<br><br></li>
+<li>In fact the chase algorithm is very useful in many other contexts</li>
+<li>We can restate the closure algorithm as a chase starting from a tableux
+
+<ol>
+<li>The tableux starts with two rows that agree on \(X\) and on nothing else</li>
+<li>After the chase, \(A \in X^+\) if and only if the rows agree on attribute \(A\)</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-96" style="background:;">
+  <hgroup>
+    <h2>The Chase Algorithm for MVDs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;ve been using the chase algorithm to find which attributes are equal based on some FD</li>
+<li>But an MVD \(X \twoheadrightarrow Y\) does not tell us that some values must be equal</li>
+<li>Instead, it tells us that if we have two tuples \(t\) and \(u\), we can construct another tuple
+\(v\) with some properties</li>
+<li>Actually, by symmetry, we can construct two tuples \(v\) and \(w\) (by swapping \(t\) and \(u\)),
+but sometimes the resulting tuples will not be new
+<br><br></li>
+<li>So we modify the chase algorithm</li>
+<li>We start with some tuples</li>
+<li>Then we apply MVDs to create more tuples!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-97" style="background:;">
+  <hgroup>
+    <h2>The Chase Algorithm for Inferring MVDs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have some FDs and some MVDs</li>
+<li>We want to decide if the MVD \(X \twoheadrightarrow Y\) is implied by these FDs and MVDs
+<br><br></li>
+<li>Start a tableaux with two tuples
+
+<ul>
+<li>\(t\)</li>
+<li>\(u\), which agrees with \(t\) on \(X\) and nothing else</li>
+</ul></li>
+<li>Repeatedly apply the FDs and MVDs to the tableaux</li>
+<li>If we ever find a tuple that \(v\) that agrees with \(t\) and \(u\) on \(X\), with \(t\) on \(Y\),
+and with \(u\) on \(\mathcal{A}-Y\), then the MVD \(X \twoheadrightarrow Y\) is implied</li>
+<li>If we terminate without finding such a tuple, then \(X \twoheadrightarrow Y\) is not implied</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-98" style="background:;">
+  <hgroup>
+    <h2>The Chase Algorithm for Inferring MVDs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have \(R(A,B,C,D)\) with dependencies
+
+<ul>
+<li>\(A \rightarrow B\)</li>
+<li>\(B \twoheadrightarrow C\)</li>
+</ul></li>
+<li><p>Does \(A \twoheadrightarrow C\) hold?
+<br><br></p></li>
+<li><p>Consider this tableaux</p></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d_1\)</td>
+</tr>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c_2\)</td>
+<td>\(d\)</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Keep doing the chase, and look for the tuple \((a,b,c,d)\)</li>
+<li>Notice how we split the unsubscripted variables \(b\), \(c\), \(d\) among the rows to make
+it easier to see when the new tuple shows up</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-99" style="background:;">
+  <hgroup>
+    <h2>The Chase Algorithm for Inferring MVDs</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+<th>Dependency</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(a\)</td>
+<td>\(b_1\)</td>
+<td>\(c\)</td>
+<td>\(d_1\)</td>
+<td></td>
+</tr>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c_2\)</td>
+<td>\(d\)</td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+<th>Dependency</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d_1\)</td>
+<td>\(A \rightarrow B\)</td>
+</tr>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c_2\)</td>
+<td>\(d\)</td>
+<td></td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>\(A\)</th>
+<th>\(B\)</th>
+<th>\(C\)</th>
+<th>\(D\)</th>
+<th>Dependency</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d_1\)</td>
+<td></td>
+</tr>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c_2\)</td>
+<td>\(d\)</td>
+<td></td>
+</tr>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c_2\)</td>
+<td>\(d_1\)</td>
+<td>\(B \twoheadrightarrow C\)</td>
+</tr>
+<tr>
+<td>\(a\)</td>
+<td>\(b\)</td>
+<td>\(c\)</td>
+<td>\(d\)</td>
+<td>\(B \twoheadrightarrow C\)</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-100" style="background:;">
+  <hgroup>
+    <h2>Projecting MVDs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have some FDs and MVDs for a relation \(R\) with attributes \(\mathcal{A}\)</li>
+<li>Then we project \(R\) into \(R_1\) on some attributes \(\mathcal{B}\)</li>
+<li>How do we know which dependencies hold on \(R_1\)?</li>
+</ul>
+
+<ul class = "build incremental">
+<li>For a given possible MVD (and there are exponentially many), you can construct a
+a tableaux as before</li>
+<li><p>Then run the chase algorithm and see if you find a <strong>row</strong> that supports the MVD</p></li>
+<li><p>The FDs follow the same process</p></li>
+<li><p>Set up a tableaux as in the lossless join process</p></li>
+<li><p>Chase the tableaux, and make sure the final tableaux has the same values in the given 
+<strong>columns</strong></p></li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -1774,25 +3676,25 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=42 title='Boyce-Codd Normal Form'>
+        data-slide=42 title='Boyce-Codd Normal Form (BCNF)'>
          42
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=43 title='Boyce-Codd Normal Form'>
+        data-slide=43 title='Boyce-Codd Normal Form (BCNF)'>
          43
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=44 title='Boyce-Codd Normal Form'>
+        data-slide=44 title='Boyce-Codd Normal Form (BCNF)'>
          44
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=45 title='Boyce-Codd Normal Form'>
+        data-slide=45 title='Boyce-Codd Normal Form (BCNF)'>
          45
       </a>
     </li>
@@ -1800,6 +3702,330 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
       <a href="#" target="_self" rel='tooltip' 
         data-slide=46 title='Decomposing into BCNF'>
          46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Decomposing into BCNF'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Decomposing into BCNF'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Decomposing into BCNF'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Decomposing into BCNF'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Consequences of Decomposition into BCNF'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='(Wanted) Properties of BCNF Decomposition'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='No Anomalies: Redundancy'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='No Anomalies: Redundancy'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='No Anomalies: Update'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='No Anomalies: Deletion'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Recoverability'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='Recoverability'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Recoverability'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Recoverability'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Recoverability'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Lossless Joins'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='The Chase Test for Lossless Joins'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='The Chase Test for Lossless Joins'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='The Chase Test for Lossless Joins'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='The Chase Test for Lossless Joins'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='The Chase Test for Lossless Joins'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='The Chase Test for Lossless Joins'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='The Chase Test for Lossless Joins'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='The Chase Test for Lossless Joins'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='The Chase Test for Lossless Joins'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='Dependency Preservation'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='Third Normal Form (3NF)'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='Third Normal Form (3NF)'>
+         74
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=75 title='Third Normal Form (3NF)'>
+         75
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=76 title='Third Normal Form Guarantees'>
+         76
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=77 title='Decomposition into 3NF'>
+         77
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=78 title='Example Decomposition into 3NF'>
+         78
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=79 title='Example Decomposition into 3NF: Step 1'>
+         79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='Example Decomposition into 3NF: Step 2'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title='Example Decomposition into 3NF: Step 3'>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='Why the Decomposition into 3NF Works'>
+         82
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=83 title='Multivalued Dependencies'>
+         83
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=84 title='Multivalued Dependencies'>
+         84
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=85 title='Multivalued Dependencies'>
+         85
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=86 title='Multivalued Dependencies'>
+         86
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=87 title='Multivalued Dependencies'>
+         87
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=88 title='Multivalued Dependencies'>
+         88
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=89 title='Rules for Multivalued Dependencies'>
+         89
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=90 title='Caveat on Rules for Multivalued Dependencies'>
+         90
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=91 title='More Rules for Multivalued Dependencies'>
+         91
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=92 title='Fourth Normal Form (4NF)'>
+         92
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=93 title='Relationship among Normal Forms'>
+         93
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=94 title='Algorithms for MVDs'>
+         94
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=95 title='The Closure Algorithm'>
+         95
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=96 title='The Chase Algorithm for MVDs'>
+         96
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=97 title='The Chase Algorithm for Inferring MVDs'>
+         97
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=98 title='The Chase Algorithm for Inferring MVDs'>
+         98
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=99 title='The Chase Algorithm for Inferring MVDs'>
+         99
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=100 title='Projecting MVDs'>
+         100
       </a>
     </li>
   </ul>

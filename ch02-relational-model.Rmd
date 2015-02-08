@@ -1162,7 +1162,7 @@ $$\text{Movies} \bowtie_{\text{producerC#} = \text{cert#}} \text{MovieExecs}$$
   MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
   ```
 
-$$\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies} \bowtie_{\text{producerC#} = \text{cert#}} \text{MovieExecs})$$
+$$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies} \bowtie_{\text{producerC#} = \text{cert#}} \text{MovieExecs})$$
 
 ---
 
@@ -1300,7 +1300,7 @@ $$\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movi
 * We've seen a lot of relational operators
 * Actually, we don't need all of them
 * Assuming the schemas $R(x,y)$ and $S(y,z)$:
-  * $R \cup S = R - (R - S)$
+  * $R \cap S = R - (R - S)$
   * $R \bowtie_\theta S = \sigma_\theta (R \times S)$
   * $R \bowtie S = \rho_{(x,y,z)}(\pi_{x,R,y,z}(\sigma(R.y = S.y)(R \times S)))$
 * It turns out we only need $\cup$, $-$, $\pi$, $\sigma$, $\times$, and $\rho$
@@ -1344,8 +1344,8 @@ $$\sigma_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movi
 ## Referential Integrity Constraints
 
 * A **referential integrity** constraints asserts that
-  ** a value appearing in one context
-  ** must also appear in another context
+  * a value appearing in one context
+  * must also appear in another context
   <br><br>
 * E.g., if a person $p$ appears in the `StarsIn.starName`,
   then that person must also appear in `MovieStars.name`
@@ -1400,7 +1400,7 @@ This is far easier to read as follows:
 $$\begin{eqnarray}
   XP  & := & \rho_{\text{M1}}(\text{Movies}) \times \rho_{\text{M2}}(\text{Movies}) \\
   SK  & := & \sigma_{\text{M1.title} = \text{M2.title} \text{ AND } \text{M1.year} = \text{M2.year}}(XP) \\
-  SNK & := & \sigma_{\text{M1.length} \ne \text{M2.length} \text{ AND } \text{M1.genre} \ne \text{M2.genre} \text{ AND } \dots}(SK) \\
+  SNK & := & \sigma_{\text{M1.length} \ne \text{M2.length} \text{ OR } \text{M1.genre} \ne \text{M2.genre} \text{ OR } \dots}(SK) \\
   SNK & = & \emptyset
   \end{eqnarray}
 $$
@@ -1418,7 +1418,7 @@ $$
 
 ## Domain Constraint Example
 
-* Here is a more complex exmple
+* Here is a more complex example
 * Presidents of a movie studio must have a net worth of at least \$10,000,000.
   <br><br>
 * Here's an idea that doesn't work:
@@ -1426,4 +1426,4 @@ $$
 * The problem is that one can be a movie executive without being a studio president!
   <br><br>
 * Here's how we limit the condition to just movie presidents
-  $$\sigma_{\text{netWorth} < 10000000}(\text{MovieExecs} \bowtie_{\text{presC#} = \text{cert#}} \text{MovieExecs}) = \emptyset$$
+  $$\sigma_{\text{netWorth} < 10000000}(\text{Studios} \bowtie_{\text{presC#} = \text{cert#}} \text{MovieExecs}) = \emptyset$$

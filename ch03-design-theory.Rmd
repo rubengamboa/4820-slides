@@ -88,10 +88,10 @@ Gone With the Wind  | 1939   |    231 | drama  | MGM        | Vivien Leigh
 Star Wars           | 1977   |    124 | scifi  | Fox        | Mark Hamill
 Wayne's World       | 1992   |     95 | comedy | Paramount  | Dana Carvey
 
-* Would you agree that $\text{title}, \text{year} \rightarrow \text{Length}$?
-* How about $\text{title}, \text{year} \rightarrow \text{Genre}$?
-* How about $\text{title}, \text{year} \rightarrow \text{StudioName}$?
-* How about $\text{title}, \text{year} \rightarrow \text{StarName}$?
+* Would you agree that $\text{title}, \text{year} \rightarrow \text{length}$?
+* How about $\text{title}, \text{year} \rightarrow \text{genre}$?
+* How about $\text{title}, \text{year} \rightarrow \text{studioName}$?
+* How about $\text{title}, \text{year} \rightarrow \text{starName}$?
 
 ---
 
@@ -106,10 +106,10 @@ Star Wars           | 1977   |    124 | scifi  | Fox        | Harrison Ford
 Wayne's World       | 1992   |     95 | comedy | Paramount  | Dana Carvey
 Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
 
-* Would you agree that $\text{title}, \text{year} \rightarrow \text{Length}$?
-* How about $\text{title}, \text{year} \rightarrow \text{Genre}$?
-* How about $\text{title}, \text{year} \rightarrow \text{StudioName}$?
-* How about $\text{title}, \text{year} \rightarrow \text{StarName}$?
+* Would you agree that $\text{title}, \text{year} \rightarrow \text{length}$?
+* How about $\text{title}, \text{year} \rightarrow \text{genre}$?
+* How about $\text{title}, \text{year} \rightarrow \text{studioName}$?
+* How about $\text{title}, \text{year} \rightarrow \text{starName}$?
 
 ---
 
@@ -624,7 +624,7 @@ Wayne's World      | 1992 | 95      | comedy  | Paramount
 
 ---
 
-## Boyce-Codd Normal Form
+## Boyce-Codd Normal Form (BCNF) 
 
 * **Boyce-Codd Normal Form** (BCNF) is a condition that can tell us when a schema does not suffer from anomalies
   <br><br>
@@ -639,7 +639,7 @@ Wayne's World      | 1992 | 95      | comedy  | Paramount
 
 ---
 
-## Boyce-Codd Normal Form
+## Boyce-Codd Normal Form (BCNF)
 
 Title              | Year | Length  | Genre   | StudioName      | StarName
 -------------------|------|---------|---------|-----------------|---------------
@@ -660,7 +660,7 @@ Wayne's World      | 1992 | 95      | comedy  | Paramount       | Mike Meyers
 
 ---
 
-## Boyce-Codd Normal Form
+## Boyce-Codd Normal Form (BCNF)
 
 Title              | Year | Length  | Genre   | StudioName 
 -------------------|------|---------|---------|------------
@@ -679,7 +679,7 @@ Wayne's World      | 1992 | 95      | comedy  | Paramount
 
 ---
 
-## Boyce-Codd Normal Form
+## Boyce-Codd Normal Form (BCNF)
 
 Title              | Year | StarName
 -------------------|------|---------------
@@ -701,3 +701,862 @@ Wayne's World      | 1992 | Mike Meyers
 
 ## Decomposing into BCNF
 
+* We now have a goal
+* We want to **turn a schema into BCNF**
+  <br><br>
+* We can do this by **decomposition**
+* With care, we can decompose any relation $R$ into a set of relations $R_1, R_2, \dots, R_k$ such that
+  * the $R_i$ are all in BCNF
+  * the data in $R$ can be reproduced from the data in the $R_i$
+
+---
+
+## Decomposing into BCNF
+
+* The trick is to use the FDs of $R$ to guide its decomposition
+  <br><br>
+* Consider `Movies(title, year, length, genre, studioName, starName)`
+* The key is `title, year, starName`
+* But we have an FD `title, year` $\rightarrow$ `length, genre, studioName`
+* This is a BCNF violation
+  <br><br>
+* We fix the violation by decomposing `Movies` into
+  * `Movies1(title, year, length, genre, studioName)` 
+  * `Movies2(title, year, starName)` 
+
+---
+
+## Decomposing into BCNF
+
+* The FD `title, year` $\rightarrow$ `length, genre, studioName` suggested decomposing
+  `Movies(title, year, length, genre, studioName, starName)` into
+  * `Movies1(title, year, length, genre, studioName)` 
+  * `Movies2(title, year, starName)` 
+  <br><br>
+* This follows a simple strategy
+    * `Movies1`: All attributes from $LHS \rightarrow RHS$
+    * `Movies2`: Attributes from $LHS$ and any attribute not in $RHS$
+    <br><br>
+* Repeatedly applying this strategy guarantees that we'll end up with a schema in BCNF
+* **Judicious** use of this strategy ensures that we end up with a reasonable schema, 
+  i.e., one with a small number of relations
+
+---
+
+## Decomposing into BCNF
+
+INPUT: A relation $R$ with attributes $\mathcal{A}$ and a set of FDs $S$
+
+OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of which are in BCNF
+
+1. If $R$ is in BCNF, return $\{R\}$
+2. Let $X \rightarrow Y$ be a FD in $S$ that violates BCNF
+3. Decompose $R$ into $R_1(X^+)$ and $R_2(X, \mathcal{A}-X^+)$
+4. Let $S_1$ be the projection of the FDs $S$ for $R_1$
+5. Let $S_2$ be the projection of the FDs $S$ for $R_2$
+6. Recursively decompose $R_1$ with $S_1$ into a set of BCNF relations
+7. Recursively decompose $R_1$ with $S_1$ into a set of BCNF relations
+8. Return the union of the decompositions of $R_1$ and $R_2$
+
+---
+
+## Decomposing into BCNF
+
+* Why does this algorithm terminate?
+
+> * When it calls itself recursively after decomposing on $X \rightarrow Y$, it always does with a smaller relation
+  * $R_1(X^+)$ has fewer attributes than $R$; otherwise, $X$ would be a key for $R$ and there is no BCNF violation
+  * $R_2(X, \mathcal{A}-X^+)$ also has fewer attributes than $R$, since $Y\in X^+$ but $Y \not\in X$
+* And when we get to binary relations, we're done
+* All binary relations are in BCNF!
+
+---
+
+# Consequences of Decomposition into BCNF
+
+---
+
+## (Wanted) Properties of BCNF Decomposition
+
+* We start with a relation $R$ and decompose it into $R_1, R_2, \dots, R_n$, all of which are in BCNF
+  <br><br>
+* What properties do we want of this decomposition?
+  <br><br>
+
+1. **No anomalies** in the $R_i$
+2. **Recoverability of information**, meaning that we can recreate $R$ from the $R_i$
+3. **Preservation of dependencies**, meaning that any FD about $R$ somehow translates into FDs for some of the $R_i$
+   <br><br>
+
+> * With BCNF decomposition, we get the first two, but not necessarily the third
+* Actually, you can't (always) get all three properties with any decomposition strategy!
+
+---
+
+## No Anomalies: Redundancy
+
+* Consider any of the $R_i$
+* It's in BCNF
+* Let's say the key is $A$, and $X$ and $Y$ are two **other** attributes
+* Consider any row of $R_i$
+* It is possible to have another row with the same value of $X$ but a different value of $Y$
+* This is because $X \rightarrow Y$ cannot be a FD
+* So there are no redundancies
+* The same value may appear in multiple cells, but **not because it has to**
+* I.e., any repeated values are there because they are providing **new information**
+
+---
+
+## No Anomalies: Redundancy
+
+* E.g., consider `Student(name, major, address, college)` with FDs
+  * `name` is a key
+  * `major` $\rightarrow$ `college`
+  <br><br>
+
+* We decompose it into
+  * `Student1(major, college)`
+  * `Student2(name, major, address)`
+  <br><br>
+
+* There may be duplicate entries in `address`
+* But these are not **redundant** entries
+* They simply indicate more than one student living in the same place
+* The same goes for duplicate entries in the `major` column
+
+---
+
+## No Anomalies: Update
+
+* Because there are no redundancies, it is impossible to update a value in one place but forget to do so in some other place
+  <br><br>
+* The only exception to this is in **keys**
+* If you have up update a key, you must update it in every place it appears
+  <br><br>
+* This is yet one more reason why **synthetic keys are best**
+
+---
+
+## No Anomalies: Deletion
+
+* If you delete a tuple, may you lose more information than necessary?
+  <br><br>
+* Well, this can still happen
+  <br><br>
+* Suppose you want to delete Carrie Fisher's phone number
+* Doing so may also delete her address, etc.
+  <br><br>
+* I.e., if $R(A,B,C)$ and $A \rightarrow B, C$, if you delete the row because the value of $C$ is wrong, you are losing the
+  information about $B$
+* The answer, of course, is to write a NULL into the $C$ column, instead of deleting the entire row
+
+---
+
+## Recoverability
+
+* How do we get $R$ back from the $R_i$
+  <br><br>
+* The answer is to consider $R_1 \bowtie R_2 \bowtie \dots \bowtie R_n$
+  <br><br>
+* That looks plausible, but there are two questions
+  * If a tuple is in $R$, is it also in $R_1 \bowtie R_2 \bowtie \dots \bowtie R_n$?
+  * If a tuple is in $R_1 \bowtie R_2 \bowtie \dots \bowtie R_n$, is it also in $R$?
+
+
+---
+
+## Recoverability
+
+* Suppose we start with $R(A,B,C)$ and the FD $B \rightarrow C$
+* Then we split $R$ into
+  * $R(A, B)$
+  * $R(B, C)$
+
+> * Now suppose $(a, b, c) \in R$
+* This means that $(a, b) \in R_1$ and $(b, c) \in R_2$
+* But then, this also means that $(a, b, c) \in R_1 \bowtie R_2$
+
+> * In general, any tuple in $R$ is also in $R_1 \bowtie R_2 \bowtie \dots \bowtie R_n$
+
+---
+
+## Recoverability
+
+* Suppose we start with $R(A,B,C)$ and the FD $B \rightarrow C$
+* Then we split $R$ into
+  * $R(A, B)$
+  * $R(B, C)$
+
+> * Now suppose $(a, b, c) \in R$ and $(d, b, e) \in R$
+* This means that $(a, b)$ and $(d, b)$ are in $R_1$, and $(b, c)$ and $(b, e)$ are in R_2$
+* But then, this also means that all of these are in $R_1 \bowtie R_2$:
+  * $(a, b, c)$
+  * $(d, b, e)$
+  * $(a, b, e)$
+  * $(d, b, c)$
+* Are all of these in $R$?
+
+---
+
+## Recoverability
+
+* Are all of these in $R$?
+  * $(a, b, c)$
+  * $(d, b, e)$
+  * $(a, b, e)$
+  * $(d, b, c)$
+
+> * The answer is yes!
+* Since $B \rightarrow C$, it must be that $c = e$
+* So there are only two tuples, not four:
+  * $(a, b, c)$, which is the same as $(a, b, e)$
+  * $(d, b, e)$, which is the same as $(d, b, c)$
+* So all tuples are in $R$
+
+> * In general, any tuple in $R_1 \bowtie R_2 \bowtie \dots \bowtie R_n$ is also in $R$
+
+---&twocol
+
+## Recoverability
+
+* The FD $B \rightarrow C$ is crucial
+
+* Consider the following table, which does not have this FD
+
+A  | B | C
+---|---|---
+1  | 2 | 3
+4  | 2 | 5
+6  | 7 | 8
+
+<br>
+
+* It's decomposed as follows
+
+
+*** =left
+
+A  | B 
+---|---
+1  | 2 
+4  | 2 
+6  | 7
+
+*** =right
+
+B  | C
+---|---
+2  | 3
+2  | 5
+7  | 8
+
+---
+
+## Lossless Joins
+
+* Recoverability is also called a **lossless join**
+  <br><br>
+* This means that when we decompose, the join does not **lose information**
+  <br><br>
+* There is never any danger that we lose some tuple $t$ that was in the original relation $R$
+* The real danger is that we get some extra tuples in the join that were not in the original relation $R$ 
+  <br><br>
+* I.e., without **lossless join**, we get extra tuples
+
+---
+
+## The Chase Test for Lossless Joins
+
+* Suppose we have a relation $R$ and a set of dependencies $S$
+* We decompose $R$ into $R_1, R_2, \dots, R_n$
+* Is this decomposition lossless?
+  <br><br>
+* One way to answer this question is with the **chase test**
+* The idea is to use the FDs in S to show that any join of the $R_i$ must result in a tuple originally in $R$
+* We do this by considering a tuple in the join and looking at the tuples in $R$ that must have generated the
+  corresponding tuples in the $R_i$
+
+---
+
+## The Chase Test for Lossless Joins
+
+* Consider $R(A,B,C,D)$
+* Suppose it's decomposed into $R_1(A,D)$, $R_2(A,C)$, and $R_3(B, C, D)$
+  <br><br>
+* Let $(a,b,c,d) \in R$
+* Then $(a,d) \in R_1$, $(a,c) \in R_2$ and $(b,c,d) \in R_3$
+* So $(a,b,c,d) \in R_1 \bowtie R_2 \bowtie R_3$
+* Which means $R \subset R_1 \bowtie R_2 \bowtie R_3$
+  <br><br>
+* That's the easy direction
+* The hard part is going the other way
+
+---
+
+## The Chase Test for Lossless Joins
+
+* Consider $R(A,B,C,D)$
+* Suppose it's decomposed into $R_1(A,D)$, $R_2(A,C)$, and $R_3(B, C, D)$
+  <br><br>
+* Let $(a,b,c,d) \in R_1 \bowtie R_2 \bowtie R_3$
+* Then there must be tuples $t_1$, $t_2$, and $t_3$ in $R$ that look like the following
+
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b_1$ | $c_1$ | $d$
+$t_2$       | $a$   | $b_2$ | $c$   | $d_2$
+$t_3$       | $a_3$ | $b$   | $c$   | $d$
+
+<br>
+
+* This is called a **tableaux**, not a table (for obvious reasons)
+* Our goal is to show that one of the $t_i$ is actually $(a,b,c,d)$
+
+---
+
+## The Chase Test for Lossless Joins
+
+* Next, we use the FDs to "chase" the symbols in the tableauxa
+* The goal is to to see which symbols must be the same, e.g., $b_1 = b_2 = b$
+  <br><br>
+* So suppose that the FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
+  <br><br>
+  
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b_1$ | $c_1$ | $d$
+$t_2$       | $a$   | $b_2$ | $c$   | $d_2$
+$t_3$       | $a_3$ | $b$   | $c$   | $d$
+
+<br>
+
+* Ah! Since $A \rightarrow B$, $b_1 = b_2$
+* We'll rename and **keep the lowest subscript**
+
+---
+
+## The Chase Test for Lossless Joins
+
+* The FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
+  <br><br>
+  
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b_1$ | $c_1$ | $d$
+$t_2$       | $a$   | $b_1$ | $c$   | $d_2$
+$t_3$       | $a_3$ | $b$   | $c$   | $d$
+
+<br>
+
+* Ah! Since $B \rightarrow C$, $c_1 = c$
+
+---
+
+## The Chase Test for Lossless Joins
+
+* The FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
+  <br><br>
+
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b_1$ | $c$   | $d$
+$t_2$       | $a$   | $b_1$ | $c$   | $d_2$
+$t_3$       | $a_3$ | $b$   | $c$   | $d$
+
+<br>
+
+* And since $C, D \rightarrow A$, $a_3 = a$
+
+
+---
+
+## The Chase Test for Lossless Joins
+
+* The FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
+  <br><br>
+
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b_1$ | $c$   | $d$
+$t_2$       | $a$   | $b_1$ | $c$   | $d_2$
+$t_3$       | $a$   | $b$   | $c$   | $d$
+
+<br>
+
+* Back to $A \rightarrow B$, $b_1 = b$
+
+---
+
+## The Chase Test for Lossless Joins
+
+* The FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
+  <br><br>
+
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b$   | $c$   | $d$
+$t_2$       | $a$   | $b$   | $c$   | $d_2$
+$t_3$       | $a$   | $b$   | $c$   | $d$
+
+<br>
+
+* We can get rid of one of the duplicate rows
+
+---
+
+## The Chase Test for Lossless Joins
+
+* The FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
+  <br><br>
+
+$t_i \in R$ | $A$   | $B$   | $C$   | $D$
+------------|-------|-------|-------|-------
+$t_1$       | $a$   | $b$   | $c$   | $d$
+$t_2$       | $a$   | $b$   | $c$   | $d_2$
+
+<br>
+
+* And now we're done
+* Notice that $t_1$ is exactly $(a,b,c,d)$
+* We started with a tuple in $R_1 \bowtie R_2 \bowtie R_3$ and shown that it must also be in $R$
+* So $R_1 \bowtie R_2 \bowtie R_3 \subset R$
+* And therefore $R_1 \bowtie R_2 \bowtie R_3 = R$
+
+---
+
+## Dependency Preservation
+
+* Suppose we have $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $C \rightarrow D$
+  * $D \rightarrow A$
+* First, notice that $A, B$ is a key, and that the other FDs violate BCNF
+  <br><br>
+* We decompose $R$ using $C \rightarrow D$ into
+  * $R_1(A,B,C)$
+  * $R_2(C,D)$
+* In this case, we do not have to decompose any more, since both relations are in BCNF
+  <br><br>
+* But, we lost the FD $D \rightarrow A$!
+
+---
+
+# Third Normal Form (3NF)
+
+---
+
+## Third Normal Form (3NF)
+
+* In practice, decomposition into BCNF is
+  * free of redundancy anomalies
+  * mostly free of other anomalies
+  * guaranteed lossless
+  * usually dependency-preserving
+  <br><br>
+* But what about those few times when it is not dependency-preserving
+  <br><br>
+* A solution is to decompose into a weaker normal form, called **Third Normal Form** or **3NF**
+  <br><br>
+* Note: 3NF came first, so interview questions are often about 3NF
+
+---
+
+## Third Normal Form (3NF)
+
+* A relation $R$ is in third normal form if for every non-trivial FD $A_1, A_2, \dots, A_n \rightarrow B_1, B_2, \dots B_m$
+  * Either $\{A_1, A_2, \dots, A_n\}$ is a **superkey**
+  * Or each of the $B_i$ is equal to one of the $A_j$ or is part of a **key** (not necessarily the same key)
+  <br><br>
+
+> * Notice that the first condition is equivalent to BCNF
+* So any relation in $BCNF$ is automatically in $3NF$
+* But there are $3NF$ relations that are not in $BCNF$
+* That's what we mean when we say 3NF is a weaker normal form than BCNF
+
+---
+
+## Third Normal Form Guarantees
+
+* We will now show how to decompose a relation into 3NF
+  <br><br>
+* In practice, decomposition into 3NF is
+  * not necessarily free of redundancy anomalies
+  * mostly free of other anomalies
+  * guaranteed lossless
+  * guaranteed dependency-preserving
+
+---
+
+## Decomposition into 3NF
+
+INPUT: A relation $R$ with attributes $\mathcal{A}$ and a set of FDs $S$
+
+OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of which are in 3NF
+
+1. Let $G$ be a minimal basis for the FDs $S$
+2. For each $X \rightarrow A$ in $G$, create a relation with attributes $X, A$
+3. If the attributes in one of the resulting relations is a superkey for $R$, we're done
+4. Otherwise, add an extra relation whose schema is a key for $R$
+
+---
+
+## Example Decomposition into 3NF
+
+* Recall $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $C \rightarrow D$
+  * $D \rightarrow A$
+* Remember that we failed to decompose it into BCNF in a way that was dependency preserving
+  <br><br>
+* Now we'll decompose it into 3NF instead
+
+---
+
+## Example Decomposition into 3NF: Step 1
+
+* We have these FDs
+  * $A, B \rightarrow C$
+  * $C \rightarrow D$
+  * $D \rightarrow A$
+  <br><br>
+* No FD follows from the others, so we cannot remove any of the FDs without changing the constraints
+  <br><br>
+* The only FD with more than one attribute in the left-hand side is $A, B \rightarrow C$, but removing
+  either $A$ or $B$ changes the constraints
+  <br><br>
+* We conclude that this set of FDs is already a minimal basis
+
+---
+
+## Example Decomposition into 3NF: Step 2
+
+* We have these FDs
+  * $A, B \rightarrow C$
+  * $C \rightarrow D$
+  * $D \rightarrow A$
+  <br><br>
+* So we decompose the relation $R$ into
+  * $R_1(A, B, C)$
+  * $R_2(C, D)$
+  * $R_3(D, A)$
+
+---
+
+## Example Decomposition into 3NF: Step 3
+
+* We have a relation from each FD:
+
+FD                    | Table
+----------------------|------------------
+$A, B \rightarrow C$  | $R_1(A, B, C)$
+$C \rightarrow D$     | $R_2(C, D)$
+$D \rightarrow A$     | $R_3(D, A)$
+
+<br>
+  
+* Are we done?
+* We have to consider all the keys of $R$:
+  * $A, B$
+  * $B, C$
+  * $B, D$
+* That means the attributes of $R_1$ are a superkey for $R$, so we're done
+* Otherwise, we could have picked any of the key candidates and turned it into $R_4$
+
+---
+
+## Why the Decomposition into 3NF Works
+
+* Clearly, all FDs are preserved
+  * Each FD becomes one of the $R_i$, so no FD can be lost
+  <br><br>
+* The decomposition is lossless
+  * Start with a tuple $t \in R_1 \bowtie R_2 \bowtie \dots R_k$
+  * One of the $R_i$ contains a key for $R$
+  * Let $t_i$ be the projection of $t$ onto $R_i$
+  * Now that we know the tuple $t_i \in R_i$, all the other attributes are determined
+  * So only one tuple from each of the other $R_j$ will join with that $t_i$
+  * I.e., no "extra" tuples can sneak in the join
+
+---
+
+## Multivalued Dependencies
+
+----
+
+## Multivalued Dependencies
+
+* Consider the following table
+
+Name          | Street          | City          | Title               | Year      
+--------------|-----------------|---------------|---------------------|-----------
+Carrie Fisher | 123 Maple St.   | Hollywood     | Star Wars           | 1977
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Star Wars           | 1977
+Carrie Fisher | 123 Maple St.   | Hollywood     | Empire Strikes Back | 1980
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Empire Strikes Back | 1980
+Carrie Fisher | 123 Maple St.   | Hollywood     | Return of the Jedi  | 1983
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Return of the Jedi  | 1983
+
+* Obviously there are many redundancies
+* But there is no BCNF violation!
+* The reason is that there are no non-trivial dependencies
+* There are three different real-world entity types here: actors, addresses, and movies
+* But none of them functionally determine any of the others
+
+----
+
+## Multivalued Dependencies
+
+* So what's wrong with this table?
+
+Name          | Street          | City          | Title               | Year      
+--------------|-----------------|---------------|---------------------|-----------
+Carrie Fisher | 123 Maple St.   | Hollywood     | Star Wars           | 1977
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Star Wars           | 1977
+Carrie Fisher | 123 Maple St.   | Hollywood     | Empire Strikes Back | 1980
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Empire Strikes Back | 1980
+Carrie Fisher | 123 Maple St.   | Hollywood     | Return of the Jedi  | 1983
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Return of the Jedi  | 1983
+
+* There are no BCNF violations
+* But the street/city entries are totally independent from the title/year entries
+* So the table must contain the cross product of street/city and title/year
+* To address this problem, we must capture that street/city **is independent of** title/year
+* This is called a **multivalued dependency (MVD)**
+
+---
+
+## Multivalued Dependencies
+
+Name          | Street          | City          | Title               | Year      
+--------------|-----------------|---------------|---------------------|-----------
+Carrie Fisher | 123 Maple St.   | Hollywood     | Star Wars           | 1977
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Star Wars           | 1977
+Carrie Fisher | 123 Maple St.   | Hollywood     | Empire Strikes Back | 1980
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Empire Strikes Back | 1980
+Carrie Fisher | 123 Maple St.   | Hollywood     | Return of the Jedi  | 1983
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Return of the Jedi  | 1983
+
+* The MVD for this table is $\text{name} \twoheadrightarrow \text{street}, \text{city}$
+  <br><br>
+* Suppose there are two tuples $t$ and $u$ that agree on name
+* Then there must be another tuple $v$ that
+  1. agrees with $t$ and $u$ on name
+  2. agrees with $t$ on street and city
+  3. agrees with $u$ on title and year
+    
+
+---
+
+## Multivalued Dependencies
+
+Name          | Street          | City          | Title               | Year      
+--------------|-----------------|---------------|---------------------|-----------
+Carrie Fisher | 123 Maple St.   | Hollywood     | Star Wars           | 1977
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Star Wars           | 1977
+Carrie Fisher | 123 Maple St.   | Hollywood     | Empire Strikes Back | 1980
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Empire Strikes Back | 1980
+Carrie Fisher | 123 Maple St.   | Hollywood     | Return of the Jedi  | 1983
+Carrie Fisher | 5 Locust Ln.    | Malibu        | Return of the Jedi  | 1983
+
+* Consider $\text{name} \twoheadrightarrow \text{street}, \text{city}$
+  * $t = (\text{Carrie Fisher}, \text{123 Maple St.}, \text{Hollywood}, \text{Star Wars}, 1977)$
+  * $u = (\text{Carrie Fisher}, \text{5 Locust Ln.}, \text{Malibu}, \text{Empire Strikes Back}, 1980)$
+    <br><br>
+  * $v = (\text{Carrie Fisher}, \text{123 Maple St.}, \text{Hollywood}, \text{Empire Strikes Back}, 1980)$
+
+---
+
+## Multivalued Dependencies
+
+* In general, suppose we have a relation $R$ with attributes $\mathcal{A}$
+* An MVD $X \twoheadrightarrow Y$ holds if whenever we find two tuples $t$ and $u$ that agree on $X$, we can find
+  another tuple $v$ that
+  1. agrees with $t$ and $u$ on $X$
+  2. agrees with $t$ on $Y$
+  3. agrees with $u$ on $\mathcal{A}-(X \cup Y)$
+
+---
+
+## Rules for Multivalued Dependencies
+
+* **Trivial MVDs** 
+  * $A_1, A_2, \dots, A_m \twoheadrightarrow B_1, B_2, \dots, B_n$ holds if
+    $\{B_1, B_2, \dots, B_n\} \subset \{A_1, A_2, \dots, A_m\}$
+  <br><br>
+* **Transitive Rule**
+  * If $A_1, A_2, \dots, A_m \twoheadrightarrow B_1, B_2, \dots, B_n$ and
+    $B_1, B_2, \dots, B_n \twoheadrightarrow C_1, C_2, \dots, C_k$, then
+    $A_1, A_2, \dots, A_m \twoheadrightarrow C_1, C_2, \dots, C_k$
+
+
+---
+
+## Caveat on Rules for Multivalued Dependencies
+
+* The use of an arrow $\twoheadrightarrow$ is suggestive, but potentially misleading
+* It makes it very natural to believe that, say, the transitive rule holds
+  <br><br>
+* The problem is that our intuition can fail us
+* E.g., the splitting rule does not hold!
+* $A \twoheadrightarrow B, C$ does not mean
+  * $A \twoheadrightarrow B$
+  * $A \twoheadrightarrow C$
+* The reason is that $A \twoheadrightarrow B, C$ says something about the columns $A$, $B$, $C$,
+  but also **all other columns** in the relation
+* E.g., $\text{name} \twoheadrightarrow \text{street}, \text{city}$ actually says something about
+  the relationship between street/city and title/year
+* But $\text{name} \twoheadrightarrow \text{street}$ says something about the relationship between
+  street and city/title/year (which is bogus)
+
+---
+
+## More Rules for Multivalued Dependencies
+
+* **FD Promotion** 
+  * If $X \rightarrow Y$, then $X \twoheadrightarrow Y$
+  * To see why, choose $t$ and $u$, and then let $v = u$
+  <br><br>
+* **Complementation Rule**
+  * If $X \twoheadrightarrow Y$, then $X \twoheadrightarrow \mathcal{A} - Y$
+  * To see why, consider the symmetry in the definition of $X \twoheadrightarrow Y$
+  <br><br>
+* **Trivial MVDs**
+  * $X \twoheadrightarrow \mathcal{A}-X$
+  * To see why, choose $t$ and $u$, and then let $v = t$
+
+---
+
+## Fourth Normal Form (4NF)
+
+* A relation $R$ is in **fourth normal form (4NF)** if 
+  * whenever $A_1, A_2, \dots, A_m \twoheadrightarrow B_1, B_2, \dots, B_n$ is a nontrivial MVD for $R$,
+  * $\{A_1, A_2, \dots, A_m\}$ is a superkey for $R$
+  <br><br>
+* Since all FDs are also MVDs, any relation in 4NF is also in BCNF, so it's also in 3NF
+* I.e., $\text{4NF} \subset \text{BCNF} \subset \text{3NF}$
+
+> * Good news!
+* The algorithm for decomposing into BCNF just works for decomposing into 4NF
+* The only difference is that it decomposes on MVDs that violate 4NF instead of on FDs that violate BCNF
+* Minor complication: Projecting MVDs is not as easy as projecting FDs
+
+---
+
+## Relationship among Normal Forms
+
+Property                     | 3NF | BCNF | 4NF
+-----------------------------|-----|------|-----
+Eliminates FD redundancies   | No  | Yes  | Yes
+Eliminates MVD redundancies  | No  | No   | Yes
+Preserves FDs                | Yes | No   | No
+Preserves MVDs               | No  | No   | No
+
+---
+
+# Algorithms for MVDs
+
+---
+
+## The Closure Algorithm
+
+* Earlier we discussed the **closure algorithm** that computes $X^+$
+* We also discussed the **chase algorithm** for proving lossless decompositions
+  <br><br>
+* In fact the chase algorithm is very useful in many other contexts
+* We can restate the closure algorithm as a chase starting from a tableux
+  1. The tableux starts with two rows that agree on $X$ and on nothing else
+  2. After the chase, $A \in X^+$ if and only if the rows agree on attribute $A$
+
+
+---
+
+## The Chase Algorithm for MVDs
+
+* We've been using the chase algorithm to find which attributes are equal based on some FD
+* But an MVD $X \twoheadrightarrow Y$ does not tell us that some values must be equal
+* Instead, it tells us that if we have two tuples $t$ and $u$, we can construct another tuple
+  $v$ with some properties
+* Actually, by symmetry, we can construct two tuples $v$ and $w$ (by swapping $t$ and $u$),
+  but sometimes the resulting tuples will not be new
+  <br><br>
+* So we modify the chase algorithm
+* We start with some tuples
+* Then we apply MVDs to create more tuples!
+
+---
+
+## The Chase Algorithm for Inferring MVDs
+
+* Suppose we have some FDs and some MVDs
+* We want to decide if the MVD $X \twoheadrightarrow Y$ is implied by these FDs and MVDs
+  <br><br>
+* Start a tableaux with two tuples
+  * $t$
+  * $u$, which agrees with $t$ on $X$ and nothing else
+* Repeatedly apply the FDs and MVDs to the tableaux
+* If we ever find a tuple that $v$ that agrees with $t$ and $u$ on $X$, with $t$ on $Y$,
+  and with $u$ on $\mathcal{A}-Y$, then the MVD $X \twoheadrightarrow Y$ is implied
+* If we terminate without finding such a tuple, then $X \twoheadrightarrow Y$ is not implied
+
+---
+
+## The Chase Algorithm for Inferring MVDs
+
+* Suppose we have $R(A,B,C,D)$ with dependencies
+  * $A \rightarrow B$
+  * $B \twoheadrightarrow C$
+* Does $A \twoheadrightarrow C$ hold?
+  <br><br>
+
+* Consider this tableaux
+
+$A$ | $B$   | $C$   | $D$ 
+----|-------|-------|--------
+$a$ | $b_1$ | $c$   | $d_1$
+$a$ | $b$   | $c_2$ | $d$
+
+* Keep doing the chase, and look for the tuple $(a,b,c,d)$
+* Notice how we split the unsubscripted variables $b$, $c$, $d$ among the rows to make
+  it easier to see when the new tuple shows up
+
+---
+
+## The Chase Algorithm for Inferring MVDs
+
+$A$ | $B$   | $C$   | $D$    | Dependency
+----|-------|-------|--------|------------
+$a$ | $b_1$ | $c$   | $d_1$  |
+$a$ | $b$   | $c_2$ | $d$    |
+
+<br>
+
+$A$ | $B$   | $C$   | $D$    | Dependency
+----|-------|-------|--------|-------------------
+$a$ | $b$   | $c$   | $d_1$  | $A \rightarrow B$
+$a$ | $b$   | $c_2$ | $d$
+
+<br>
+
+$A$ | $B$   | $C$   | $D$    | Dependency
+----|-------|-------|--------|------------------------
+$a$ | $b$   | $c$   | $d_1$  |
+$a$ | $b$   | $c_2$ | $d$    |
+$a$ | $b$   | $c_2$ | $d_1$  | $B \twoheadrightarrow C$
+$a$ | $b$   | $c$   | $d$    | $B \twoheadrightarrow C$
+
+---
+
+## Projecting MVDs
+
+* Suppose we have some FDs and MVDs for a relation $R$ with attributes $\mathcal{A}$
+* Then we project $R$ into $R_1$ on some attributes $\mathcal{B}$
+* How do we know which dependencies hold on $R_1$?
+
+> * For a given possible MVD (and there are exponentially many), you can construct a
+  a tableaux as before
+* Then run the chase algorithm and see if you find a **row** that supports the MVD
+
+> * The FDs follow the same process
+* Set up a tableaux as in the lossless join process
+* Chase the tableaux, and make sure the final tableaux has the same values in the given 
+  **columns**
