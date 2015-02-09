@@ -151,9 +151,8 @@ Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
 
 * Suppose we have a relation $R(A, B, C, D, E)$
 * Suppose that
-  * $A \rightarrow B, C$
-  * $B \rightarrow D, E$
-  * $C \rightarrow D, E$
+  * $B \rightarrow C, D, E$
+  * $C \rightarrow B, D, E$
 
 > * $\{A, B, C\}$ is a pseudo-key, because $A, B, C \rightarrow D, E$
 * But it is not a key, because $A, B \rightarrow C, D, E$ and $\{A, B\} \subsetneq \{A, B, C\}$
@@ -171,15 +170,14 @@ Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
 
 * Suppose we have a relation $R(A, B, C, D, E)$
 * Suppose that
-  * $A \rightarrow B, C$
-  * $B \rightarrow D, E$
-  * $C \rightarrow D, E$
+  * $B \rightarrow C, D, E$
+  * $C \rightarrow B, D, E$
 * We already know that $\{A, B\}$ is a key
 
 > * Similarly, $\{A, C\}$ is also a key
 * We would choose either $\{A, B\}$ or $\{A, C\}$ as the primary key
 
-> * There are many (14) superkeys, but no more keys
+> * There are many (4) superkeys, but no more keys
 
 ---
 
@@ -296,7 +294,7 @@ Note that this algorithm terminates
 
 ## Example
 
-Suppose we have a relation $R(A,B,C,D,E)$ with the following FDs:
+Suppose we have a relation $R(A,B,C,D,E,F)$ with the following FDs:
 * $A, B \rightarrow C$
 * $B, C \rightarrow A, D$
 * $D \rightarrow E$
@@ -381,7 +379,7 @@ Step | $X$             | FD
 * We need to show that $A_1, A_2, \dots, A_n \rightarrow B$ does not hold
 * To do this, we create a relation instance for $R$ in which this FD does not hold
 * The instance has two tuples
-  * $t$: 1's on all attributes in $A^+$, and 0's on all other attributes
+  * $t$: 1's on all attributes in $X$, and 0's on all other attributes
   * $s$: 1's on all attributes
 * Notice that $t$ and $s$ agree on an attribute $C$ if and only $C \in X$
 
@@ -395,7 +393,7 @@ Step | $X$             | FD
 * We claim that this instance satisfies all of the FDs in $S$
   <br><br>
 * Consider some FD $C_1, C_2, \dots, C_k \rightarrow D$ in $S$
-* If one of the $C_i$ is not among the $C_i$, then we're done
+* If one of the $C_i$ is not in $X$, then we're done
 * Otherwise, the algorithm would have added $D$ to $X$ because of this FD
 * So we conclude that this case cannot happen
 * I.e., the instance satisfies all of the FDs in $S$
@@ -482,7 +480,7 @@ Step | $X$             | FD
 * What are the FDs for $\pi_{\mathcal{B}}(R)$, where $\mathcal{B}$ is some subset of the attributes of $R$?
   <br>
 
-> * We can follow the **projection of functional dependencies** $S'$, which are all the FDs in $S$ such that
+> * We can follow the **projection of functional dependencies** $S'$, which are all syntactically valid FDs such that
   1. they follow from $S$
   2. they involve only attributes in $\mathcal{B}$
   

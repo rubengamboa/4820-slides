@@ -340,9 +340,8 @@ A & \rightarrow & C \\
 <li>Suppose that
 
 <ul>
-<li>\(A \rightarrow B, C\)</li>
-<li>\(B \rightarrow D, E\)</li>
-<li>\(C \rightarrow D, E\)</li>
+<li>\(B \rightarrow C, D, E\)</li>
+<li>\(C \rightarrow B, D, E\)</li>
 </ul></li>
 </ul>
 
@@ -373,9 +372,8 @@ A & \rightarrow & C \\
 <li>Suppose that
 
 <ul>
-<li>\(A \rightarrow B, C\)</li>
-<li>\(B \rightarrow D, E\)</li>
-<li>\(C \rightarrow D, E\)</li>
+<li>\(B \rightarrow C, D, E\)</li>
+<li>\(C \rightarrow B, D, E\)</li>
 </ul></li>
 <li>We already know that \(\{A, B\}\) is a key</li>
 </ul>
@@ -383,7 +381,7 @@ A & \rightarrow & C \\
 <ul class = "build incremental">
 <li>Similarly, \(\{A, C\}\) is also a key</li>
 <li><p>We would choose either \(\{A, B\}\) or \(\{A, C\}\) as the primary key</p></li>
-<li><p>There are many (14) superkeys, but no more keys</p></li>
+<li><p>There are many (4) superkeys, but no more keys</p></li>
 </ul>
 
   </article>
@@ -592,7 +590,7 @@ Note that this algorithm terminates</p>
     <h2>Example</h2>
   </hgroup>
   <article data-timings="">
-    <p>Suppose we have a relation \(R(A,B,C,D,E)\) with the following FDs:</p>
+    <p>Suppose we have a relation \(R(A,B,C,D,E,F)\) with the following FDs:</p>
 
 <ul>
 <li>\(A, B \rightarrow C\)</li>
@@ -751,7 +749,7 @@ Note that this algorithm terminates</p>
 <li>The instance has two tuples
 
 <ul>
-<li>\(t\): 1&#39;s on all attributes in \(A^+\), and 0&#39;s on all other attributes</li>
+<li>\(t\): 1&#39;s on all attributes in \(X\), and 0&#39;s on all other attributes</li>
 <li>\(s\): 1&#39;s on all attributes</li>
 </ul></li>
 <li>Notice that \(t\) and \(s\) agree on an attribute \(C\) if and only \(C \in X\)</li>
@@ -776,7 +774,7 @@ Note that this algorithm terminates</p>
 <li>We claim that this instance satisfies all of the FDs in \(S\)
 <br><br></li>
 <li>Consider some FD \(C_1, C_2, \dots, C_k \rightarrow D\) in \(S\)</li>
-<li>If one of the \(C_i\) is not among the \(C_i\), then we&#39;re done</li>
+<li>If one of the \(C_i\) is not in \(X\), then we&#39;re done</li>
 <li>Otherwise, the algorithm would have added \(D\) to \(X\) because of this FD</li>
 <li>So we conclude that this case cannot happen</li>
 <li>I.e., the instance satisfies all of the FDs in \(S\)</li>
@@ -917,7 +915,7 @@ then \(\mathcal{A} \rightarrow \mathcal{C}\)</li>
 </ul>
 
 <ul class = "build incremental">
-<li><p>We can follow the <strong>projection of functional dependencies</strong> \(S'\), which are all the FDs in \(S\) such that</p>
+<li><p>We can follow the <strong>projection of functional dependencies</strong> \(S'\), which are all syntactically valid FDs such that</p>
 
 <ol>
 <li>they follow from \(S\)</li>
