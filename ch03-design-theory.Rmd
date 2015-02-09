@@ -177,7 +177,7 @@ Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
 > * Similarly, $\{A, C\}$ is also a key
 * We would choose either $\{A, B\}$ or $\{A, C\}$ as the primary key
 
-> * There are many (4) superkeys, but no more keys
+> * There are many (10) superkeys, but no more keys
 
 ---
 
