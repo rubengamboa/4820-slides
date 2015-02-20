@@ -211,7 +211,7 @@ widgets:      [mathjax, bootstrap]
   <br><br>
 * Usually, the relationship is **asymmetric**
   * E.g., *Empire Strikes Back* is a sequel of *Star Wars*
-  * But *Star Wars* is **not*** a sequel of *Empire Strikes Back*
+  * But *Star Wars* is **not** a sequel of *Empire Strikes Back*
   <br><br>
 * So when we draw the E/R diagram, we have to label each edge, to show the **role** of the given participant
   * E.g., the role may be *sequel* and *original*
@@ -346,4 +346,629 @@ widgets:      [mathjax, bootstrap]
   <br><br>
 * We'll (try to) answer these questions by identifying important design principles
 
+---
 
+## Faithfulness
+
+* First and foremost, the design should reflect the **real world**
+  <br><br>
+* An entity set $E$ should have attribute $A$ if and only if that attribute really exists in the real world for that
+  entity set
+  <br><br>
+* Likewise, the **multiplicities** of relationships must reflect the real world
+
+> * Don't be fooled!
+* This isn't technical, but it **is** extremely difficult
+* It may take years to fully understand a particular aspect of the real world well enough to design a good database
+
+---
+
+## Redundancy
+
+* Avoid redundancy at (almost) all costs
+  <br><br>
+* Everything we said about redundancy for tables is still applicable
+  <br><br>
+* And there is an extra complication
+* There can be redundancy between an attribute and a relationship
+  * Student has an Advisor relationship with Faculty
+  * Student has an attribute called Advisor
+
+---
+
+## Redundancy of Relationships
+
+* Relationships also present an extra opportunity for redundancy
+* E.g., consider the relationships Parent and GrandParent
+  <br><br>
+* The problem with having both of these relationship is obvious
+  <br><br>
+* Even here, though, there is a subtlety
+* What if we sometimes don't know all the Parents, but we do know some reliable facts about GrandParents?
+
+---
+
+## Simplicity
+
+* Hoare's Law of Large Problems:
+ 
+  > Inside every large problem is a small problem struggling to get out.
+
+* But never forget H.L. Mencken's take:
+
+  > For every complex problem there is an answer that is clear, simple, and wrong.
+
+* Bottom line: If two solutions work, pick the simpler one, but only if it **really** works
+
+---
+
+## Attributes vs. Entity Sets (or Relationships)
+
+* It is easy to add an attribute to an existing entity set
+* In general, attributes are lightweight
+  <br><br>
+* The problem is that sometimes an attribute does not work:
+  * It may have nested attributes (especially if there are FDs between the attributes)
+  * Different values of the attribute may have natural relationships
+  * A single value of the attribute may be involved in many-one or many-many relationships with other entity sets
+  <br><br>
+* In general: Err on the side of having entity sets
+* This heuristic works because we will be naturally biased in favor of attributes!
+
+---
+
+## Example: Historical Market Data
+
+* Take a very simple example
+* We want to store market data, which looks like this
+
+Ticker   | Company               | Date     | Price
+---------|-----------------------|----------|----------
+AAPL     | Apple Inc.            | 2/18/15  | 128.71
+AAPL     | Apple Inc.            | 2/17/15  | 127.83
+MSFT     | Microsoft Corporation | 2/18/15  |  43.53
+MSFT     | Microsoft Corporation | 2/17/15  |  43.58
+C        | Citigroup Inc.        | 2/18/15  |  51.42
+C        | Citigroup Inc.        | 2/17/15  |  51.69
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/aapl-chart.png" alt="Chart of AAPL" title="Chart of AAPL" class="img-responsive">
+</p>
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-1.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-2.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-2b.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+---
+
+## Example: Historical Market Data
+
+* Another complication: Splits
+
+Ticker   | Company               | Date     | Price
+---------|-----------------------|----------|----------
+AAPL     | Apple Inc.            | 6/05/14  | 647.35
+AAPL     | Apple Inc.            | 6/06/14  | 647.57
+AAPL     | Apple Inc.            | 6/09/14  |  93.70
+AAPL     | Apple Inc.            | 6/10/14  |  94.25
+
+---
+
+## Example: Historical Market Data
+
+* Yet another complication: Dividends
+
+Ticker   | Company               | Date     | Price
+---------|-----------------------|----------|----------
+AAPL     | Apple Inc.            | 2/03/15  | 118.65
+AAPL     | Apple Inc.            | 2/04/15  | 119.56
+AAPL     | Apple Inc.            | 2/05/15  | 119.94
+AAPL     | Apple Inc.            | 2/06/15  | 118.93
+
+---
+
+## Example: Historical Market Data
+
+* Yet another complication: Acquisitions (Beats)
+
+Ticker   | Company               | Date     | Price
+---------|-----------------------|----------|----------
+AAPL     | Apple Inc.            | 5/23/14  | 614.13
+AAPL     | Apple Inc.            | 5/27/14  | 625.63
+AAPL     | Apple Inc.            | 5/28/14  | 624.01
+AAPL     | Apple Inc.            | 5/29/14  | 635.38
+
+---
+
+## Example: Historical Market Data
+
+* Yet another complication: Spinoffs (Apperian)
+
+Ticker   | Company               | Date     | Price
+---------|-----------------------|----------|----------
+AAPL     | Apple Inc.            | 1/13/09  | 87.71
+AAPL     | Apple Inc.            | 1/14/09  | 85.33
+AAPL     | Apple Inc.            | 1/15/09  | 83.38
+AAPL     | Apple Inc.            | 1/16/09  | 82.33
+
+Not very exciting: But read up on AT&T's breakup in 1984!
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-3.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+---
+
+## Example: Historical Market Data
+
+* Even More Complications: Ticker Symbols and Exchanges
+
+Ticker    | Company               | Date     | Price    | Exchange
+----------|-----------------------|----------|----------|----------
+AAPL      | Apple Inc.            | 2/18/15  | 128.71   | NMS
+AAPL34.SA |	Apple Inc.            | 2/18/15  | 36.61	| SAO
+AAPL.MX   | Apple Inc.            | 2/18/15  | 1,911.41 | MEX
+AAPL.SW   | APPLE                 | 2/18/15  | 120.50   | EBS
+AAPL.BA   | Apple Inc.            | 2/18/15  | 155.00   | BUE
+
+---
+
+## Example: Historical Market Data
+
+* Even More Complications: Ticker Symbols
+
+Ticker    | Company               | Date      | Price    | Exchange
+----------|-----------------------|-----------|----------|----------
+C         | Chrysler Corporation  |     1997  |          | NYSE
+DCX       | DaimlerChrysler AG    |     1998  |          | NYSE
+FCAU      | Fiat Chrysler         | 10/13/14  |   9.55   | NYSE
+C         | Citigroup Inc.        |     1998  |          | NYSE
+C         | Corn Futures          |     1960  |          | CME
+
+There are CUSIP (Committee on Uniform Securities Identification Procedures) symbols, which 
+give a unique identifier for each security traded in North America:
+* 037833100 - Apple
+* 172967101 - Citigroup
+
+But, you guessed it.  CUSIPs change over time, so you need another entity set to handle "CUSIP chaining"
+
+---
+
+## Example: Historical Market Data
+
+Did we mention AAPL?
+
+* Apple Computer Inc., on 1/3/77
+* Apple Inc., 1/9/07
+
+---
+
+## Example: Historical Market Data
+
+* One More Complication: Things change
+* AAPL is trading at 138.72 on 2/18/15
+  <br><br>
+* No, wait!
+* That was a typo!!!
+* I meant 128.72 on 2/18/15
+  <br><br>
+* So what if my target for APPL was 135 and I sold all my AAPL holdings?
+* And what if I am working for a hedge fund that just lost \$100M selling its AAPL stock because the sell order
+  triggered a "flash crash"
+  <br><br>
+* Maybe all data points in the historical data should have a date and corrections history attached to them
+* The same may be said for names, etc.
+
+---
+
+# Constraints in the E/R Model
+
+---
+
+## Constraints in the E/R Model
+
+* We saw that constraints play an important role in the relational model
+* We want to represent constraints in the E/R model, too
+  <br><br>
+* We've already seen some of this: **arrowheads represent multiplicity**
+* This is actually a type of constraint
+* It's a bit like an FD, but it goes across relations!
+* (We'll model it later as an FD in the relationship table)
+
+---
+
+## Keys in the E/R Model
+
+* Keys are another very important constraint
+* It has the same meaning as in the relational model
+* And it's represented in the same way
+  * The attributes in the key are underlined
+  <br><br>
+* There is one extra subtlety
+* If $A$ is an entity set and $A_1$, $A_2$, $A_3$ are subclasses (or subentity sets)
+  * There must be a key in $A$ (with the attributes of $A$)
+  * The key of $A_i$ is $\pi_{\mathcal{A_i}}(A)$
+* I.e., if you have an instance of the superclass, you can get the associated instance(s) in the subclasse(s)
+* In particular, $A \bowtie A_1$ returns all the information for the entities in $A_1$
+
+---
+
+## Keys in the E/R Model
+
+<p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+Note: It is purely a coincidence that the key attributes are always above the entity set!
+
+In general, this will not be the case
+
+---
+
+## Referential Integrity
+
+* **Referential Integrity** is a crucial constraint
+* Basically, it says that if you point to something, it really exists
+  * In programming: No garbage pointers
+  * In the web: No *404 Not Found* errors
+  <br><br>
+* You may (should) remember how we specified this constraint using relational algebra
+  <br><br>
+* The basic referential integrity is **assumed** in E/R Diagrams
+* If there is a many-to-one relationship from $E$ to $F$, we take it for granted that
+  * if an instance $e$ of $E$ claims to be associated with an instance $f$ of $F$,
+  * then $f$ actually exists
+
+---
+
+## Referential Integrity
+
+* In E/R diagrams, **referential integrity** also refers to a similar (but different) notion
+  <br><br>
+* Again, suppose there is a many-to-one relationship from $E$ to $F$
+* And consider an entity $e$ of $E$
+* Does there need to be an entity $f$ in $F$ that $e$ is associated with?
+  <br><br>
+* If the answer is "yes", then this is also a sort of referential integrity constraint
+* It is denoted in E/R Diagrams by **rounded** arrowheads
+
+<p class="centered">
+    <img src="assets/img/erd-referential-integrity.png" alt="E/R Referential Integrity" title="E/R Referential Integrity" class="img-responsive">
+</p>
+
+---
+
+## Degree Constraints
+
+* What the "referential integrity" really says is that **every $e$ in $E$ must be associated with at least one $f$ in $F$**
+* In addition, since the relationship is many-to-one, then we know $e$ is associated with **exactly one** $f$
+  <br><br>
+* This idea can be generalized to different **degree constraings**
+* E.g., each $e$ in $E$ must be associated with **at most 10** $f_i$ in $F$
+* Or each $e$ in $E$ must be associated with **at least 3** $f_i$ in $F$
+
+<p class="centered">
+    <img src="assets/img/erd-degree-constraints.png" alt="E/R Degree Constraints" title="E/R Degree Constraints" class="img-responsive">
+</p>
+
+---
+
+# Weak Entity Sets
+
+---
+
+## Weak Entity Sets
+
+* Consider an entity set $E$ with key $A_1$, $A_2$, $A_3$
+* It is possible that $A_1$ is actually a key for some other entity set $F$
+* In this case, we say that $E$ is a **weak entity set**
+  <br><br>
+* That's actually the **definition** of weak entity set
+* It is an entity set whose key is a superset of the key of some other entity set
+
+---
+
+## Weak Entity Sets: Because of Mergers
+
+* For example, UW has many students
+* Each student has a unique ID, the W#
+* As far as UW is concerned, the ID is unique
+  <br><br>
+* But what if we want to have a database that combines students from many universities
+* Then the key for the Student table may consist of
+  * University key
+  * Student key (relative to the university)
+
+University    | StudentID     | Name
+--------------|---------------|---------------------
+UWyo          | W12345678     | John Galt
+UWyo          | W24683579     | Francisco d'Anconia
+TAMU          | 010-CS-193a   | Dagny Taggart
+UTAus         | a73e9fxe$3    | Hank Rearden
+
+---
+
+## Weak Entity Sets: Because of Hierarchies
+
+* Another classic reason for weak entity sets is hierarchies
+* Consider a **purchase order**
+* It contains
+  * one or more line items, each with a product, quantity, and price
+  * subtotal
+  * tax
+  * total
+  <br><br>
+* The line items **belong to** the purchase order
+* So their key contains the key of the purchase order
+* E.g., lime item #2 of purchase order #429
+
+---
+
+## Keys for Entity Sets
+
+* The key for an entity set consists of
+  * Some of its own attributes (e.g., StudentID)
+  * Keys from entity sets that can be **reached** from the weak entity set (e.g., University)
+  <br><br>
+* By "reached", we are referring to **relationships**
+* The relationship between a weak entity set and the "owning" entity set is called a **supporting relationship**
+* The "owning" entity set is called a **supporting entity set**
+
+---
+
+## Supporting Relationships and Entity Sets
+
+* Suppose we have 
+  * a weak entity set $E$
+  * with supporting relationship $R$
+  * and supporting entity set $F$
+
+* Then the following requirements must hold
+  1. $R$ is a binary many-to-one or one-to-one relationship from $E$ to $F$ (i.e., there is at most one owner)
+  2. There must be at least one $F$ associated with each $E$ (i.e., there is exactly one owner)
+  3. The key of $E$ must have some attributes that form a key in $F$
+  4. If $F$ is also a weak entity, then its key will have some attributes from its supporting entity set, and those
+     will also appear in $E$
+  <br><br>
+* Note that there may be more than one supporting relationship between $E$ and $F$, but this is quite rare
+
+---
+
+## Weak Entity Sets in E/R Diagrams
+
+* Weak entity sets are denoted in **double rectangles**
+* Supporting relationships are denoted as **double diamonds**
+* The (underlined) key of a weak entity set does not include the attributes from its supporting entity set
+
+<p class="centered">
+    <img src="assets/img/erd-weak-entity-set.png" alt="E/R Weak Entity Sets" title="E/R Weak Entity Sets" class="img-responsive">
+</p>
+
+---
+
+# Converting E/R Diagrams to Relations
+
+---
+
+## Converting E/R Diagrams to Relations
+
+* One of the reasons that E/R diagrams are so useful is that they can be mechanically converted into 
+  equivalent relations
+* So we can convert our high-level design to a low-level implementation
+  <br><br>
+* The basic strategy is 
+  * turn each entity set into a relation with the same name and attributes
+  * turn a relationship into an entity set with attributes corresponding to the primary keys of the connected entity sets,
+    as well as any attributes defined for the relationship itself
+
+---
+
+## Converting E/R Diagrams to Relations
+
+<p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+```
+Movies(_title_, _year_, length, genre)
+Stars(_name_, address)
+StarsIn(_title_, _year_, _name_)
+```
+
+---
+
+## Converting E/R Diagrams to Relations
+
+<p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+```
+Movies(_title_, _year_, length, genre)
+Studios(_name_, address)
+Owns(_title_, _year_, _name_)
+```
+
+With the following FD to account for the constraint on Studios:
+* title, year $\rightarrow$ name
+
+---
+
+## Converting E/R Diagrams to Relations
+
+<p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+For many-to-one relationships, it is common to merge the relationship table with the "many" side:
+
+```
+Movies(_title_, _year_, length, genre, name)
+Studios(_name_, address)
+```
+
+---
+
+## Handling Weak Entity Sets
+
+* Weak entity sets can also be converted to relations, but with a little more care
+  <br><br>
+* The list of attributes must also include the attributes in the key of the supporting relation
+  <br><br>
+* Whenever a relationship table refers to a weak entity set, it must do so with the **entire key**, including
+  the part contributed by the supporting relation
+  <br><br>
+* There is no need to create the supporting relationship table
+  * It is a many-to-one or one-to-one table, so it can be merged into the weak entity set, as we did before
+
+---
+
+## Handling Weak Entity Sets
+
+<p class="centered">
+    <img src="assets/img/erd-translate-weak-entity-set.png" alt="E/R Weak Entity Set" title="E/R Weak Entity Set" class="img-responsive">
+</p>
+
+```
+Studios(_name_, address)
+Crews(_number_, _studioName_, crewChief)
+```
+
+<br>
+
+Notice there is no need to create the relationship table
+```
+UnitOf(_number_, _studioName_, _name_)
+```
+
+---
+
+## Handling Subclasses (or Subentity Sets)
+
+* Care must also be taken with the conversion of E/R diagrams that involve **inheritance**
+* This particular case is a little controversial
+* There is no widespread agreement on the best way to do it
+  <br><br>
+* The book suggests three approaches
+  * The E/R viewpoint
+  * A single class
+  * NULL values
+
+---
+
+## Subclasses: The E/R Viewpoint
+
+* Suppose we have root $A$ and subclasses $A_1$, $A_2$, and $A_3$
+  <br><br>
+* We create a relation for each entity set
+* Each of the $A_i$ must have all the attributes in the key of $A$
+* I.e., the $A_i$ explicitly inherit the key attributes from $A$
+* That becomes the key of the $A_i$, so if an $A_i$ participates
+  in a relationship, the entire key is used to identify an entity
+
+---
+
+## Subclasses: The E/R Viewpoint
+
+<p class="centered">
+    <img src="assets/img/erd-subclasses.png" alt="E/R Inheritance" title="E/R Inheritance" class="img-responsive">
+</p>
+
+
+```
+Movies(_title_, _year_, length, genre)
+Cartoons(_title_, _year_)
+MurderMysteries(_title_, _year_, weapon)
+```
+
+**Important:** 
+* Each entity must exist in the `Movies` table
+* In addition, an entity may also exist in `Cartoons`, `MurdermMysteries`, or both
+
+---
+
+## Subclasses: The Single Class Approach
+
+* The idea behind this is to enumerate all possible subclasses and create a table for each
+  <br><br>
+* In our case, the "possible subclasses" are
+  * Movies
+  * CartoonMovies
+  * MurderMysteryMovies
+  * CartoonMurderMysteryMovies
+  <br><br>
+* Yes, that is building a table for each **subtree** of the hierarchy that includes the root
+* (And, by the way, it's not much different than what C++ does)
+
+---
+
+## Subclasses: Using NULL Values
+
+* The traditional way of doing this is to construct **just one relation**
+* This relation would be named after the root, and have the attributes of **all** subclasses
+* E.g., $A$ would have the attributes of $A$, $A_1$, $A_2$, and $A_3$
+* In addition, there is an extra attribute (often called "type") that says whether this instance
+  is of type $A_1$, $A_2$, or $A_3$
+* If multiple combinations are possible, then "type" needs to be more complicated
+
+---
+
+## Subclasses: Using NULL Values
+
+<p class="centered">
+    <img src="assets/img/erd-subclasses.png" alt="E/R Inheritance" title="E/R Inheritance" class="img-responsive">
+</p>
+
+```
+Movies(_title_, _year_, movieType, length, genre, weapon)
+```
+
+Note that the attribute "weapon" would have NULLs for all entities except murder mysteries!
+
+---
+
+## Handling Subclasses (or Subentity Sets)
+
+* The traditional (single-table) approach has some advantages
+  * There is only one row for each entity
+  * You can get all information for a given entity in just one lookup, without having to join
+    lots of tables
+* But it also has disadvantages
+  * The tuples are **big**, so it is more expensive to read a tuple from disk
+  * Most queries may use only some of the attributes, so the rest is wasted
+  <br><br>
+* Generally speaking, database administrators prefer the single-table approach, while OO programmers
+  prefer the "one table per entity set" approach
+* Almost nobody prefers the "one table per subtree" approach, except in very small cases
+
+---
+
+# Unified Modeling Language

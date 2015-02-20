@@ -374,7 +374,7 @@ we say that \(R\) is <strong>many-to-one</strong> from \(F\) to \(E\)</li>
 
 <ul>
 <li>E.g., <em>Empire Strikes Back</em> is a sequel of <em>Star Wars</em></li>
-<li>But <em>Star Wars</em> is <strong>not</strong>* a sequel of <em>Empire Strikes Back</em>
+<li>But <em>Star Wars</em> is <strong>not</strong> a sequel of <em>Empire Strikes Back</em>
 <br><br></li>
 </ul></li>
 <li>So when we draw the E/R diagram, we have to label each edge, to show the <strong>role</strong> of the given participant
@@ -605,6 +605,1240 @@ to binary relationships only</li>
   <!-- Presenter Notes -->
 </slide>
 
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Faithfulness</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>First and foremost, the design should reflect the <strong>real world</strong>
+<br><br></li>
+<li>An entity set \(E\) should have attribute \(A\) if and only if that attribute really exists in the real world for that
+entity set
+<br><br></li>
+<li>Likewise, the <strong>multiplicities</strong> of relationships must reflect the real world</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Don&#39;t be fooled!</li>
+<li>This isn&#39;t technical, but it <strong>is</strong> extremely difficult</li>
+<li>It may take years to fully understand a particular aspect of the real world well enough to design a good database</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Redundancy</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Avoid redundancy at (almost) all costs
+<br><br></li>
+<li>Everything we said about redundancy for tables is still applicable
+<br><br></li>
+<li>And there is an extra complication</li>
+<li>There can be redundancy between an attribute and a relationship
+
+<ul>
+<li>Student has an Advisor relationship with Faculty</li>
+<li>Student has an attribute called Advisor</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Redundancy of Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Relationships also present an extra opportunity for redundancy</li>
+<li>E.g., consider the relationships Parent and GrandParent
+<br><br></li>
+<li>The problem with having both of these relationship is obvious
+<br><br></li>
+<li>Even here, though, there is a subtlety</li>
+<li>What if we sometimes don&#39;t know all the Parents, but we do know some reliable facts about GrandParents?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Simplicity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Hoare&#39;s Law of Large Problems:</p>
+
+<blockquote>
+<p>Inside every large problem is a small problem struggling to get out.</p>
+</blockquote></li>
+<li><p>But never forget H.L. Mencken&#39;s take:</p>
+
+<blockquote>
+<p>For every complex problem there is an answer that is clear, simple, and wrong.</p>
+</blockquote></li>
+<li><p>Bottom line: If two solutions work, pick the simpler one, but only if it <strong>really</strong> works</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Attributes vs. Entity Sets (or Relationships)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It is easy to add an attribute to an existing entity set</li>
+<li>In general, attributes are lightweight
+<br><br></li>
+<li>The problem is that sometimes an attribute does not work:
+
+<ul>
+<li>It may have nested attributes (especially if there are FDs between the attributes)</li>
+<li>Different values of the attribute may have natural relationships</li>
+<li>A single value of the attribute may be involved in many-one or many-many relationships with other entity sets
+<br><br></li>
+</ul></li>
+<li>In general: Err on the side of having entity sets</li>
+<li>This heuristic works because we will be naturally biased in favor of attributes!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Take a very simple example</li>
+<li>We want to store market data, which looks like this</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/18/15</td>
+<td>128.71</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/17/15</td>
+<td>127.83</td>
+</tr>
+<tr>
+<td>MSFT</td>
+<td>Microsoft Corporation</td>
+<td>2/18/15</td>
+<td>43.53</td>
+</tr>
+<tr>
+<td>MSFT</td>
+<td>Microsoft Corporation</td>
+<td>2/17/15</td>
+<td>43.58</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Citigroup Inc.</td>
+<td>2/18/15</td>
+<td>51.42</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Citigroup Inc.</td>
+<td>2/17/15</td>
+<td>51.69</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/aapl-chart.png" alt="Chart of AAPL" title="Chart of AAPL" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-1.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-2.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-2b.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Another complication: Splits</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>6/05/14</td>
+<td>647.35</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>6/06/14</td>
+<td>647.57</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>6/09/14</td>
+<td>93.70</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>6/10/14</td>
+<td>94.25</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Yet another complication: Dividends</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/03/15</td>
+<td>118.65</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/04/15</td>
+<td>119.56</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/05/15</td>
+<td>119.94</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/06/15</td>
+<td>118.93</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Yet another complication: Acquisitions (Beats)</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>5/23/14</td>
+<td>614.13</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>5/27/14</td>
+<td>625.63</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>5/28/14</td>
+<td>624.01</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>5/29/14</td>
+<td>635.38</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Yet another complication: Spinoffs (Apperian)</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>1/13/09</td>
+<td>87.71</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>1/14/09</td>
+<td>85.33</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>1/15/09</td>
+<td>83.38</td>
+</tr>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>1/16/09</td>
+<td>82.33</td>
+</tr>
+</tbody></table>
+
+<p>Not very exciting: But read up on AT&amp;T&#39;s breakup in 1984!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-3.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Even More Complications: Ticker Symbols and Exchanges</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+<th>Exchange</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AAPL</td>
+<td>Apple Inc.</td>
+<td>2/18/15</td>
+<td>128.71</td>
+<td>NMS</td>
+</tr>
+<tr>
+<td>AAPL34.SA</td>
+<td>Apple Inc.</td>
+<td>2/18/15</td>
+<td>36.61</td>
+<td>SAO</td>
+</tr>
+<tr>
+<td>AAPL.MX</td>
+<td>Apple Inc.</td>
+<td>2/18/15</td>
+<td>1,911.41</td>
+<td>MEX</td>
+</tr>
+<tr>
+<td>AAPL.SW</td>
+<td>APPLE</td>
+<td>2/18/15</td>
+<td>120.50</td>
+<td>EBS</td>
+</tr>
+<tr>
+<td>AAPL.BA</td>
+<td>Apple Inc.</td>
+<td>2/18/15</td>
+<td>155.00</td>
+<td>BUE</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Even More Complications: Ticker Symbols</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Ticker</th>
+<th>Company</th>
+<th>Date</th>
+<th>Price</th>
+<th>Exchange</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>C</td>
+<td>Chrysler Corporation</td>
+<td>1997</td>
+<td></td>
+<td>NYSE</td>
+</tr>
+<tr>
+<td>DCX</td>
+<td>DaimlerChrysler AG</td>
+<td>1998</td>
+<td></td>
+<td>NYSE</td>
+</tr>
+<tr>
+<td>FCAU</td>
+<td>Fiat Chrysler</td>
+<td>10/13/14</td>
+<td>9.55</td>
+<td>NYSE</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Citigroup Inc.</td>
+<td>1998</td>
+<td></td>
+<td>NYSE</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Corn Futures</td>
+<td>1960</td>
+<td></td>
+<td>CME</td>
+</tr>
+</tbody></table>
+
+<p>There are CUSIP (Committee on Uniform Securities Identification Procedures) symbols, which 
+give a unique identifier for each security traded in North America:</p>
+
+<ul>
+<li>037833100 - Apple</li>
+<li>172967101 - Citigroup</li>
+</ul>
+
+<p>But, you guessed it.  CUSIPs change over time, so you need another entity set to handle &quot;CUSIP chaining&quot;</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Did we mention AAPL?</p>
+
+<ul>
+<li>Apple Computer Inc., on 1/3/77</li>
+<li>Apple Inc., 1/9/07</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One More Complication: Things change</li>
+<li>AAPL is trading at 138.72 on 2/18/15
+<br><br></li>
+<li>No, wait!</li>
+<li>That was a typo!!!</li>
+<li>I meant 128.72 on 2/18/15
+<br><br></li>
+<li>So what if my target for APPL was 135 and I sold all my AAPL holdings?</li>
+<li>And what if I am working for a hedge fund that just lost $100M selling its AAPL stock because the sell order
+triggered a &quot;flash crash&quot;
+<br><br></li>
+<li>Maybe all data points in the historical data should have a date and corrections history attached to them</li>
+<li>The same may be said for names, etc.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h1>Constraints in the E/R Model</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Constraints in the E/R Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We saw that constraints play an important role in the relational model</li>
+<li>We want to represent constraints in the E/R model, too
+<br><br></li>
+<li>We&#39;ve already seen some of this: <strong>arrowheads represent multiplicity</strong></li>
+<li>This is actually a type of constraint</li>
+<li>It&#39;s a bit like an FD, but it goes across relations!</li>
+<li>(We&#39;ll model it later as an FD in the relationship table)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Keys in the E/R Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Keys are another very important constraint</li>
+<li>It has the same meaning as in the relational model</li>
+<li>And it&#39;s represented in the same way
+
+<ul>
+<li>The attributes in the key are underlined
+<br><br></li>
+</ul></li>
+<li>There is one extra subtlety</li>
+<li>If \(A\) is an entity set and \(A_1\), \(A_2\), \(A_3\) are subclasses (or subentity sets)
+
+<ul>
+<li>There must be a key in \(A\) (with the attributes of \(A\))</li>
+<li>The key of \(A_i\) is \(\pi_{\mathcal{A_i}}(A)\)</li>
+</ul></li>
+<li>I.e., if you have an instance of the superclass, you can get the associated instance(s) in the subclasse(s)</li>
+<li>In particular, \(A \bowtie A_1\) returns all the information for the entities in \(A_1\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Keys in the E/R Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+<p>Note: It is purely a coincidence that the key attributes are always above the entity set!</p>
+
+<p>In general, this will not be the case</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Referential Integrity</strong> is a crucial constraint</li>
+<li>Basically, it says that if you point to something, it really exists
+
+<ul>
+<li>In programming: No garbage pointers</li>
+<li>In the web: No <em>404 Not Found</em> errors
+<br><br></li>
+</ul></li>
+<li>You may (should) remember how we specified this constraint using relational algebra
+<br><br></li>
+<li>The basic referential integrity is <strong>assumed</strong> in E/R Diagrams</li>
+<li>If there is a many-to-one relationship from \(E\) to \(F\), we take it for granted that
+
+<ul>
+<li>if an instance \(e\) of \(E\) claims to be associated with an instance \(f\) of \(F\),</li>
+<li>then \(f\) actually exists</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In E/R diagrams, <strong>referential integrity</strong> also refers to a similar (but different) notion
+<br><br></li>
+<li>Again, suppose there is a many-to-one relationship from \(E\) to \(F\)</li>
+<li>And consider an entity \(e\) of \(E\)</li>
+<li>Does there need to be an entity \(f\) in \(F\) that \(e\) is associated with?
+<br><br></li>
+<li>If the answer is &quot;yes&quot;, then this is also a sort of referential integrity constraint</li>
+<li>It is denoted in E/R Diagrams by <strong>rounded</strong> arrowheads</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/erd-referential-integrity.png" alt="E/R Referential Integrity" title="E/R Referential Integrity" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>Degree Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What the &quot;referential integrity&quot; really says is that <strong>every \(e\) in \(E\) must be associated with at least one \(f\) in \(F\)</strong></li>
+<li>In addition, since the relationship is many-to-one, then we know \(e\) is associated with <strong>exactly one</strong> \(f\)
+<br><br></li>
+<li>This idea can be generalized to different <strong>degree constraings</strong></li>
+<li>E.g., each \(e\) in \(E\) must be associated with <strong>at most 10</strong> \(f_i\) in \(F\)</li>
+<li>Or each \(e\) in \(E\) must be associated with <strong>at least 3</strong> \(f_i\) in \(F\)</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/erd-degree-constraints.png" alt="E/R Degree Constraints" title="E/R Degree Constraints" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h1>Weak Entity Sets</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>Weak Entity Sets</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider an entity set \(E\) with key \(A_1\), \(A_2\), \(A_3\)</li>
+<li>It is possible that \(A_1\) is actually a key for some other entity set \(F\)</li>
+<li>In this case, we say that \(E\) is a <strong>weak entity set</strong>
+<br><br></li>
+<li>That&#39;s actually the <strong>definition</strong> of weak entity set</li>
+<li>It is an entity set whose key is a superset of the key of some other entity set</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>Weak Entity Sets: Because of Mergers</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>For example, UW has many students</li>
+<li>Each student has a unique ID, the W#</li>
+<li>As far as UW is concerned, the ID is unique
+<br><br></li>
+<li>But what if we want to have a database that combines students from many universities</li>
+<li>Then the key for the Student table may consist of
+
+<ul>
+<li>University key</li>
+<li>Student key (relative to the university)</li>
+</ul></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>University</th>
+<th>StudentID</th>
+<th>Name</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>UWyo</td>
+<td>W12345678</td>
+<td>John Galt</td>
+</tr>
+<tr>
+<td>UWyo</td>
+<td>W24683579</td>
+<td>Francisco d&#39;Anconia</td>
+</tr>
+<tr>
+<td>TAMU</td>
+<td>010-CS-193a</td>
+<td>Dagny Taggart</td>
+</tr>
+<tr>
+<td>UTAus</td>
+<td>a73e9fxe$3</td>
+<td>Hank Rearden</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>Weak Entity Sets: Because of Hierarchies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Another classic reason for weak entity sets is hierarchies</li>
+<li>Consider a <strong>purchase order</strong></li>
+<li>It contains
+
+<ul>
+<li>one or more line items, each with a product, quantity, and price</li>
+<li>subtotal</li>
+<li>tax</li>
+<li>total
+<br><br></li>
+</ul></li>
+<li>The line items <strong>belong to</strong> the purchase order</li>
+<li>So their key contains the key of the purchase order</li>
+<li>E.g., lime item #2 of purchase order #429</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Keys for Entity Sets</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The key for an entity set consists of
+
+<ul>
+<li>Some of its own attributes (e.g., StudentID)</li>
+<li>Keys from entity sets that can be <strong>reached</strong> from the weak entity set (e.g., University)
+<br><br></li>
+</ul></li>
+<li>By &quot;reached&quot;, we are referring to <strong>relationships</strong></li>
+<li>The relationship between a weak entity set and the &quot;owning&quot; entity set is called a <strong>supporting relationship</strong></li>
+<li>The &quot;owning&quot; entity set is called a <strong>supporting entity set</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>Supporting Relationships and Entity Sets</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Suppose we have </p>
+
+<ul>
+<li>a weak entity set \(E\)</li>
+<li>with supporting relationship \(R\)</li>
+<li>and supporting entity set \(F\)</li>
+</ul></li>
+<li><p>Then the following requirements must hold</p>
+
+<ol>
+<li>\(R\) is a binary many-to-one or one-to-one relationship from \(E\) to \(F\) (i.e., there is at most one owner)</li>
+<li>There must be at least one \(F\) associated with each \(E\) (i.e., there is exactly one owner)</li>
+<li>The key of \(E\) must have some attributes that form a key in \(F\)</li>
+<li>If \(F\) is also a weak entity, then its key will have some attributes from its supporting entity set, and those
+will also appear in \(E\)
+<br><br></li>
+</ol></li>
+<li><p>Note that there may be more than one supporting relationship between \(E\) and \(F\), but this is quite rare</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h2>Weak Entity Sets in E/R Diagrams</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Weak entity sets are denoted in <strong>double rectangles</strong></li>
+<li>Supporting relationships are denoted as <strong>double diamonds</strong></li>
+<li>The (underlined) key of a weak entity set does not include the attributes from its supporting entity set</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/erd-weak-entity-set.png" alt="E/R Weak Entity Sets" title="E/R Weak Entity Sets" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h1>Converting E/R Diagrams to Relations</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Converting E/R Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One of the reasons that E/R diagrams are so useful is that they can be mechanically converted into 
+equivalent relations</li>
+<li>So we can convert our high-level design to a low-level implementation
+<br><br></li>
+<li>The basic strategy is 
+
+<ul>
+<li>turn each entity set into a relation with the same name and attributes</li>
+<li>turn a relationship into an entity set with attributes corresponding to the primary keys of the connected entity sets,
+as well as any attributes defined for the relationship itself</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Converting E/R Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre)
+Stars(_name_, address)
+StarsIn(_title_, _year_, _name_)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Converting E/R Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre)
+Studios(_name_, address)
+Owns(_title_, _year_, _name_)
+</code></pre>
+
+<p>With the following FD to account for the constraint on Studios:</p>
+
+<ul>
+<li>title, year \(\rightarrow\) name</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Converting E/R Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-keys.png" alt="E/R Diagram Keys" title="E/R Diagram Keys" class="img-responsive">
+</p>
+
+<p>For many-to-one relationships, it is common to merge the relationship table with the &quot;many&quot; side:</p>
+
+<pre><code>Movies(_title_, _year_, length, genre, name)
+Studios(_name_, address)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>Handling Weak Entity Sets</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Weak entity sets can also be converted to relations, but with a little more care
+<br><br></li>
+<li>The list of attributes must also include the attributes in the key of the supporting relation
+<br><br></li>
+<li>Whenever a relationship table refers to a weak entity set, it must do so with the <strong>entire key</strong>, including
+the part contributed by the supporting relation
+<br><br></li>
+<li>There is no need to create the supporting relationship table
+
+<ul>
+<li>It is a many-to-one or one-to-one table, so it can be merged into the weak entity set, as we did before</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>Handling Weak Entity Sets</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-translate-weak-entity-set.png" alt="E/R Weak Entity Set" title="E/R Weak Entity Set" class="img-responsive">
+</p>
+
+<pre><code>Studios(_name_, address)
+Crews(_number_, _studioName_, crewChief)
+</code></pre>
+
+<p><br></p>
+
+<p>Notice there is no need to create the relationship table</p>
+
+<pre><code>UnitOf(_number_, _studioName_, _name_)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses (or Subentity Sets)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Care must also be taken with the conversion of E/R diagrams that involve <strong>inheritance</strong></li>
+<li>This particular case is a little controversial</li>
+<li>There is no widespread agreement on the best way to do it
+<br><br></li>
+<li>The book suggests three approaches
+
+<ul>
+<li>The E/R viewpoint</li>
+<li>A single class</li>
+<li>NULL values</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>Subclasses: The E/R Viewpoint</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have root \(A\) and subclasses \(A_1\), \(A_2\), and \(A_3\)
+<br><br></li>
+<li>We create a relation for each entity set</li>
+<li>Each of the \(A_i\) must have all the attributes in the key of \(A\)</li>
+<li>I.e., the \(A_i\) explicitly inherit the key attributes from \(A\)</li>
+<li>That becomes the key of the \(A_i\), so if an \(A_i\) participates
+in a relationship, the entire key is used to identify an entity</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
+  <hgroup>
+    <h2>Subclasses: The E/R Viewpoint</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-subclasses.png" alt="E/R Inheritance" title="E/R Inheritance" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre)
+Cartoons(_title_, _year_)
+MurderMysteries(_title_, _year_, weapon)
+</code></pre>
+
+<p><strong>Important:</strong> </p>
+
+<ul>
+<li>Each entity must exist in the <code>Movies</code> table</li>
+<li>In addition, an entity may also exist in <code>Cartoons</code>, <code>MurdermMysteries</code>, or both</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>Subclasses: The Single Class Approach</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The idea behind this is to enumerate all possible subclasses and create a table for each
+<br><br></li>
+<li>In our case, the &quot;possible subclasses&quot; are
+
+<ul>
+<li>Movies</li>
+<li>CartoonMovies</li>
+<li>MurderMysteryMovies</li>
+<li>CartoonMurderMysteryMovies
+<br><br></li>
+</ul></li>
+<li>Yes, that is building a table for each <strong>subtree</strong> of the hierarchy that includes the root</li>
+<li>(And, by the way, it&#39;s not much different than what C++ does)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>Subclasses: Using NULL Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The traditional way of doing this is to construct <strong>just one relation</strong></li>
+<li>This relation would be named after the root, and have the attributes of <strong>all</strong> subclasses</li>
+<li>E.g., \(A\) would have the attributes of \(A\), \(A_1\), \(A_2\), and \(A_3\)</li>
+<li>In addition, there is an extra attribute (often called &quot;type&quot;) that says whether this instance
+is of type \(A_1\), \(A_2\), or \(A_3\)</li>
+<li>If multiple combinations are possible, then &quot;type&quot; needs to be more complicated</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>Subclasses: Using NULL Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/erd-subclasses.png" alt="E/R Inheritance" title="E/R Inheritance" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, movieType, length, genre, weapon)
+</code></pre>
+
+<p>Note that the attribute &quot;weapon&quot; would have NULLs for all entities except murder mysteries!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses (or Subentity Sets)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The traditional (single-table) approach has some advantages
+
+<ul>
+<li>There is only one row for each entity</li>
+<li>You can get all information for a given entity in just one lookup, without having to join
+lots of tables</li>
+</ul></li>
+<li>But it also has disadvantages
+
+<ul>
+<li>The tuples are <strong>big</strong>, so it is more expensive to read a tuple from disk</li>
+<li>Most queries may use only some of the attributes, so the rest is wasted
+<br><br></li>
+</ul></li>
+<li>Generally speaking, database administrators prefer the single-table approach, while OO programmers
+prefer the &quot;one table per entity set&quot; approach</li>
+<li>Almost nobody prefers the &quot;one table per subtree&quot; approach, except in very small cases</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h1>Unified Modeling Language</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
     <slide class="backdrop"></slide>
   </slides>
   <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
@@ -763,6 +1997,294 @@ to binary relationships only</li>
       <a href="#" target="_self" rel='tooltip' 
         data-slide=26 title='Design Principles'>
          26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Faithfulness'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Redundancy'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Redundancy of Relationships'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Simplicity'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Attributes vs. Entity Sets (or Relationships)'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Example: Historical Market Data'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Example: Historical Market Data'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Example: Historical Market Data'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Example: Historical Market Data'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Example: Historical Market Data'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Example: Historical Market Data'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Example: Historical Market Data'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Example: Historical Market Data'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Example: Historical Market Data'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Example: Historical Market Data'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Example: Historical Market Data'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Example: Historical Market Data'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Example: Historical Market Data'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Example: Historical Market Data'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Constraints in the E/R Model'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Constraints in the E/R Model'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Keys in the E/R Model'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Keys in the E/R Model'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Referential Integrity'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Referential Integrity'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='Degree Constraints'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='Weak Entity Sets'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='Weak Entity Sets'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='Weak Entity Sets: Because of Mergers'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Weak Entity Sets: Because of Hierarchies'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Keys for Entity Sets'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='Supporting Relationships and Entity Sets'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Weak Entity Sets in E/R Diagrams'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Converting E/R Diagrams to Relations'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Converting E/R Diagrams to Relations'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Converting E/R Diagrams to Relations'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Converting E/R Diagrams to Relations'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='Converting E/R Diagrams to Relations'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='Handling Weak Entity Sets'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='Handling Weak Entity Sets'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='Handling Subclasses (or Subentity Sets)'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='Subclasses: The E/R Viewpoint'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='Subclasses: The E/R Viewpoint'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='Subclasses: The Single Class Approach'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='Subclasses: Using NULL Values'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='Subclasses: Using NULL Values'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='Handling Subclasses (or Subentity Sets)'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='Unified Modeling Language'>
+         74
       </a>
     </li>
   </ul>
