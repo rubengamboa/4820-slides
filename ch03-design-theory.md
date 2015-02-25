@@ -143,7 +143,7 @@ Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
   1. $\mathcal{S} \rightarrow \mathcal{A} - \mathcal{S}$
   2. If $\mathcal{S'} \subsetneq \mathcal{S}$, then $\mathcal{S'} \nrightarrow \mathcal{A} - \mathcal{S'}$
   
-> * If only the first condition holds, we call $\mathcal{S}$ a **superkey**
+> * If the first condition holds, we call $\mathcal{S}$ a **superkey**, whether the second condition holds or not
 
 ---
 
