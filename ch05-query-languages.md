@@ -507,7 +507,7 @@ A   | B   | C
 * Sometimes, it would be preferable to create an extra row, e.g., with a student but with a NULL advisor
 * That's what outer joins do
 
----&twocol
+---
 
 ## Outer Joins
 
@@ -516,6 +516,10 @@ A   | B   | C
   * The tuples in $R \bowtie S$
   * A tuple $(a,b,c,NULL)$ for each $(a,b,c) \in R$ with no matching tuples in $S$
   * A tuple $(NULL,b,c,d)$ for each $(b,c,d) \in S$ with no matching tuples in $R$
+
+---&twocol
+
+## Outer Joins
 
 *** =left
 
@@ -546,6 +550,68 @@ A    | B   | C   | D
 4    | 5   | 6   | NULL
 7    | 8   | 9   | NULL
 NULL | 6   | 7   | 12
+
+---
+
+## Left and Right Outer Joins
+
+* Consider $R(A,B,C)$ and $S(B,C,D)$
+* Usually, we only want to keep the dangling tuples from $R$ and not $S$, or vice versa
+  <br><br>
+* **Left outer join** $R \overset{\circ}{\bowtie}_L S$: Keep dangling tuples from $R$ but not from $S$
+* **Right outer join** $R \overset{\circ}{\bowtie}_R S$: Keep dangling tuples from $S$ but not from $R$
+* I.e., the left outer join preserves the tuples in the left table, and the same for the right
+  <br><br>
+* Some databases only support left outer joins
+
+---&twocol
+
+## Outer Joins
+
+*** =left
+
+### $R(A,B,C)$
+
+A   | B   | C   
+----|-----|-----
+1   | 2   | 3
+4   | 5   | 6
+7   | 8   | 9
+
+### $S(B,C,D)$
+
+B   | C   | D   
+----|-----|-----
+2   | 3   | 10
+2   | 3   | 11
+6   | 7   | 12
+
+*** =right
+
+### $R \overset{\circ}{\bowtie}_L S$
+
+A    | B   | C   | D   
+-----|-----|-----|-----
+1    | 2   | 3   | 10
+1    | 2   | 3   | 11
+4    | 5   | 6   | NULL
+7    | 8   | 9   | NULL
+
+### $R \overset{\circ}{\bowtie}_R S$
+
+A    | B   | C   | D   
+-----|-----|-----|-----
+1    | 2   | 3   | 10
+1    | 2   | 3   | 11
+NULL | 6   | 7   | 12
+
+---
+
+# A Logic for Relations
+
+---
+
+# Relational Algebra and Datalog
 
 
 

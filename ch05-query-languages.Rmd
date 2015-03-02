@@ -558,8 +558,8 @@ NULL | 6   | 7   | 12
 * Consider $R(A,B,C)$ and $S(B,C,D)$
 * Usually, we only want to keep the dangling tuples from $R$ and not $S$, or vice versa
   <br><br>
-* **Left outer join** $R \overset{\circ}{\bowtie_L} S$: Keep dangling tuples from $R$ but not from $S$
-* **Right outer join** $R \overset{\circ}{\bowtie_R} S$: Keep dangling tuples from $S$ but not from $R$
+* **Left outer join** $R \overset{\circ}{\bowtie}_L S$: Keep dangling tuples from $R$ but not from $S$
+* **Right outer join** $R \overset{\circ}{\bowtie}_R S$: Keep dangling tuples from $S$ but not from $R$
 * I.e., the left outer join preserves the tuples in the left table, and the same for the right
   <br><br>
 * Some databases only support left outer joins
@@ -588,7 +588,7 @@ B   | C   | D
 
 *** =right
 
-### $R \overset{\circ}{\bowtie_L} S$
+### $R \overset{\circ}{\bowtie}_L S$
 
 A    | B   | C   | D   
 -----|-----|-----|-----
@@ -597,7 +597,7 @@ A    | B   | C   | D
 4    | 5   | 6   | NULL
 7    | 8   | 9   | NULL
 
-### $R \overset{\circ}{\bowtie_R} S$
+### $R \overset{\circ}{\bowtie}_R S$
 
 A    | B   | C   | D   
 -----|-----|-----|-----

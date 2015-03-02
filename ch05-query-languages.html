@@ -1261,6 +1261,16 @@ to invoke the \(\rho\) renaming operator
 </ul></li>
 </ul>
 
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    
 <div style='float:left;width:48%;'>
   <h3>\(R(A,B,C)\)</h3>
 
@@ -1359,6 +1369,178 @@ to invoke the \(\rho\) renaming operator
 </tbody></table>
 
 </div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Left and Right Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider \(R(A,B,C)\) and \(S(B,C,D)\)</li>
+<li>Usually, we only want to keep the dangling tuples from \(R\) and not \(S\), or vice versa
+<br><br></li>
+<li><strong>Left outer join</strong> \(R \overset{\circ}{\bowtie}_L S\): Keep dangling tuples from \(R\) but not from \(S\)</li>
+<li><strong>Right outer join</strong> \(R \overset{\circ}{\bowtie}_R S\): Keep dangling tuples from \(S\) but not from \(R\)</li>
+<li>I.e., the left outer join preserves the tuples in the left table, and the same for the right
+<br><br></li>
+<li>Some databases only support left outer joins</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>\(R(A,B,C)\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+</tbody></table>
+
+<h3>\(S(B,C,D)\)</h3>
+
+<table><thead>
+<tr>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>11</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7</td>
+<td>12</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(R \overset{\circ}{\bowtie}_L S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>10</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>11</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>NULL</td>
+</tr>
+</tbody></table>
+
+<h3>\(R \overset{\circ}{\bowtie}_R S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>10</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>11</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>6</td>
+<td>7</td>
+<td>12</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h1>A Logic for Relations</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h1>Relational Algebra and Datalog</h1>
+  </hgroup>
+  <article data-timings="">
+    
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -1503,6 +1685,36 @@ to invoke the \(\rho\) renaming operator
       <a href="#" target="_self" rel='tooltip' 
         data-slide=23 title='Outer Joins'>
          23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Outer Joins'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Left and Right Outer Joins'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Outer Joins'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='A Logic for Relations'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Relational Algebra and Datalog'>
+         28
       </a>
     </li>
   </ul>
