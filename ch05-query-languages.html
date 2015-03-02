@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Algebraic and Logical Query Languages</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>About this Chapter</h2>
+
+<ul>
+<li>The focus of this chapter is on <strong>programming database applications</strong>
+<br><br></li>
+<li>First, we will discuss some important extensions to relational algebra</li>
+<li>This includes some new operators that are very useful in practice, e.g., grouping and sorting</li>
+<li>It also involves some pragmatic compromises that make implementations of relational algebra more efficient
+<br><br></li>
+<li>We will also introduce a different query model that is based on logic</li>
+<li>This formalism is also useful as a foundation towards <strong>graphical query languages</strong>, e.g., Query-by-Example (QBE)</li>
+<li>And it supports more powerful queries than relational algebra</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Relational Operations on Bags</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>What Are Bags?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>bag</strong> (also called a <strong>multiset</strong>) is a collection of elements that
+
+<ol>
+<li>is <strong>unordered</strong></li>
+<li>allows <strong>multiple copies</strong> of the same element
+<br><br></li>
+</ol></li>
+<li>It is different from <strong>lists</strong> in that lists are ordered
+<br><br></li>
+<li>It is different from <strong>sets</strong> in that sets have only one copy of each element
+<br><br></li>
+<li>In our context, using bags means that we allow <strong>duplicate rows</strong> in a table</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Why Bags instead of Sets?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The original mathematical formalism of relational databases was based on sets
+<br><br></li>
+<li>Real relational database systems operated on <strong>bags</strong> instead of sets
+<br><br></li>
+<li>The reason is efficiency, e.g.,
+
+<ul>
+<li>To compute \(A \cup B\), simply return the elements of \(A\) followed by the elements of \(B\)</li>
+<li>To compute \(\pi(A)\), simply return project each element of \(A\) one at a time, and return the result as you compute it</li>
+</ul></li>
+<li>In neither case do you need to worry about duplicates</li>
+<li>Taking care of duplicates is an \(O(n\log n)\) operation, whereas the two algorithms above are only \(O(n)\)
+<br><br></li>
+<li>And don&#39;t forget that in the context of database, that could be a <strong>huge</strong> difference</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Bag Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose \(R\) and \(S\) are bags</li>
+<li>Tuple \(t\) appears \(n\) times in \(R\) and \(m\) times in \(S\)</li>
+<li>Here, we allow \(n\) and \(m\) to be zero</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Operation</th>
+<th>#times \(t\) appears in result</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(R \cup S\)</td>
+<td>\(n+m\)</td>
+</tr>
+<tr>
+<td>\(R \cap S\)</td>
+<td>\(\min(n,m)\)</td>
+</tr>
+<tr>
+<td>\(R - S\)</td>
+<td>\(\max(n-m, 0)\)</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Bag Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here are some example relations</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Relation \(S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Bag Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>\(R \cup S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(R \cap S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+</tbody></table>
+
+<h3>\(R - S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+<h3>\(S - R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Bag Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Relation \(\pi_B(R)\)</h3>
+
+<table><thead>
+<tr>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>2</td>
+</tr>
+<tr>
+<td>4</td>
+</tr>
+<tr>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+</tr>
+</tbody></table>
+
+<h3>Relation \(\sigma_{A \le 2}(R)\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Bag Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+<h3>Relation \(S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(R \times S\)</h3>
+
+<table><thead>
+<tr>
+<th>R.A</th>
+<th>R.B</th>
+<th>S.A</th>
+<th>S.B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Bag Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+<h3>Relation \(S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>6</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(R \bowtie_{R.A=S.A} S\)</h3>
+
+<table><thead>
+<tr>
+<th>R.A</th>
+<th>R.B</th>
+<th>S.A</th>
+<th>S.B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Bag Operations Pragmatics</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Remember: The main reason for bag operations is that they are more efficient than set operations
+<br><br></li>
+<li>So does it really make sense that a tuple \(t\) should appear \(n+m\) times in \(R \cup S\)?
+<br><br></li>
+<li>In general, expect database implementations to define their own semantics for bag operations</li>
+<li>And the precise semantics may vary depending on the way the optimizer chooses to implement
+a given query</li>
+<li>Which means it may change over time</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h1>Extended Operators of Relational Algebra</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Extended Operators of Relational Algebra</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>These operators are not part of the original description of relational algebra, but
+they are incredibly useful
+<br><br></li>
+<li><strong>Duplicate-elimination</strong> operator \(\delta\)</li>
+<li><strong>Sorting</strong> operator \(\tau\) (\(\sigma\) was taken) </li>
+<li><strong>Grouping</strong> operator \(\gamma\)</li>
+<li><strong>Aggregation</strong> combines multiple tuples into a single value, e.g., by averaging</li>
+<li><strong>Extended projection</strong> supports arithmetic operators and renaming in a projection</li>
+<li><strong>Outer joins</strong> are similar to joins, but retain tuples that do not meet the join criteria</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Duplicate Elimination</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This just converts a bag into a set by removing duplicates</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(\delta(R)\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Aggregate Operators</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>These summarize (or aggregate) one or more columns in the result</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Aggregations of \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>Aggregation</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>SUM(A)</td>
+<td>6</td>
+</tr>
+<tr>
+<td>AVG(A)</td>
+<td>1.5</td>
+</tr>
+<tr>
+<td>MIN(A)</td>
+<td>1</td>
+</tr>
+<tr>
+<td>MAX(A)</td>
+<td>3</td>
+</tr>
+<tr>
+<td>COUNT(A)</td>
+<td>4</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Grouping</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The grouping operator collects all the rows that have the same value of one or more columns</li>
+<li>That way, aggregation takes place on each group, not on the entire table
+<br><br></li>
+<li>This is the difference between
+
+<ul>
+<li>Average starting salary of graduating seniors</li>
+<li>Average starting salary of graduating seniors <strong>by major</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Grouping Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Students</h3>
+
+<table><thead>
+<tr>
+<th>StudentId</th>
+<th>Major</th>
+<th>Salary</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1001</td>
+<td>COSC</td>
+<td>60,000</td>
+</tr>
+<tr>
+<td>2010</td>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>1022</td>
+<td>COSC</td>
+<td>65,000</td>
+</tr>
+<tr>
+<td>3095</td>
+<td>EECS</td>
+<td>58,000</td>
+</tr>
+<tr>
+<td>9403</td>
+<td>EECS</td>
+<td>55,000</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(\pi_{\text{AVG}(\text{Salary})}(\text{Students})\)</h3>
+
+<table><thead>
+<tr>
+<th>\(\text{AVG}(\text{Salary})\)</th>
+</tr>
+</thead><tbody>
+</tbody></table>
+
+<p>50,000</p>
+
+<h3>\(\gamma_{\text{Major},\text{AVG}(\text{Salary})}(\text{Students})\)</h3>
+
+<table><thead>
+<tr>
+<th>Major</th>
+<th>\(\text{AVG}(\text{Salary})\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>COSC</td>
+<td>62,500</td>
+</tr>
+<tr>
+<td>EECS</td>
+<td>56,500</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Grouping and Aggregation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In general, we have \(\gamma_{L}(R)\)</li>
+<li>The list \(L\) may contain
+
+<ul>
+<li><strong>grouping attributes</strong> from \(R\), e.g., \(A\)</li>
+<li><strong>aggregated attributes</strong> from \(R\), e.g., \(\text{SUM}(B)\)
+<br><br></li>
+</ul></li>
+<li>To execute \(\gamma_{L}(R)\):
+
+<ol>
+<li>Partition the tuples of \(R\) into groups according to the values in the grouping attributes</li>
+<li>For each group, create a tuple that has the values of the grouping attributes and the
+aggregated values of the aggregated attributes</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Extended Grouping Operator</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The names for aggregated attributes are unwieldy, e.g, \(\text{SUM}(B)\)</li>
+<li>A simple extension allows us to rename these attributes immediately, without having
+to invoke the \(\rho\) renaming operator
+<br><br></li>
+</ul>
+
+<h3>\(\gamma_{\text{Major},\text{AVG}(\text{Salary})\rightarrow\text{AvgSalary}}(\text{Students})\)</h3>
+
+<table><thead>
+<tr>
+<th>Major</th>
+<th>AvgSalary</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>COSC</td>
+<td>62,500</td>
+</tr>
+<tr>
+<td>EECS</td>
+<td>56,500</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Extended Projection Operator</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Similarly, we can extend the projection operator</li>
+<li>Each item in a projection can be
+
+<ul>
+<li>an attribute \(A\) (just as before)</li>
+<li>a renamed attribute, e.g., \(A \rightarrow B\)</li>
+<li>a named expression, e.g., \(A+2 \rightarrow B\)</li>
+</ul></li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(\pi_{A, 2\cdot A\rightarrow A', B \rightarrow B'}(R)\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>A&#39;</th>
+<th>B&#39;</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>6</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Sorting Operator</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The sorting operator \(\tau\) orders the tuples by one or more columns</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>Relation \(R\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>6</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(\tau_{A,C}(R)\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>4</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>6</td>
+</tr>
+<tr>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A characteristic of joins is that only rows with matching tuples in the other relation show up in the result</li>
+<li>The remaining rows are left dangling
+<br><br></li>
+<li>E.g., suppose we join students with advisors</li>
+<li>If a student does not have an advisor, she will <strong>not show up</strong> on the results</li>
+<li>If an advisor does not have any students, she will <strong>not show up</strong> on the results, either
+<br><br></li>
+<li>Sometimes, it would be preferable to create an extra row, e.g., with a student but with a NULL advisor</li>
+<li>That&#39;s what outer joins do</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider \(R(A,B,C)\) and \(S(B,C,D)\)</li>
+<li>The outer join is \(R \overset{\circ}{\bowtie} S\) contains
+
+<ul>
+<li>The tuples in \(R \bowtie S\)</li>
+<li>A tuple \((a,b,c,NULL)\) for each \((a,b,c) \in R\) with no matching tuples in \(S\)</li>
+<li>A tuple \((NULL,b,c,d)\) for each \((b,c,d) \in S\) with no matching tuples in \(R\)</li>
+</ul></li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <h3>\(R(A,B,C)\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+</tbody></table>
+
+<h3>\(S(B,C,D)\)</h3>
+
+<table><thead>
+<tr>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>11</td>
+</tr>
+<tr>
+<td>6</td>
+<td>7</td>
+<td>12</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>\(R \overset{\circ}{\bowtie} S\)</h3>
+
+<table><thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>10</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>11</td>
+</tr>
+<tr>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>6</td>
+<td>7</td>
+<td>12</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Relational Operations on Bags'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='What Are Bags?'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Why Bags instead of Sets?'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Bag Operations'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Bag Operations'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Bag Operations'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Bag Operations'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Bag Operations'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Bag Operations'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Bag Operations Pragmatics'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Extended Operators of Relational Algebra'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Extended Operators of Relational Algebra'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Duplicate Elimination'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Aggregate Operators'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Grouping'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Grouping Example'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Grouping and Aggregation'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Extended Grouping Operator'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Extended Projection Operator'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Sorting Operator'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Outer Joins'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Outer Joins'>
+         23
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

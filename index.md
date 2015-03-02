@@ -30,7 +30,7 @@ widgets:      [mathjax, bootstrap]
 3. [Design Theory for Relational Databases](ch03-design-theory.html)
 4. [High-Level Database Models](ch04-high-level-models.html)
 <hr>
-5. Algebraic and Logical Query Languages
+5. [Algebraic and Logical Query Languages](ch05-query-languages.html)
 6. The Database Language SQL
 7. Constraints and Triggers
 8. Views and Indexes
