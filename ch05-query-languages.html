@@ -1882,6 +1882,38 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
 
 <slide class="" id="slide-43" style="background:;">
   <hgroup>
+    <h2>Beyond Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Datalog (with data structures) can also be extended to support aggregation</li>
+</ul>
+
+<pre><code>parent(charles1, james1).
+parent(elizabeth, james1).
+parent(charles2, charles1).
+parent(catherine, charles1).
+parent(james2, charles1).
+parent(sophia, elizabeth).
+parent(george1, sophia).
+
+children(X, &lt;Y&gt;) :- parent(Y, X).
+
+?children(james1, [charles1, elizabeth]).
+?children(charles1, [charles2, catherine, james2]).
+</code></pre>
+
+<ul>
+<li>Note that you can perform any aggregation operation on the resulting list</li>
+<li>Note that the grouping operator &lt;*&gt; should be defined in terms of sets, not lists...and this can be done (c.f. <a href="http://www.sigmod.org/publications/dblp/db/conf/vldb/TsurZ86.html">LDL</a>)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
     <h1>Relational Algebra and Datalog</h1>
   </hgroup>
   <article data-timings="">
@@ -1890,7 +1922,7 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-44" style="background:;">
+<slide class="" id="slide-45" style="background:;">
   <hgroup>
     <h2>Relational Algebra and Datalog</h2>
   </hgroup>
@@ -1947,7 +1979,7 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-45" style="background:;">
+<slide class="" id="slide-46" style="background:;">
   <hgroup>
     <h2>Relational Algebra and Datalog</h2>
   </hgroup>
@@ -1964,7 +1996,7 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-46" style="background:;">
+<slide class="" id="slide-47" style="background:;">
   <hgroup>
     <h2>Datalog and Relational Algebra</h2>
   </hgroup>
@@ -1985,7 +2017,7 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-47" style="background:;">
+<slide class="" id="slide-48" style="background:;">
   <hgroup>
     <h2>Datalog and GUIs</h2>
   </hgroup>
@@ -2002,7 +2034,7 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-48" style="background:;">
+<slide class="" id="slide-49" style="background:;">
   <hgroup>
     <h2>QBE Selection</h2>
   </hgroup>
@@ -2017,7 +2049,7 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-49" style="background:;">
+<slide class="" id="slide-50" style="background:;">
   <hgroup>
     <h2>QBE Join</h2>
   </hgroup>
@@ -2294,7 +2326,7 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=43 title='Relational Algebra and Datalog'>
+        data-slide=43 title='Beyond Datalog'>
          43
       </a>
     </li>
@@ -2312,26 +2344,32 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=46 title='Datalog and Relational Algebra'>
+        data-slide=46 title='Relational Algebra and Datalog'>
          46
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=47 title='Datalog and GUIs'>
+        data-slide=47 title='Datalog and Relational Algebra'>
          47
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=48 title='QBE Selection'>
+        data-slide=48 title='Datalog and GUIs'>
          48
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=49 title='QBE Join'>
+        data-slide=49 title='QBE Selection'>
          49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='QBE Join'>
+         50
       </a>
     </li>
   </ul>

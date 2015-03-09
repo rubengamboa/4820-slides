@@ -850,6 +850,30 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
 
 ---
 
+## Beyond Datalog
+
+* Datalog (with data structures) can also be extended to support aggregation
+
+```
+parent(charles1, james1).
+parent(elizabeth, james1).
+parent(charles2, charles1).
+parent(catherine, charles1).
+parent(james2, charles1).
+parent(sophia, elizabeth).
+parent(george1, sophia).
+
+children(X, <Y>) :- parent(Y, X).
+
+?children(james1, [charles1, elizabeth]).
+?children(charles1, [charles2, catherine, james2]).
+```
+
+* Note that you can perform any aggregation operation on the resulting list
+* Note that the grouping operator <*> should be defined in terms of sets, not lists...and this can be done (c.f. [LDL](http://www.sigmod.org/publications/dblp/db/conf/vldb/TsurZ86.html))
+
+---
+
 # Relational Algebra and Datalog
 
 ---
