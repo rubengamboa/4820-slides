@@ -29,6 +29,7 @@ widgets:      [mathjax, bootstrap]
 2. [The Relational Model of Data](ch02-relational-model.html)
 3. [Design Theory for Relational Databases](ch03-design-theory.html)
 4. [High-Level Database Models](ch04-high-level-models.html)
+*  [Exam 1 Results](exam1-results.html)
 <hr>
 5. [Algebraic and Logical Query Languages](ch05-query-languages.html)
 6. The Database Language SQL

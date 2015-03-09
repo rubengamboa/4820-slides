@@ -611,7 +611,318 @@ NULL | 6   | 7   | 12
 
 ---
 
+## A Logic for Relations
+
+* We will now introduce a different query language, which is **declarative**
+* I.e., the programmer states his or her **intention** and the database comes up with an execution plan
+  <br><br>
+* The query language **Datalog** is based on **logic programming**
+
+---
+
+## Prolog Facts
+
+```
+male(james1).
+male(charles1).
+male(charles2).
+male(james2).
+male(george1).
+
+female(catherine).
+female(elizabeth).
+female(sophia).
+
+parent(charles1, james1).
+parent(elizabeth, james1).
+parent(charles2, charles1).
+parent(catherine, charles1).
+parent(james2, charles1).
+parent(sophia, elizabeth).
+parent(george1, sophia).
+```
+
+---
+
+## Prolog Rules
+
+```
+mother(X,Y) :- parent(X,Y), female(Y).
+
+father(X,Y) :- parent(X,Y), male(Y).
+
+grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
+```
+
+---
+
+## Prolog Queries
+
+```
+?female(sophia).
+
+?female(charles1).
+
+?grandparent(X, elizabeth).
+
+?grandparent(charles2, Y).
+```
+
+---
+
+## Connection with Databases
+
+* Prolog facts make up the database (also called the **extensional database**)
+* Prolog rules correspond to the program (also called the **intensional database**)
+* Prolog queries are, well, queries
+  <br><br>
+
+> * Terminology:
+    * A **predicate** is a function that returns true or false
+    * An **atom** is an invocation of a predicate, e.g., $f(1,4)$
+    * A **literal** is an atom or a negated atom
+    * An **arithmetic atom** is an atom that tests arithmetic properties, e.g., $3 \le 5-x$
+    * A non-arithmetic atom is called a **relational atom**
+    * A **rule** contains a **head** and a **body**, which has one or more literals
+    * Each literal in a both is called a **goal** or **subgoal**
+
+---
+
+## Connection with Databases
+
+* `Movies(title, year, length, genre, studioName, producerC#)`
+
+```
+LongMovies(T,Y) :- Movies(T,Y,L,G,S,P) AND L >= 100.
+
+
+LongMovies(T,Y) :- Movies(T,Y,L,_,_,_), L >= 100.
+```
+
+<br><br>
+
+* Compare with 
+  $$\text{LongMovie} := \pi_{\text{title},\text{year}}(\sigma_{\text{length} \ge 100}(\text{Movies}))$$
+
+---
+
+## Semantics of Datalog Rules
+
+* So what does a rule mean?
+* E.g., what does $h(X,Y) \leftarrow b_1(X,Z), b_2(Z,Y)$ mean?
+  <br><br>
+* First, consider all possible values for all variables appearing in the rules
+* E.g., consider all possible values of $X$, $Y$, and $Z$
+  <br><br>
+* Suppose that $\langle x_0, y_0, z_0 \rangle$ is a combination of values that makes all of the subgoals in the body true
+* Then, we add the corresponding head to the answer
+  <br><br>
+* I.e., suppose $b_1(x_0, z_0)$ and $b_2(z_0, y_0)$ are both true
+* Then $h(x_0, y_0)$ is one of the answers
+
+---
+
+## Executing Datalog Queries
+
+* Start with a **query**, e.g., ?grandparent(X, elizabeth).
+* Consider all rules whose head matches the query
+  * In this case, only this rule is applicable:
+  
+    ```
+    grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
+    ```
+* Now consider the body of the rule, after substituting variables appropriately
+  * In this case, we have: 
+  
+  ```
+  parent(X, Z), parent(Z, elizabeth)
+  ```
+* The resulting literals become new **subgoals**, and we process them just like the main goal
+  * E.g., we would find all solutions to ?parent(X, Z), and then combine those with the solutions to ?parent(z, elizabeth)
+  * Notice that's ?parent(z, elizabeth) and not ?parent(Z, elizabeth)
+
+
+---
+
+## Some Problems
+
+* Consider the following rule
+
+  ```
+  orphan(X) :- NOT parent(X, Y).
+  
+  ```
+
+* In particular, suppose X is ruben and Y is buffy
+* `parent(ruben, buffy)` is false
+* Does that mean I'm an orphan?
+
+---
+
+## Some More Problems
+
+* Consider the following rule
+
+  ```
+  even(X) :- X = 2*Y.
+  
+  ```
+
+* The goal ?even(X) has an infinite number of solutions!
+* That's not **safe**
+
+---
+
+## Even More Problems
+
+* Consider the following rule
+
+  ```
+  advises(X, Y) :- faculty(X).
+  
+  ```
+
+* The goal ?advises(john,Y) also has an infinite number of solutions!
+* That's not **safe**
+
+---
+
+## Safety Condition
+
+* If a variable $X$ appears in a rule, it must also appear in
+  * a relational subgoal of the body
+  * that is not negated
+
+* This guarantees that the answers to queries are always finite (hence **safe**)
+* It also guarantees that negations and arithmetic predicates always operate on **bound** variables
+* Which means that we can find answers to queries in finite time (also **safe**)
+
+---
+
+## Semantics of Safe Datalog
+
+* Don't consider all possible values of all variables!
+  <br><br>
+* Instead, consider the positive relational literals
+* These are, in effect, lookups into the extensional database
+* So we get a finite number of tuples (i.e., bindings to the variables)
+  <br><br>
+* Since the rule is safe, this means all the variables in the rule have values
+* Now test to see whether the negated literals and arithmetic literals are true
+* If they are, the head (with the given variable bindings) is added to the result
+
+---
+
+## Recursive Datalog
+
+* One of the great things about Datalog is that it supports recursive queries
+
+```
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+bbf(X) :- royal(X), french(X).
+bbf(X) :- mother(X, Y), bbf(Y), father(X, Z), bbf(Z).
+```
+
+* Neither of these can be done with relational algebra!
+
+---
+
+## Beyond Datalog
+
+* Prolog supports more complex data structures, such as records and lists
+
+```
+append([], Ys, Ys).
+append([X | Xs], Ys, [X | Zs]) :- append(Xs, Ys, Zs).
+
+?append([1,2,3], [4,5], [1,2,3,4,5]).
+
+zip([], [], []).
+zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
+
+?zip([a,b,c], [1,2,3], [pair(a,1), pair(b,2), pair(c,3)]).
+
+```
+
+* Neither of these can be done with relational algebra!
+
+---
+
 # Relational Algebra and Datalog
 
+---
+
+## Relational Algebra and Datalog
+
+* It turns out that relational algebra expressions can be translated into Datalog
+
+Relational Algebra           | Datalog
+-----------------------------|----------------------------------------------------------
+$A \cup B$                   | P :- A.<br>P :- B.
+$A \cap B$                   | P :- A, B.
+$A - B$                      | P :- A, NOT B.
+$\pi_{x,y}(A)$               | P(X,Y) :- A(X,Y,Z).
+$\sigma_{C_1 \wedge C_2}(A)$ | P(X,Y) :- A(X,Y), C1(X,Y), C2(X,Y).
+$\sigma_{C_1 \vee C_2}(A)$   | P(X,Y) :- A(X,Y), C1(X,Y).<br>P(X,Y) :- A(X,Y), C2(X,Y).
+$A \times B$                 | P(X,Y,W,Z) :- A(X,Y), B(W,Z).
+$A \bowtie B$                | P(X,Y,Z) :- A(X,Y), B(Y,Z).
+$A \bowtie_\theta B$         | P(X,Y,W,Z) :- A(X,Y), B(W,Z), $\theta$(X,Y,W,Z).
+
+---
+
+## Relational Algebra and Datalog
+
+* Repeated applications of the rules in the previous slide will convert any relational algebra query into a Datalog program
+
+<div class="centered">
+    <img src="assets/img/relational-algebra-into-datalog.png" title="Converting Relational Algebra into Datalog" alt="Converting Relational Algebra into Datalog">
+</div>
+
+---
+
+## Datalog and Relational Algebra
+
+* A single, **safe** Datalog rule can be translated into Relational Algebra
+* That means that relational algebra and datalog can describe exactly the same queries
+* This class of queries is called **relationally complete**
+  <br><br>
+* But if you consider more than one datalog rule, things change
+* In particular, recursive datalog queries cannot be translated into relational algebra
+  <br><br>
+* Also, extended relational algebra cannot be translated into Datalog, but it can be
+  translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)
+
+---
+
+## Datalog and GUIs
+
+* Query-by-Example (QBE) is an old database product that used a graphical query language
+* Microsoft Access is one of its famous descendants
+* Parts of QBE are also reinvented often by programmers writing web front-ends to database systems
+  <br><br>
+* QBE is very closely related to Datalog!
+
+---
+
+## QBE Selection
+
+<div class="centered">
+    <img src="assets/img/qbe-selection.png" title="QBE Selection" alt="QBE Selection">
+</div>
+
+$$\sigma_{\text{rating=10}}(\text{Sailors})$$
+
+---
+
+## QBE Join
+
+<div class="centered">
+    <img src="assets/img/qbe-join.png" title="QBE Join" alt="QBE Join">
+</div>
+
+$$\pi_{\text{sname}}((\text{Sailors} \bowtie \text{Reserves}) \bowtie_{\text{Reserves.bid=R2.bid}}(\rho_{\text{R2}}(\text{Reserves}))$$
 
 
+* Notice how both joins and selections follow the same principles as Datalog

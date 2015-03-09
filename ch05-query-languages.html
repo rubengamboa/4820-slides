@@ -1537,10 +1537,501 @@ to invoke the \(\rho\) renaming operator
 
 <slide class="" id="slide-28" style="background:;">
   <hgroup>
+    <h2>A Logic for Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We will now introduce a different query language, which is <strong>declarative</strong></li>
+<li>I.e., the programmer states his or her <strong>intention</strong> and the database comes up with an execution plan
+<br><br></li>
+<li>The query language <strong>Datalog</strong> is based on <strong>logic programming</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Prolog Facts</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>male(james1).
+male(charles1).
+male(charles2).
+male(james2).
+male(george1).
+
+female(catherine).
+female(elizabeth).
+female(sophia).
+
+parent(charles1, james1).
+parent(elizabeth, james1).
+parent(charles2, charles1).
+parent(catherine, charles1).
+parent(james2, charles1).
+parent(sophia, elizabeth).
+parent(george1, sophia).
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Prolog Rules</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>mother(X,Y) :- parent(X,Y), female(Y).
+
+father(X,Y) :- parent(X,Y), male(Y).
+
+grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Prolog Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>?female(sophia).
+
+?female(charles1).
+
+?grandparent(X, elizabeth).
+
+?grandparent(charles2, Y).
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Connection with Databases</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Prolog facts make up the database (also called the <strong>extensional database</strong>)</li>
+<li>Prolog rules correspond to the program (also called the <strong>intensional database</strong>)</li>
+<li>Prolog queries are, well, queries
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Terminology:
+
+<ul>
+<li>A <strong>predicate</strong> is a function that returns true or false</li>
+<li>An <strong>atom</strong> is an invocation of a predicate, e.g., \(f(1,4)\)</li>
+<li>A <strong>literal</strong> is an atom or a negated atom</li>
+<li>An <strong>arithmetic atom</strong> is an atom that tests arithmetic properties, e.g., \(3 \le 5-x\)</li>
+<li>A non-arithmetic atom is called a <strong>relational atom</strong></li>
+<li>A <strong>rule</strong> contains a <strong>head</strong> and a <strong>body</strong>, which has one or more literals</li>
+<li>Each literal in a both is called a <strong>goal</strong> or <strong>subgoal</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Connection with Databases</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><code>Movies(title, year, length, genre, studioName, producerC#)</code></li>
+</ul>
+
+<pre><code>LongMovies(T,Y) :- Movies(T,Y,L,G,S,P) AND L &gt;= 100.
+
+
+LongMovies(T,Y) :- Movies(T,Y,L,_,_,_), L &gt;= 100.
+</code></pre>
+
+<p><br><br></p>
+
+<ul>
+<li>Compare with 
+\[\text{LongMovie} := \pi_{\text{title},\text{year}}(\sigma_{\text{length} \ge 100}(\text{Movies}))\]</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Semantics of Datalog Rules</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>So what does a rule mean?</li>
+<li>E.g., what does \(h(X,Y) \leftarrow b_1(X,Z), b_2(Z,Y)\) mean?
+<br><br></li>
+<li>First, consider all possible values for all variables appearing in the rules</li>
+<li>E.g., consider all possible values of \(X\), \(Y\), and \(Z\)
+<br><br></li>
+<li>Suppose that \(\langle x_0, y_0, z_0 \rangle\) is a combination of values that makes all of the subgoals in the body true</li>
+<li>Then, we add the corresponding head to the answer
+<br><br></li>
+<li>I.e., suppose \(b_1(x_0, z_0)\) and \(b_2(z_0, y_0)\) are both true</li>
+<li>Then \(h(x_0, y_0)\) is one of the answers</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Executing Datalog Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Start with a <strong>query</strong>, e.g., ?grandparent(X, elizabeth).</li>
+<li><p>Consider all rules whose head matches the query</p>
+
+<ul>
+<li>In this case, only this rule is applicable:</li>
+</ul>
+
+<pre><code>grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
+</code></pre></li>
+<li><p>Now consider the body of the rule, after substituting variables appropriately</p>
+
+<ul>
+<li>In this case, we have: </li>
+</ul>
+
+<pre><code>parent(X, Z), parent(Z, elizabeth)
+</code></pre></li>
+<li><p>The resulting literals become new <strong>subgoals</strong>, and we process them just like the main goal</p>
+
+<ul>
+<li>E.g., we would find all solutions to ?parent(X, Z), and then combine those with the solutions to ?parent(z, elizabeth)</li>
+<li>Notice that&#39;s ?parent(z, elizabeth) and not ?parent(Z, elizabeth)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Some Problems</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Consider the following rule</p>
+
+<pre><code>orphan(X) :- NOT parent(X, Y).
+
+</code></pre></li>
+<li><p>In particular, suppose X is ruben and Y is buffy</p></li>
+<li><p><code>parent(ruben, buffy)</code> is false</p></li>
+<li><p>Does that mean I&#39;m an orphan?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Some More Problems</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Consider the following rule</p>
+
+<pre><code>even(X) :- X = 2*Y.
+
+</code></pre></li>
+<li><p>The goal ?even(X) has an infinite number of solutions!</p></li>
+<li><p>That&#39;s not <strong>safe</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Even More Problems</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Consider the following rule</p>
+
+<pre><code>advises(X, Y) :- faculty(X).
+
+</code></pre></li>
+<li><p>The goal ?advises(john,Y) also has an infinite number of solutions!</p></li>
+<li><p>That&#39;s not <strong>safe</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Safety Condition</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>If a variable \(X\) appears in a rule, it must also appear in</p>
+
+<ul>
+<li>a relational subgoal of the body</li>
+<li>that is not negated</li>
+</ul></li>
+<li><p>This guarantees that the answers to queries are always finite (hence <strong>safe</strong>)</p></li>
+<li><p>It also guarantees that negations and arithmetic predicates always operate on <strong>bound</strong> variables</p></li>
+<li><p>Which means that we can find answers to queries in finite time (also <strong>safe</strong>)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Semantics of Safe Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Don&#39;t consider all possible values of all variables!
+<br><br></li>
+<li>Instead, consider the positive relational literals</li>
+<li>These are, in effect, lookups into the extensional database</li>
+<li>So we get a finite number of tuples (i.e., bindings to the variables)
+<br><br></li>
+<li>Since the rule is safe, this means all the variables in the rule have values</li>
+<li>Now test to see whether the negated literals and arithmetic literals are true</li>
+<li>If they are, the head (with the given variable bindings) is added to the result</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Recursive Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One of the great things about Datalog is that it supports recursive queries</li>
+</ul>
+
+<pre><code>ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+bbf(X) :- royal(X), french(X).
+bbf(X) :- mother(X, Y), bbf(Y), father(X, Z), bbf(Z).
+</code></pre>
+
+<ul>
+<li>Neither of these can be done with relational algebra!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Beyond Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Prolog supports more complex data structures, such as records and lists</li>
+</ul>
+
+<pre><code>append([], Ys, Ys).
+append([X | Xs], Ys, [X | Zs]) :- append(Xs, Ys, Zs).
+
+?append([1,2,3], [4,5], [1,2,3,4,5]).
+
+zip([], [], []).
+zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
+
+?zip([a,b,c], [1,2,3], [pair(a,1), pair(b,2), pair(c,3)]).
+
+</code></pre>
+
+<ul>
+<li>Neither of these can be done with relational algebra!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
     <h1>Relational Algebra and Datalog</h1>
   </hgroup>
   <article data-timings="">
     
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Relational Algebra and Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It turns out that relational algebra expressions can be translated into Datalog</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Relational Algebra</th>
+<th>Datalog</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>\(A \cup B\)</td>
+<td>P :- A.<br>P :- B.</td>
+</tr>
+<tr>
+<td>\(A \cap B\)</td>
+<td>P :- A, B.</td>
+</tr>
+<tr>
+<td>\(A - B\)</td>
+<td>P :- A, NOT B.</td>
+</tr>
+<tr>
+<td>\(\pi_{x,y}(A)\)</td>
+<td>P(X,Y) :- A(X,Y,Z).</td>
+</tr>
+<tr>
+<td>\(\sigma_{C_1 \wedge C_2}(A)\)</td>
+<td>P(X,Y) :- A(X,Y), C1(X,Y), C2(X,Y).</td>
+</tr>
+<tr>
+<td>\(\sigma_{C_1 \vee C_2}(A)\)</td>
+<td>P(X,Y) :- A(X,Y), C1(X,Y).<br>P(X,Y) :- A(X,Y), C2(X,Y).</td>
+</tr>
+<tr>
+<td>\(A \times B\)</td>
+<td>P(X,Y,W,Z) :- A(X,Y), B(W,Z).</td>
+</tr>
+<tr>
+<td>\(A \bowtie B\)</td>
+<td>P(X,Y,Z) :- A(X,Y), B(Y,Z).</td>
+</tr>
+<tr>
+<td>\(A \bowtie_\theta B\)</td>
+<td>P(X,Y,W,Z) :- A(X,Y), B(W,Z), \(\theta\)(X,Y,W,Z).</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Relational Algebra and Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Repeated applications of the rules in the previous slide will convert any relational algebra query into a Datalog program</li>
+</ul>
+
+<div class="centered">
+    <img src="assets/img/relational-algebra-into-datalog.png" title="Converting Relational Algebra into Datalog" alt="Converting Relational Algebra into Datalog">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Datalog and Relational Algebra</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A single, <strong>safe</strong> Datalog rule can be translated into Relational Algebra</li>
+<li>That means that relational algebra and datalog can describe exactly the same queries</li>
+<li>This class of queries is called <strong>relationally complete</strong>
+<br><br></li>
+<li>But if you consider more than one datalog rule, things change</li>
+<li>In particular, recursive datalog queries cannot be translated into relational algebra
+<br><br></li>
+<li>Also, extended relational algebra cannot be translated into Datalog, but it can be
+translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Datalog and GUIs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Query-by-Example (QBE) is an old database product that used a graphical query language</li>
+<li>Microsoft Access is one of its famous descendants</li>
+<li>Parts of QBE are also reinvented often by programmers writing web front-ends to database systems
+<br><br></li>
+<li>QBE is very closely related to Datalog!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>QBE Selection</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/qbe-selection.png" title="QBE Selection" alt="QBE Selection">
+</div>
+
+<p>\[\sigma_{\text{rating=10}}(\text{Sailors})\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>QBE Join</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/qbe-join.png" title="QBE Join" alt="QBE Join">
+</div>
+
+<p>\[\pi_{\text{sname}}((\text{Sailors} \bowtie \text{Reserves}) \bowtie_{\text{Reserves.bid=R2.bid}}(\rho_{\text{R2}}(\text{Reserves}))\]</p>
+
+<ul>
+<li>Notice how both joins and selections follow the same principles as Datalog</li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -1713,8 +2204,134 @@ to invoke the \(\rho\) renaming operator
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=28 title='Relational Algebra and Datalog'>
+        data-slide=28 title='A Logic for Relations'>
          28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Prolog Facts'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Prolog Rules'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Prolog Queries'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Connection with Databases'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Connection with Databases'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Semantics of Datalog Rules'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Executing Datalog Queries'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Some Problems'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Some More Problems'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Even More Problems'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Safety Condition'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Semantics of Safe Datalog'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Recursive Datalog'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Beyond Datalog'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Relational Algebra and Datalog'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Relational Algebra and Datalog'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Relational Algebra and Datalog'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Datalog and Relational Algebra'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Datalog and GUIs'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='QBE Selection'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='QBE Join'>
+         49
       </a>
     </li>
   </ul>
