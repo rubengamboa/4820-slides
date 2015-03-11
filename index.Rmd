@@ -32,7 +32,7 @@ widgets:      [mathjax, bootstrap]
 *  [Exam 1 Results](exam1-results.html)
 <hr>
 5. [Algebraic and Logical Query Languages](ch05-query-languages.html)
-6. The Database Language SQL
+6. [The Database Language SQL](ch06-sql.html)
 7. Constraints and Triggers
 8. Views and Indexes
 <hr>

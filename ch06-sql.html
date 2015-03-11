@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>The Database Language SQL</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>Chapter Overview</h2>
+
+<ul>
+<li>The purpose of this chapter is to introduce <strong>SQL</strong></li>
+<li><strong>SQL</strong> is the <strong>Structured Query Language</strong></li>
+<li>It is the standard language for querying and manipulating database
+<br><br></li>
+<li>Note that SQL is a &quot;soft&quot; standard</li>
+<li>There are lots of dialects</li>
+<li>We&#39;ll stick close to the official ANSI standard, but you should always consult your database manual for details</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Simple Queries in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Using SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL is generally used in one of three ways:
+
+<ol>
+<li>A user can type SQL into a command area</li>
+<li>A programmer can create a SQL query and it&#39;s run when the program executes</li>
+<li>A program can construct a query dynamically
+<br><br></li>
+</ol></li>
+<li>Option 1 is the one we&#39;ll use most in this class</li>
+<li>But it&#39;s actually the least common option
+<br><br></li>
+<li>Also, a lot of the programs that execute database queries are web applications</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Simple Queries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The basic query in SQL has the structure SELECT ... FROM ... WHERE ...
+<br><br></li>
+<li>After the SELECT is a list of <strong>attributes</strong> or a single *
+
+<ul>
+<li>&quot;SELECT&quot; should really have been &quot;PROJECT&quot;
+<br><br></li>
+</ul></li>
+<li>After the FROM is a list of <strong>relations</strong></li>
+<li>The relations are implicitly cross-producted (if that&#39;s a word)
+<br><br></li>
+<li>After the WHERE is a <strong>condition</strong></li>
+<li>This is the selection part of the query</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Simple Queries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider this schema:</li>
+</ul>
+
+<pre><code>Movies(title , year , length , genre , studioName , producerC#) 
+StarsIn(movieTitle , movieYear , starName) 
+MovieStar(name , address , gender , birthdate) 
+MovieExec(name , address , cert# , netWorth) 
+Studio(name , address , presC#) 
+</code></pre>
+
+<ul>
+<li>A basic query may be</li>
+</ul>
+
+<pre><code>SELECT *
+  FROM Movies
+ WHERE studioName = &#39;Lucasfilm&#39;
+   AND year = 1977
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Reading SQL Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Start by looking at the FROM clause</li>
+<li>That tells you what relations are being considered</li>
+<li>Remember that you can only look at one tuple from each relation at a time
+<br><br></li>
+<li>Then look at the WHERE clause</li>
+<li>This tells you which tuples are chosen
+<br><br></li>
+<li>Finally, look at the SELECT clause</li>
+<li>That tells you which attributes will make it to the answer</li>
+</ul>
+
+<pre><code>SELECT *
+  FROM Movies
+ WHERE studioName = &#39;Lucasfilm&#39;
+   AND year = 1977
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>SQL Queries and Relational Algebra</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Here is a generic SQL query</p>
+
+<pre><code>SELECT L
+  FROM R
+ WHERE C
+</code></pre>
+
+<p>This converts into the the relational algebra query
+\[\pi_L(\sigma_C(R))\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Projection in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT title, year
+  FROM Movies
+ WHERE studioName = &#39;Lucasfilm&#39;
+   AND year = 1977
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Title</th>
+<th>Year</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Extended Projection in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT title AS Name, year Released, length/60 AS Duration
+  FROM Movies
+ WHERE studioName = &#39;Lucasfilm&#39;
+   AND year = 1977
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Released</th>
+<th>Duration</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Star Wars</td>
+<td>1977</td>
+<td>2.05</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Selection in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Selection is accomplished with the condition in the FROM clause</li>
+<li>The condition syntax in SQL is actually more powerful than the syntax in relational algebra</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Conditions in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The base condition is a comparison, with the operators
+
+<ul>
+<li>=, &lt;, &gt;, &lt;=, &gt;=, &lt;&gt;</li>
+<li>Many databases also support != instead of &lt;&gt;
+<br><br></li>
+</ul></li>
+<li>The values that can be compared can be
+
+<ul>
+<li>constants, e.g., &#39;Fred&#39; or 42</li>
+<li>attributes of the relations listed in the FROM clause, e.g., year</li>
+<li>arithmetic expressions</li>
+<li>date expressions</li>
+<li>string expressions</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Conditions in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Base conditions can be combined using the familiar relational operators
+
+<ul>
+<li>AND</li>
+<li>OR</li>
+<li>NOT
+<br><br></li>
+</ul></li>
+<li>You can also use parentheses to groups of conditions, e.g.,</li>
+</ul>
+
+<pre><code>SELECT title AS Name, year Released, length/60 AS Duration
+  FROM Movies
+ WHERE studioName = &#39;Lucasfilm&#39;
+   AND (   year = 1977
+        OR year = 1980 )
+</code></pre>
+
+<ul>
+<li>But not all databases support this</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>String Comparisons in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Strings can also be compared using 
+
+<ul>
+<li>=, &lt;, &gt;, &lt;=, &gt;=, &lt;&gt;
+<br><br></li>
+</ul></li>
+<li>The meaning of the comparisons depends on the (natural) language used in the database</li>
+<li>Basically, comparisons are done using lexicographic ordering</li>
+<li>That&#39;s a fancy word for &quot;dictionary ordering&quot;
+<br><br></li>
+<li>The very good question is &quot;What language is the dictionary in?&quot;</li>
+<li>Maybe your database runs in en_US or en_GB</li>
+<li>Or maybe it&#39;s fr_CA or fr_FR</li>
+<li>Keep in mind that the ordering of words may differ depending on the specific dialect of a language!</li>
+<li>This is called the <strong>collation</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Locales in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What is the locale of your database?
+<br><br></li>
+<li>You can ignore this, and hope that the database is in en_US</li>
+<li>(Or whatever language you prefer)
+<br><br></li>
+<li>But keep in mind that the DBA can change this setting (possibly breaking your program)
+<br><br></li>
+<li>It is best to be explicit and <strong>set the locale</strong> by yourself</li>
+<li>This setting affects your <strong>session</strong> only</li>
+<li>So your queries always run in the same locale</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>String Operators</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;re all familiar with the basic arithmetic operators, e.g., +, -, *, /
+<br><br></li>
+<li>There are also string operators:
+
+<ul>
+<li><strong>Concatenation:</strong>  &#39;hello&#39; || &#39; &#39; || &#39;world&#39;
+<br><br></li>
+</ul></li>
+<li>The problem is that this isn&#39;t standard <strong>at all</strong>
+
+<ul>
+<li>&#39;hello&#39; + &#39; &#39; + &#39;world&#39;</li>
+<li>concat(&#39;hello&#39;, concat(&#39; &#39;, &#39;world&#39;))</li>
+</ul></li>
+</ul>
+
+<ul class = "build incremental">
+<li>There are may other string operators, but check your database manual for the syntax!
+
+<ul>
+<li><strong>Substring</strong></li>
+<li><strong>Replace</strong></li>
+<li><strong>Touppercase</strong></li>
+<li><strong>Tonumber</strong></li>
+<li><strong>Todate</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>String Comparisons</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We can compare with 
+
+<ul>
+<li>=, &lt;, &gt;, &lt;=, &gt;=, &lt;&gt;
+<br><br></li>
+</ul></li>
+<li>But it also makes sense to compare strings using partial matches</li>
+<li>E.g., we want to find all strings with names that look like *.SQL
+<br><br></li>
+<li>The LIKE operator does this</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>String LIKE Comparisons</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>LIKE compares a string and a <strong>pattern</strong>:
+
+<ul>
+<li>string LIKE pattern</li>
+<li>string NOT LIKE pattern
+<br><br></li>
+</ul></li>
+<li>The pattern is a string with some special <strong>matching</strong> (also <strong>globbing</strong>) characters
+
+<ul>
+<li>% matches zero or more characters</li>
+<li>_ matches precisely one character (any character)</li>
+</ul></li>
+</ul>
+
+<pre><code>SELECT *
+  FROM Movies
+ WHERE title LIKE &#39;Star %&#39;
+   AND title LIKE &#39;% Wars&#39;
+</code></pre>
+
+<ul>
+<li>This will find &#39;Star Wars&#39;</li>
+<li>It will also find &#39;Star Fairies and the Border Wars&#39;</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>String LIKE Comparisons</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Is this query TRUE or FALSE?
+
+<ul>
+<li>&#39;star wars&#39; LIKE &#39;Star %&#39;
+<br><br></li>
+</ul></li>
+<li>Sadly, it depends on your database and settings</li>
+<li>Remember the collations?</li>
+<li>Some collations are case-sensitive, and some are not</li>
+<li>So it depends on which collation you&#39;re using!
+<br><br></li>
+<li>By default, in en_US with default collation, LIKE is case insensitive</li>
+<li>So the condition is TRUE
+<br><br></li>
+<li>Some databases support the comparison operator CLIKE, which is a case-sensitive version of LIKE</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Date and Time Comparisons</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL supports the Date and Time data types</li>
+<li>But there is <strong>great variety</strong> in the syntax between different databases</li>
+<li>There are also differences when it comes to precisely what date and a time means
+
+<ul>
+<li>In some databases, the Date actually has a Time component</li>
+<li>In others, it does not</li>
+<li>Some databases have a DateTime object</li>
+<li>That may mean it has a Date and a Time</li>
+<li>Or it may mean that Date has a Date and Time, but DateTime has more resolution than Date (e.g., it supports milliseconds)
+<br><br></li>
+</ul></li>
+<li><strong>Check your database manual!</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>ANSI Date and Time Constants</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>DATE &#39;yyyy-mm-dd&#39;
+
+<ul>
+<li>DATE &#39;2015-03-05&#39;</li>
+<li>DATE &#39;2015-03-10&#39;
+<br><br></li>
+</ul></li>
+<li>TIME &#39;hh:mm:ss.ddd&#39;
+
+<ul>
+<li>TIME &#39;03:15:00&#39;</li>
+<li>TIME &#39;15:30:00&#39;</li>
+<li>TIME &#39;15:30:00.23&#39;</li>
+<li>TIME &#39;15:30:00.938548&#39;</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>ANSI Date and Time Constants</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>TIME &#39;hh:mm:ss.ddd+h:mm&#39; or TIME &#39;hh:mm:ss.ddd-h:mm&#39;
+
+<ul>
+<li>TIME &#39;03:15:00-7:00&#39;</li>
+<li>TIME &#39;03:15:00-6:00&#39;
+<br><br></li>
+</ul></li>
+<li>TIMESTAMP &#39;yyyy-mm-dd hh:mm:ss.ddd&#39;
+
+<ul>
+<li>TIMESTAMP &#39;2015-03-05 15:15:00&#39;</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>ANSI Date and Time Conditions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We can use the date and time constants in conditions</li>
+</ul>
+
+<pre><code>SELECT *
+  FROM Movies
+ WHERE releaseDate &gt;= DATE &#39;2015-03-05&#39;
+   AND releaseDate &lt;= DATE &#39;2015-03-15&#39;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>NULL Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>NULL values appear for a multitude of reasons
+
+<ol>
+<li>There is some value, but we don&#39;t know what it is</li>
+<li>There is no possible value for this particular field</li>
+<li>The value for this particular field is a secret
+<br><br></li>
+</ol></li>
+<li>So how do we handle NULL values in
+
+<ul>
+<li>expressions?</li>
+<li>conditions?</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>NULL Values in Expressions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>If any input to an expression is NULL, the value of the expression is NULL
+<br><br></li>
+<li>2 + NULL = NULL</li>
+<li>NULL - NULL = NULL</li>
+<li>0 * NULL = NULL</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>NULL Values in Conditions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>If an input to a condition is NULL, the value of the condition if UNKNOWN</li>
+<li>That means that conditions can be TRUE, FALSE, or UNKNOWN</li>
+<li>These three-value logic has the following truth tables</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <table><thead>
+<tr>
+<th>X</th>
+<th>Y</th>
+<th>X AND Y</th>
+<th>X OR Y</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>TRUE</td>
+<td>TRUE</td>
+<td>TRUE</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>TRUE</td>
+<td>FALSE</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>TRUE</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>FALSE</td>
+<td>FALSE</td>
+<td>FALSE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>FALSE</td>
+<td>UNKNOWN</td>
+<td>FALSE</td>
+<td>UNKNOWN</td>
+</tr>
+<tr>
+<td>UNKNOWN</td>
+<td>TRUE</td>
+<td>UNKNOWN</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>UNKNOWN</td>
+<td>FALSE</td>
+<td>FALSE</td>
+<td>UNKNOWN</td>
+</tr>
+<tr>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <table><thead>
+<tr>
+<th>X</th>
+<th>NOT X</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>TRUE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Three-valued Conditions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A condition may be TRUE, FALSE, or UNKNOWN
+<br><br></li>
+<li>If it&#39;s TRUE, we select the row and print the result</li>
+<li>If it&#39;s FALSE, we do not select the row, so no result is printed</li>
+<li>If it&#39;s UNKNOWN, we treat it as FALSE -- but only in the final step</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>NULL Values in Conditions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Notice that NOT UNKNOWN is UNKNOWN
+<br><br></li>
+<li>So the following condition does not print all rows</li>
+</ul>
+
+<pre><code>SELECT *
+  FROM Movies
+ WHERE length &gt; 200
+    OR length &lt;= 200
+</code></pre>
+
+<ul>
+<li>It only returns the rows that have a non-NULL length!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Ordering the Output</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Even though we claim that results are sets or bags, we sometimes want to answer the rows in the result
+<br><br></li>
+<li>We do so with the ORDER BY clause, which we put at the end of the query</li>
+<li>You can order by one or more attributes</li>
+<li>And you can choose to order in ASCending (default) or DESCending order</li>
+</ul>
+
+<pre><code>  SELECT *
+    FROM Movies
+ORDER BY year, length DESC
+</code></pre>
+
+<ul>
+<li>The Movies are sorted by year first, i.e., Movies made in 1990, then in 1991, then 1992, etc.</li>
+<li>Within a year, the Movies are sorted from longest to shortest</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h1>Queries Involving More Than One Relation</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Queries Involving More Than One Relation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>If a query needs data from more than one relation, simply list all the needed relations in the FROM clause
+<br><br></li>
+<li>The query proceeds by taking the cross-product of all the relations in the FROM clause</li>
+<li>Then, the condition in the WHERE clause tests whether a particular combination of tuples passes</li>
+<li>If the combination passes, the data in the SELECT clause is displayed</li>
+</ul>
+
+<pre><code>SELECT title, name
+  FROM Movies, MovieExecs
+ WHERE title = &#39;Star Wars&#39;
+   AND producerC# = cert#
+</code></pre>
+
+<ul>
+<li>Notice this is almost like a join</li>
+<li>And remember that \(X \bowtie Y = \sigma(X \times Y)\)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Disambiguating Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>But what about the following schema</li>
+</ul>
+
+<pre><code>Books(_isbn_, title, authorid)
+Authors(authorid, name)
+</code></pre>
+
+<ul>
+<li>How can we compare authorid in Books with authorid in Authors?</li>
+<li>SQL notation is R.A, where R is a relation name and A one of its attributes</li>
+</ul>
+
+<pre><code>SELECT title, name
+  FROM Books, Authors
+ WHERE Books.authorid = Authors.authorid
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Disambiguating Attributes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What if we need to use a relation more than once?
+<br><br></li>
+<li><strong>Tuple variables</strong> allow us to rename a relation</li>
+<li>The new name can be used to disambiguate attributes</li>
+</ul>
+
+<pre><code>SELECT title, name
+  FROM Books B1, Books B2, Authors
+ WHERE B1.authorid = Authors.authorid
+   AND B1.authorid = Authors.authorid
+   AND B1.isbn &lt;&gt; B2.isbn
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Sidebar: Hint on Multiple Copies</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Instead of using &lt;&gt;, use &lt;</li>
+<li>That way, you only get one copy of each pair</li>
+</ul>
+
+<pre><code>SELECT title, name
+  FROM Books B1, Books B2, Authors
+ WHERE B1.authorid = Authors.authorid
+   AND B1.authorid = Authors.authorid
+   AND B1.isbn &lt; B2.isbn
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>SQL Queries and Relational Algebra</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Here is a generic SQL query that uses multiple relations</p>
+
+<pre><code>SELECT L
+  FROM R, S
+ WHERE C
+</code></pre>
+
+<p>This converts into the the relational algebra query
+\[\pi_L(\sigma_C(R \times S))\]</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Set Operations in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Union-compatible queries can be combined using the operators
+
+<ul>
+<li>UNION</li>
+<li>INTERSECT</li>
+<li>EXCEPT</li>
+</ul></li>
+<li>Many databases support only UNION, however</li>
+<li><strong>Check your database manual!</strong></li>
+</ul>
+
+<pre><code>(SELECT title, name
+   FROM Movies, MovieExecs
+  WHERE title = &#39;Star Wars&#39;
+    AND producerC# = cert#)
+UNION
+(SELECT title, name
+   FROM Movies, MovieExecs
+  WHERE title = &#39;The Empire Strikes Back&#39;
+    AND producerC# = cert#)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Set Operations in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>(SELECT title, year
+   FROM Movies
+ WHERE studioName = &#39;Lucasfilm&#39;)
+EXCEPT
+(SELECT title, year
+   FROM Movies
+  WHERE year &gt;= 1995)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Simple Queries in SQL'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Using SQL'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Simple Queries in SQL'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Simple Queries in SQL'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Reading SQL Queries'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='SQL Queries and Relational Algebra'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Projection in SQL'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Extended Projection in SQL'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Selection in SQL'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Conditions in SQL'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Conditions in SQL'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='String Comparisons in SQL'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Locales in SQL'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='String Operators'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='String Comparisons'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='String LIKE Comparisons'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='String LIKE Comparisons'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Date and Time Comparisons'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='ANSI Date and Time Constants'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='ANSI Date and Time Constants'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='ANSI Date and Time Conditions'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='NULL Values'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='NULL Values in Expressions'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='NULL Values in Conditions'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Three-valued Conditions'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='NULL Values in Conditions'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Ordering the Output'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Queries Involving More Than One Relation'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Queries Involving More Than One Relation'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Disambiguating Attributes'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Disambiguating Attributes'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Sidebar: Hint on Multiple Copies'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='SQL Queries and Relational Algebra'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Set Operations in SQL'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Set Operations in SQL'>
+         36
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
