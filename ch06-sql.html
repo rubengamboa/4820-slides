@@ -994,6 +994,524 @@ EXCEPT
   <!-- Presenter Notes -->
 </slide>
 
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h1>Subqueries</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Subqueries</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Subqueries come very naturally -- <em>too</em> naturally -- to computer scientists</p></li>
+<li><p>In a nutshell, the results of a subquery can be used</p>
+
+<ul>
+<li>in place of a relation (e.g., Students who are COSC majors)</li>
+<li>in place of a single value (e.g., the CRN for this class)</li>
+<li>in place of a list of values (e.g., the CRNs for classes I&#39;m teaching this semester)</li>
+</ul></li>
+<li><p>Of course, subqueries can have subqueries, which can have more nested subqueries, etc.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Subqueries that Produce Single Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Generally speaking, a query have many rows and many columns</li>
+<li>But some queries return only a single row and a single column</li>
+</ul>
+
+<pre><code>SELECT crn
+  FROM Courses
+ WHERE year = 2015
+   AND semester = &#39;Spring&#39;
+   AND dept = &#39;COSC&#39;
+   AND cnumber = &#39;4820&#39;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Subqueries that Produce Single Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We can use that query to find all the students in this class</li>
+</ul>
+
+<pre><code>SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = (SELECT crn
+                         FROM Courses
+                        WHERE year = 2015
+                          AND semester = &#39;Spring&#39;
+                          AND dept = &#39;COSC&#39;
+                          AND cnumber = &#39;4820&#39;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>How Subqueries Are Executed</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = (SELECT crn
+                         FROM Courses
+                        WHERE year = 2015   AND semester = &#39;Spring&#39;
+                          AND dept = &#39;COSC&#39; AND cnumber = &#39;4820&#39;)
+</code></pre>
+
+<ul>
+<li>First, execute the innermost query, so we find the CRN for this course</li>
+<li>Then, replace the subquery with the result, which is 21621</li>
+<li>Now, execute the outer query</li>
+</ul>
+
+<pre><code>SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = 21621
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>The Problem with Subqueries</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There&#39;s a different way to get the list of students taking this course:</li>
+</ul>
+
+<pre><code>SELECT first_name, last_name
+  FROM Students, Enrolled, Courses
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = 21621
+   AND year = 2015   AND semester = &#39;Spring&#39;
+   AND dept = &#39;COSC&#39; AND cnumber = &#39;4820&#39;
+</code></pre>
+
+<ul>
+<li>This may be <strong>considerably more efficient</strong> than what we proposed above</li>
+<li>Some databases will automatically convert the subquery into a join</li>
+<li>But some databases won&#39;t even try</li>
+<li>And not all databases will succeed in all cases
+<br><br></li>
+<li>When possible, use joins instead of subqueries!!!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Conditions Involving Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we have a subquery \(S\)</li>
+<li><p>There are many things we could ask about the results of \(S\)</p>
+
+<ul>
+<li>Are there any results in \(S\)?</li>
+<li>Is a particular entry in \(S\)?</li>
+<li>Are all the entries in \(S\) bigger than some value?</li>
+<li>Is any entry in \(S\) bigger than some value?</li>
+</ul></li>
+<li><p>SQL contains special operators for each of these cases</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Is the Result Empty?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What classes have no students?</li>
+</ul>
+
+<pre><code>SELECT crn
+  FROM Courses
+ WHERE NOT EXISTS ( SELECT *
+                      FROM Enrolled 
+                     WHERE Courses.crn = Enrolled.crn )
+</code></pre>
+
+<ul>
+<li><strong>Spoilers:</strong> Notice that we would not be able to execute the nested query by itself first</li>
+<li>Such queries are called <strong>correlated subqueries</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Does the Result Contain a Specific Value?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What students are in any of my classes?</li>
+</ul>
+
+<pre><code>SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn IN (SELECT crn
+                          FROM Courses
+                         WHERE year = 2015
+                           AND semester = &#39;Spring&#39;
+                           AND facultyId = (SELECT id
+                                              FROM Faculty
+                                             WHERE first_name = &#39;Ruben&#39;
+                                               AND last_name = &#39;Gamboa&#39;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Does the Result Contain a Specific Value?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What producers have worked with Harrison Ford?</li>
+</ul>
+
+<pre><code>SELECT name
+  FROM MovieExec
+ WHERE cert# IN (SELECT producerC#
+                   FROM Movies
+                  WHERE (title, year) IN (SELECT movieTitle, movieYear
+                                            FROM StarsIn
+                                           WHERE starName = &#39;Harrison Ford&#39;))
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Are All the Entries Bigger than Some Value?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What stars are completely bankable?</li>
+</ul>
+
+<pre><code>SELECT name
+  FROM MovieStars
+ WHERE 50000000 &lt;= ALL (SELECT profit
+                          FROM Movies
+                         WHERE MovieStars.name IN (SELECT starName
+                                                     FROM StarsIn
+                                                    WHERE movieTitle = title
+                                                      AND movieYear = year))
+</code></pre>
+
+<ul>
+<li>Notice these subqueries are also <strong>correlated</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Are Some Entries Bigger than Some Value?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What stars are bankable at least some of the time?</li>
+</ul>
+
+<pre><code>SELECT name
+  FROM MovieStars
+ WHERE 50000000 &lt;= ANY (SELECT profit
+                          FROM Movies
+                         WHERE MovieStars.name IN (SELECT starName
+                                                     FROM StarsIn
+                                                    WHERE movieTitle = title
+                                                      AND movieYear = year))
+</code></pre>
+
+<ul>
+<li>Notice these subqueries are also <strong>correlated</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Correlated Subqueries</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What is the first movie made by each movie star?</li>
+</ul>
+
+<pre><code>SELECT MovieStars.name, FirstMovie.title, FirstMovie.year
+  FROM MovieStars, Movie AS FirstMovie, StarsIn
+ WHERE StarsIn.starName = MovieStars.name
+   AND StarsIn.movieTitle = FirstMovie.title
+   AND StarsIn.movieYear = FirstMovie.year
+   AND NOT EXISTS ( SELECT *
+                      FROM Movie, StarsIn
+                     WHERE StarsIn.starName = MovieStars.name
+                       AND StarsIn.movieTitle = Movie.title
+                       AND StarsIn.movieYear = Movie.year
+                       AND Movie.year &lt; FirstMovie.year )
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Subqueries in FROM Clauses</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A subquery returns a set of tuples</li>
+<li>So it&#39;s really the same thing as a relation
+<br><br></li>
+<li>That&#39;s the rationale behind allowing subqueries in FROM clauses</li>
+<li>If you do this, you should give the subquery a name, so you can use
+it for disambiguating attribute names</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Subqueries in FROM Clauses</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What actor has starred in the most movies?</li>
+</ul>
+
+<pre><code>SELECT name
+  FROM (SELECT MovieStars.name, COUNT(*) AS movieCount
+          FROM MovieStars, StarsIn
+         WHERE MovieStars.name = StarsIn.name 
+         GROUP BY name) AS StarMovieCount
+ WHERE NOT EXISTS (SELECT *
+                     FROM StarMovieCount AS SMC2
+                    WHERE SMC2.movieCount &gt; StarMovieCount.movieCount)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>SQL Join</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall that the FROM clause contains a <strong>list of relations</strong></li>
+<li>Actually, that&#39;s not quite true</li>
+<li>What it contains is a very relational algebra expression</li>
+<li>The &quot;,&quot; operator is actually the <strong>set product</strong> operator</li>
+<li>And it can be written as CROSS JOIN</li>
+</ul>
+
+<pre><code>SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn, Movies
+ WHERE StarsIn.title = Movies.title
+   AND StarsIn.year = Movies.year
+   AND Movies.length &gt; 120
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h2>SQL Join</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn CROSS JOIN Movies
+ WHERE StarsIn.title = Movies.title
+   AND StarsIn.year = Movies.year
+   AND Movies.length &gt; 120
+</code></pre>
+
+<ul>
+<li>There is no compelling reason for using CROSS JOIN instead of &quot;,&quot;</li>
+<li>And many databases don&#39;t support the CROSS JOIN syntax, anyway</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>SQL Theta Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can place an entire theta join on the FROM clause</li>
+<li>Use the JOIN ... ON synta</li>
+</ul>
+
+<pre><code>SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn JOIN Movies ON StarsIn.title = Movies.title
+                          AND StarsIn.year = Movies.year
+ WHERE Movies.length &gt; 120
+</code></pre>
+
+<ul>
+<li>This is really a matter of style</li>
+<li>Some database programmers prefer to place the &quot;join&quot; conditions in the FROM,
+and the &quot;selection&quot; conditions in the WHERE</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>Natural Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Natural joins are even easier</li>
+<li>Just use NATURAL JOIN and the tables will be joined according to the common attributes</li>
+</ul>
+
+<pre><code>SELECT name, title, year, genre
+  FROM StarsIn NATURAL JOIN Movies
+ WHERE Movies.length &gt; 120
+</code></pre>
+
+<ul>
+<li>Note: For this to work, the StarsIn relation must have the same attribute names as Movies</li>
+<li>This is rarely the case, so natural joins are not as common as you may expect</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Finally, we can have an OUTER JOIN</li>
+<li>This can be combined with NATURAL or not</li>
+</ul>
+
+<pre><code>SELECT name, title, year, genre
+  FROM StarsIn NATURAL FULL OUTER JOIN Movies
+ WHERE Movies.length &gt; 120
+</code></pre>
+
+<pre><code>SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn FULL OUTER JOIN Movies ON StarsIn.title = Movies.title
+                                     AND StarsIn.year = Movies.year
+ WHERE Movies.length &gt; 120
+</code></pre>
+
+<ul>
+<li>A FULL outer join preserves tuples in both relations</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Left and Right Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Of course, SQL supports both LEFT and RIGHT OUTER JOINS</li>
+</ul>
+
+<pre><code>SELECT name, title, year, genre
+  FROM StarsIn NATURAL LEFT OUTER JOIN Movies
+ WHERE Movies.length &gt; 120
+</code></pre>
+
+<pre><code>SELECT name, title, year, genre
+  FROM StarsIn NATURAL RIGHT OUTER JOIN Movies
+ WHERE Movies.length &gt; 120
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>Reality and Outer Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Not all databases support all the different types of outer joins
+<br><br></li>
+<li>It is very common for LEFT OUTER JOIN to be supported</li>
+<li>But none of the other OUTER JOIN combinations are necessarily supported
+<br><br></li>
+<li><strong>Check your database manual!</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
     <slide class="backdrop"></slide>
   </slides>
   <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
@@ -1212,6 +1730,138 @@ EXCEPT
       <a href="#" target="_self" rel='tooltip' 
         data-slide=36 title='Set Operations in SQL'>
          36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Subqueries'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Subqueries'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Subqueries that Produce Single Values'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Subqueries that Produce Single Values'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='How Subqueries Are Executed'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='The Problem with Subqueries'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Conditions Involving Relations'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Is the Result Empty?'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Does the Result Contain a Specific Value?'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Does the Result Contain a Specific Value?'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Are All the Entries Bigger than Some Value?'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Are Some Entries Bigger than Some Value?'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Correlated Subqueries'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Subqueries in FROM Clauses'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Subqueries in FROM Clauses'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='SQL Join'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='SQL Join'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='SQL Theta Joins'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='Natural Joins'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Outer Joins'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Left and Right Outer Joins'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='Reality and Outer Joins'>
+         58
       </a>
     </li>
   </ul>

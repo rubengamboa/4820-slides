@@ -581,3 +581,372 @@ EXCEPT
    FROM Movies
   WHERE year >= 1995)
 ```
+
+---
+
+# Subqueries
+
+---
+
+## Subqueries
+
+* Subqueries come very naturally -- *too* naturally -- to computer scientists
+
+* In a nutshell, the results of a subquery can be used
+  * in place of a relation (e.g., Students who are COSC majors)
+  * in place of a single value (e.g., the CRN for this class)
+  * in place of a list of values (e.g., the CRNs for classes I'm teaching this semester)
+
+* Of course, subqueries can have subqueries, which can have more nested subqueries, etc.
+
+---
+
+## Subqueries that Produce Single Values
+
+* Generally speaking, a query have many rows and many columns
+* But some queries return only a single row and a single column
+
+```
+SELECT crn
+  FROM Courses
+ WHERE year = 2015
+   AND semester = 'Spring'
+   AND dept = 'COSC'
+   AND cnumber = '4820'
+```
+
+---
+
+## Subqueries that Produce Single Values
+
+* We can use that query to find all the students in this class
+
+```
+SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = (SELECT crn
+                         FROM Courses
+                        WHERE year = 2015
+                          AND semester = 'Spring'
+                          AND dept = 'COSC'
+                          AND cnumber = '4820')
+```
+
+---
+
+## How Subqueries Are Executed
+
+```
+SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = (SELECT crn
+                         FROM Courses
+                        WHERE year = 2015   AND semester = 'Spring'
+                          AND dept = 'COSC' AND cnumber = '4820')
+```
+
+* First, execute the innermost query, so we find the CRN for this course
+* Then, replace the subquery with the result, which is 21621
+* Now, execute the outer query
+
+```
+SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = 21621
+```
+
+---
+
+## The Problem with Subqueries
+
+* There's a different way to get the list of students taking this course:
+
+```
+SELECT first_name, last_name
+  FROM Students, Enrolled, Courses
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn = 21621
+   AND year = 2015   AND semester = 'Spring'
+   AND dept = 'COSC' AND cnumber = '4820'
+```
+
+* This may be **considerably more efficient** than what we proposed above
+* Some databases will automatically convert the subquery into a join
+* But some databases won't even try
+* And not all databases will succeed in all cases
+  <br><br>
+* When possible, use joins instead of subqueries!!!
+
+---
+
+## Conditions Involving Relations
+
+* Suppose we have a subquery $S$
+* There are many things we could ask about the results of $S$
+  * Are there any results in $S$?
+  * Is a particular entry in $S$?
+  * Are all the entries in $S$ bigger than some value?
+  * Is any entry in $S$ bigger than some value?
+
+* SQL contains special operators for each of these cases
+
+---
+
+## Is the Result Empty?
+
+* What classes have no students?
+
+```
+SELECT crn
+  FROM Courses
+ WHERE NOT EXISTS ( SELECT *
+                      FROM Enrolled 
+                     WHERE Courses.crn = Enrolled.crn )
+```
+
+* **Spoilers:** Notice that we would not be able to execute the nested query by itself first
+* Such queries are called **correlated subqueries**
+
+---
+
+## Does the Result Contain a Specific Value?
+
+* What students are in any of my classes?
+
+```
+SELECT first_name, last_name
+  FROM Students, Enrolled
+ WHERE Students.wnumber = Enrolled.wnumber
+   AND Enrolled.crn IN (SELECT crn
+                          FROM Courses
+                         WHERE year = 2015
+                           AND semester = 'Spring'
+                           AND facultyId = (SELECT id
+                                              FROM Faculty
+                                             WHERE first_name = 'Ruben'
+                                               AND last_name = 'Gamboa'))
+```
+
+---
+
+## Does the Result Contain a Specific Value?
+
+* What producers have worked with Harrison Ford?
+
+```
+SELECT name
+  FROM MovieExec
+ WHERE cert# IN (SELECT producerC#
+                   FROM Movies
+                  WHERE (title, year) IN (SELECT movieTitle, movieYear
+                                            FROM StarsIn
+                                           WHERE starName = 'Harrison Ford'))
+```
+
+---
+
+## Are All the Entries Bigger than Some Value?
+
+* What stars are completely bankable?
+
+```
+SELECT name
+  FROM MovieStars
+ WHERE 50000000 <= ALL (SELECT profit
+                          FROM Movies
+                         WHERE MovieStars.name IN (SELECT starName
+                                                     FROM StarsIn
+                                                    WHERE movieTitle = title
+                                                      AND movieYear = year))
+```
+
+* Notice these subqueries are also **correlated**
+
+---
+
+## Are Some Entries Bigger than Some Value?
+
+* What stars are bankable at least some of the time?
+
+```
+SELECT name
+  FROM MovieStars
+ WHERE 50000000 <= ANY (SELECT profit
+                          FROM Movies
+                         WHERE MovieStars.name IN (SELECT starName
+                                                     FROM StarsIn
+                                                    WHERE movieTitle = title
+                                                      AND movieYear = year))
+```
+
+* Notice these subqueries are also **correlated**
+
+---
+
+## Correlated Subqueries
+
+* What is the first movie made by each movie star?
+
+```
+SELECT MovieStars.name, FirstMovie.title, FirstMovie.year
+  FROM MovieStars, Movie AS FirstMovie, StarsIn
+ WHERE StarsIn.starName = MovieStars.name
+   AND StarsIn.movieTitle = FirstMovie.title
+   AND StarsIn.movieYear = FirstMovie.year
+   AND NOT EXISTS ( SELECT *
+                      FROM Movie, StarsIn
+                     WHERE StarsIn.starName = MovieStars.name
+                       AND StarsIn.movieTitle = Movie.title
+                       AND StarsIn.movieYear = Movie.year
+                       AND Movie.year < FirstMovie.year )
+```
+
+---
+
+## Subqueries in FROM Clauses
+
+* A subquery returns a set of tuples
+* So it's really the same thing as a relation
+  <br><br>
+* That's the rationale behind allowing subqueries in FROM clauses
+* If you do this, you should give the subquery a name, so you can use
+  it for disambiguating attribute names
+
+---
+
+## Subqueries in FROM Clauses
+
+* What actor has starred in the most movies?
+
+```
+SELECT name
+  FROM (SELECT MovieStars.name, COUNT(*) AS movieCount
+          FROM MovieStars, StarsIn
+         WHERE MovieStars.name = StarsIn.name 
+         GROUP BY name) AS StarMovieCount
+ WHERE NOT EXISTS (SELECT *
+                     FROM StarMovieCount AS SMC2
+                    WHERE SMC2.movieCount > StarMovieCount.movieCount)
+
+
+---
+
+## SQL Join 
+
+* Recall that the FROM clause contains a **list of relations**
+* Actually, that's not quite true
+* What it contains is a very relational algebra expression
+* The "," operator is actually the **set product** operator
+* And it can be written as CROSS JOIN
+
+```
+SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn, Movies
+ WHERE StarsIn.title = Movies.title
+   AND StarsIn.year = Movies.year
+   AND Movies.length > 120
+```
+
+---
+
+## SQL Join 
+
+```
+SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn CROSS JOIN Movies
+ WHERE StarsIn.title = Movies.title
+   AND StarsIn.year = Movies.year
+   AND Movies.length > 120
+```
+
+* There is no compelling reason for using CROSS JOIN instead of ","
+* And many databases don't support the CROSS JOIN syntax, anyway
+
+---
+
+## SQL Theta Joins
+
+* You can place an entire theta join on the FROM clause
+* Use the JOIN ... ON synta
+
+```
+SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn JOIN Movies ON StarsIn.title = Movies.title
+                          AND StarsIn.year = Movies.year
+ WHERE Movies.length > 120
+```
+
+* This is really a matter of style
+* Some database programmers prefer to place the "join" conditions in the FROM,
+  and the "selection" conditions in the WHERE
+
+---
+
+## Natural Joins
+
+* Natural joins are even easier
+* Just use NATURAL JOIN and the tables will be joined according to the common attributes
+
+```
+SELECT name, title, year, genre
+  FROM StarsIn NATURAL JOIN Movies
+ WHERE Movies.length > 120
+```
+
+* Note: For this to work, the StarsIn relation must have the same attribute names as Movies
+* This is rarely the case, so natural joins are not as common as you may expect
+
+---
+
+## Outer Joins
+
+* Finally, we can have an OUTER JOIN
+* This can be combined with NATURAL or not
+
+```
+SELECT name, title, year, genre
+  FROM StarsIn NATURAL FULL OUTER JOIN Movies
+ WHERE Movies.length > 120
+```
+
+```
+SELECT starName, movieTitle, movieYear, genre
+  FROM StarsIn FULL OUTER JOIN Movies ON StarsIn.title = Movies.title
+                                     AND StarsIn.year = Movies.year
+ WHERE Movies.length > 120
+```
+
+
+* A FULL outer join preserves tuples in both relations
+
+---
+
+## Left and Right Outer Joins
+
+* Of course, SQL supports both LEFT and RIGHT OUTER JOINS
+
+```
+SELECT name, title, year, genre
+  FROM StarsIn NATURAL LEFT OUTER JOIN Movies
+ WHERE Movies.length > 120
+```
+
+```
+SELECT name, title, year, genre
+  FROM StarsIn NATURAL RIGHT OUTER JOIN Movies
+ WHERE Movies.length > 120
+```
+
+---
+
+## Reality and Outer Joins
+
+* Not all databases support all the different types of outer joins
+  <br><br>
+* It is very common for LEFT OUTER JOIN to be supported
+* But none of the other OUTER JOIN combinations are necessarily supported
+  <br><br>
+* **Check your database manual!**
