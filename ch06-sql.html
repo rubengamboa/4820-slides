@@ -896,7 +896,7 @@ Authors(authorid, name)
 <pre><code>SELECT title, name
   FROM Books B1, Books B2, Authors
  WHERE B1.authorid = Authors.authorid
-   AND B1.authorid = Authors.authorid
+   AND B2.authorid = Authors.authorid
    AND B1.isbn &lt;&gt; B2.isbn
 </code></pre>
 
@@ -917,7 +917,7 @@ Authors(authorid, name)
 <pre><code>SELECT title, name
   FROM Books B1, Books B2, Authors
  WHERE B1.authorid = Authors.authorid
-   AND B1.authorid = Authors.authorid
+   AND B2.authorid = Authors.authorid
    AND B1.isbn &lt; B2.isbn
 </code></pre>
 

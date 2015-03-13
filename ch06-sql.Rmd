@@ -511,7 +511,7 @@ SELECT title, name
 SELECT title, name
   FROM Books B1, Books B2, Authors
  WHERE B1.authorid = Authors.authorid
-   AND B1.authorid = Authors.authorid
+   AND B2.authorid = Authors.authorid
    AND B1.isbn <> B2.isbn
 ```
 
@@ -526,7 +526,7 @@ SELECT title, name
 SELECT title, name
   FROM Books B1, Books B2, Authors
  WHERE B1.authorid = Authors.authorid
-   AND B1.authorid = Authors.authorid
+   AND B2.authorid = Authors.authorid
    AND B1.isbn < B2.isbn
 ```
 
