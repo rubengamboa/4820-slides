@@ -1512,6 +1512,1121 @@ and the &quot;selection&quot; conditions in the WHERE</li>
   <!-- Presenter Notes -->
 </slide>
 
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h1>Full-Relation Operations</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h2>Full-Relation Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>By design, SQL conditions look at each row separately</li>
+<li>There is no notion of looking at more than one row at a time</li>
+<li>That&#39;s why there is an AVG(x) function in the SHOW clause, but not in the WHEN clause
+<br><br></li>
+<li>But some operations only make sense in the context of a full relation</li>
+<li>We&#39;ll discuss those operations next</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Duplicate Elimination</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall that databases are working on bags instead of sets</li>
+<li>But many times we really want the answers to be sets
+<br><br></li>
+<li>That&#39;s where <strong>duplicate elimination</strong> comes in</li>
+<li>This is easily done, with <code>SELECT DISTINCT</code> instead of <code>SELECT</code></li>
+</ul>
+
+<pre><code>SELECT DISTINCT starName
+  FROM StarsIn, Movies
+ WHERE StarsIn.title = Movies.title
+   AND StarsIn.year = Movies.year
+   AND Movies.length &gt; 120
+</code></pre>
+
+<ul>
+<li>How would this be different without the <code>DISTINCT</code> keyword?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Duplicate Elimination with Set Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose you take the <code>UNION</code> or <code>INTERSECT</code> or <code>EXCEPT</code> of two relations</li>
+<li>By default, this <strong>eliminates duplicates</strong>
+
+<ul>
+<li>This sort of makes sense</li>
+<li>The implementation of <code>INTERSECT</code> and <code>EXCEPT</code> is most efficient when eliminating duplicates</li>
+<li><code>UNION</code> would be more efficient with duplicates, but it follows the patter of the other set operations
+<br><br></li>
+</ul></li>
+<li>Here, you can ask explicitly for bag behavior (i.e., to have the duplicates left)</li>
+<li>Simply use <code>UNION ALL</code> or <code>INTERSECT ALL</code> or <code>EXCEPT ALL</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Grouping and Aggregation in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;ve already seen the grouping operator \(\gamma\) in relational algebra</li>
+<li>The equivalent operation is <code>GROUP BY</code> in SQL</li>
+</ul>
+
+<pre><code>  SELECT major, AVG(salary)
+    FROM Students
+GROUP BY major
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Flashback: Grouping and Aggregation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In general, we have \(\gamma_{L}(R)\)</li>
+<li>The list \(L\) may contain
+
+<ul>
+<li><strong>grouping attributes</strong> from \(R\), e.g., \(A\)</li>
+<li><strong>aggregated attributes</strong> from \(R\), e.g., \(\text{SUM}(B)\)
+<br><br></li>
+</ul></li>
+<li>To execute \(\gamma_{L}(R)\):
+
+<ol>
+<li>Partition the tuples of \(R\) into groups according to the values in the grouping attributes</li>
+<li>For each group, create a tuple that has the values of the grouping attributes and the
+aggregated values of the aggregated attributes</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>Grouping and Aggregation in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>  SELECT major, AVG(salary)
+    FROM Students
+GROUP BY major
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Major</th>
+<th>\(\text{AVG}(\text{Salary})\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>COSC</td>
+<td>62,500</td>
+</tr>
+<tr>
+<td>EECS</td>
+<td>56,500</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>Grouping and Aggregation in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>  SELECT major, COUNT(EnrolledIn.crn), AVG(salary)
+    FROM Students, EnrolledIn, Courses
+   WHERE Students.id = EnrolledIn.id
+     AND Courses.crn = EnrolledIn.crn
+     AND Courses.dept = &#39;MATH&#39;
+GROUP BY major
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>Aggregation Operators</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL supports five standard aggregation operators
+
+<ul>
+<li>SUM, AVG, MIN, MAX, COUNT</li>
+</ul></li>
+<li>Each aggregation operator takes a single attribute as an argument, e.g., <code>AVG(salary)</code></li>
+<li>In addition, the <code>COUNT</code> operator has a special syntax <code>COUNT(*)</code> that counts all the tuples in the result</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>Aggregation Operators and Duplicates</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>StudentId</th>
+<th>Major</th>
+<th>Salary</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1001</td>
+<td>COSC</td>
+<td>60,000</td>
+</tr>
+<tr>
+<td>2010</td>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>1022</td>
+<td>COSC</td>
+<td>65,000</td>
+</tr>
+<tr>
+<td>3095</td>
+<td>EECS</td>
+<td>58,000</td>
+</tr>
+<tr>
+<td>9403</td>
+<td>EECS</td>
+<td>55,000</td>
+</tr>
+</tbody></table>
+
+<p><br></p>
+
+<table><thead>
+<tr>
+<th>Aggregation</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>COUNT(*)</td>
+<td>5</td>
+</tr>
+<tr>
+<td>COUNT(Major)</td>
+<td>5</td>
+</tr>
+<tr>
+<td>COUNT(DISTINCT Major)</td>
+<td>3</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>The <code>DISTINCT</code> keyword inside an aggregation limits the rows under consideration</li>
+<li>This is only useful for <code>COUNT(DISTINCT x)</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
+  <hgroup>
+    <h2>Aggregation Operators and NULLs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>NULLs complicate the semantics of aggregation operators a little</li>
+<li>The basic rule is <strong>NULLs are completely ignored</strong></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Aggregation</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>COUNT(*)</td>
+<td># of rows</td>
+</tr>
+<tr>
+<td>COUNT(Major)</td>
+<td># of rows with a non-NULL Major</td>
+</tr>
+<tr>
+<td>SUM(Salary)</td>
+<td>sum of the non-NULL Salary values</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>Grouping and NULLs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we <code>GROUP BY</code> Major</li>
+<li>We&#39;ll have a group for each different Major
+<br><br></li>
+<li>What about the entries with NULL Majors?</li>
+<li>Remember that NULL is not the same as another NULL value</li>
+<li>I.e., if two students have a NULL major, that does not mean they are studying the same (unknown? undeclared?) major
+<br><br></li>
+<li>But it would be very strange to have an entry for each row with a NULL major</li>
+<li>The SQL standard treats NULLs as <strong>the same value</strong> for the purpose of grouping</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>Grouping and NULLs</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <table><thead>
+<tr>
+<th>StudentId</th>
+<th>Major</th>
+<th>Salary</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1001</td>
+<td>COSC</td>
+<td>60,000</td>
+</tr>
+<tr>
+<td>2010</td>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>1022</td>
+<td>NULL</td>
+<td>65,000</td>
+</tr>
+<tr>
+<td>3095</td>
+<td>EECS</td>
+<td>58,000</td>
+</tr>
+<tr>
+<td>9403</td>
+<td>NULL</td>
+<td>55,000</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <pre><code>  SELECT major, AVG(salary)
+    FROM Students
+GROUP BY major
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Major</th>
+<th>\(\text{AVG}(\text{Salary})\)</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ARTH</td>
+<td>12,000</td>
+</tr>
+<tr>
+<td>COSC</td>
+<td>60,000</td>
+</tr>
+<tr>
+<td>EECS</td>
+<td>58,000</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>60,000</td>
+</tr>
+</tbody></table>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>Grouping and NULLs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One more thing: What if a group is empty?</li>
+<li>This could happen, for example, if all the entries in it are NULL
+<br><br></li>
+<li>Then the answer is NULL for SUM, AVG, MIN, MAX</li>
+<li>But the answer is 0 for COUNT
+<br><br></li>
+<li>This is actually consistent with our definitions from before, but it surprises some people</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Aggregation</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>COUNT(*)</td>
+<td># of rows</td>
+</tr>
+<tr>
+<td>COUNT(Major)</td>
+<td># of rows with a non-NULL Major</td>
+</tr>
+<tr>
+<td>SUM(Salary)</td>
+<td>sum of the non-NULL Salary values</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h1>Database Modifications</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h2>Database Modifications</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>So far, we&#39;ve been using SQL as a query language</li>
+<li>But SQL is also a <strong>data manipulation language</strong>, so we can modify the database with it
+<br><br></li>
+<li>Modifications can be
+
+<ul>
+<li><strong>Insert</strong> a tuple into a relation</li>
+<li><strong>Delete</strong> tuples from a relation</li>
+<li><strong>Update</strong> values of some tuples in a relation
+<br><br></li>
+</ul></li>
+<li>Together with simple queries, these are known as CRUD operations
+
+<ul>
+<li><strong>C</strong>reate, <strong>R</strong>ead, <strong>U</strong>pdate, <strong>D</strong>elete</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
+    <h2>Insert Operations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The easiest operation adds a tuple to a relation
+
+<ul>
+<li><code>INSERT INTO R(A1,A2,...,An) VALUES (v1,v2,...,vn)</code></li>
+</ul></li>
+<li>Some databases allow you to insert more than one tuple, by providing a comma-separated list of tuples after <code>VALUES</code>
+<br><br></li>
+<li>Note, the list of attributes <code>(A1,A2,...,An)</code> is optional</li>
+<li>But always use it
+
+<ul>
+<li>The order of the attributes may change</li>
+<li>The number of attributes may change
+<br><br></li>
+</ul></li>
+<li>But wait, what if there is an attribute B1 that is not listed?</li>
+<li>The new tuple gets a value of B1 that is either
+
+<ul>
+<li>the default value specified for B1 in the schema</li>
+<li>NULL</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-76" style="background:;">
+  <hgroup>
+    <h2>Inserting an Entire Table</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can insert many tuples at once with <code>INSERT ... SELECT</code></li>
+<li>The syntax is basically an <code>INSERT INTO ...</code> clause followed by a <code>SELECT</code> query (instead of <code>VALUES</code>)</li>
+</ul>
+
+<pre><code>INSERT INTO LongMovies(title, year, length, genre)
+SELECT title, year, length, genre
+  FROM Movies
+ WHERE length &gt; 120 
+</code></pre>
+
+<ul>
+<li>I make use of <code>INSERT ... SELECT</code> a lot when I&#39;m modifying tables</li>
+<li>You may find it useful in your project</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-77" style="background:;">
+  <hgroup>
+    <h2>Correlated Updates</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider this query</li>
+</ul>
+
+<pre><code>INSERT INTO Studios(name)
+SELECT DISTINCT studioName
+  FROM Movies
+ WHERE studioName NOT IN (SELECT name FROM Studios)
+</code></pre>
+
+<ul>
+<li>A few things to note:
+
+<ol>
+<li><code>DISTINCT</code> is important to avoid creating duplicate rows</li>
+<li>The subquery keeps us from adding a studio that was already known</li>
+<li>The semantics of SQL require that the <code>SELECT</code> query completely execute before any tuples are added</li>
+</ol></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Reality strikes again: This is a <strong>correlated subquery</strong></li>
+<li>Many databases do not support <strong>correlated update subqueries</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-78" style="background:;">
+  <hgroup>
+    <h2>Deleting Tuples</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The syntax is
+
+<ul>
+<li><code>DELETE FROM R WHERE ...</code>
+<br><br></li>
+</ul></li>
+<li>Hint: Always run a <code>SELECT FROM R WHERE ...</code> before doing the deletion!
+<br><br></li>
+</ul>
+
+<pre><code>DELETE FROM Movies
+      WHERE genre &lt;&gt; &#39;scifi&#39;
+</code></pre>
+
+<ul>
+<li>Note that the WHERE clause may match 0, 1, or many tuples</li>
+<li>All matching tuples (if any) will be deleted</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-79" style="background:;">
+  <hgroup>
+    <h2>Updating Tuples</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Finally, the UPDATE command allows us to change the values in one or more tuples
+
+<ul>
+<li><code>UPDATE R SET A1=v1, A2=v2, ..., An=vn WHERE ...</code></li>
+</ul></li>
+</ul>
+
+<pre><code>UPDATE Movie
+   SET thumbsUp = 2
+ WHERE (title, year) IN (SELECT movieTitle, movieYear
+                           FROM StarsIn 
+                          WHERE starName = &#39;Harrison Ford&#39;)
+</code></pre>
+
+<ul>
+<li>Note: This is <strong>not</strong> a correlated subquery!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-80" style="background:;">
+  <hgroup>
+    <h1>Transactions in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-81" style="background:;">
+  <hgroup>
+    <h2>Transactions in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;ve been looking at SQL queries as if <strong>each query executed completely on its own</strong></li>
+<li>In particular, we&#39;ve ignored
+
+<ul>
+<li>what happens when more than one query is being executed at a time?</li>
+<li>what happens when a query fails to execute?</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-82" style="background:;">
+  <hgroup>
+    <h2>Transactions: Scenario 1</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here is a classic scenario showing the need to perform transactions</li>
+</ul>
+
+<pre><code>UPDATE Accounts
+   SET Balance = Balance + 200
+ WHERE AccountId = 10000;
+
+UPDATE Accounts
+   SET Balance = Balance - 200
+ WHERE AccountId = 10001;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-83" style="background:;">
+  <hgroup>
+    <h2>Transactions: Scenario 2</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here is another subtle interaction, this time between rows of the same table</li>
+</ul>
+
+<pre><code>UPDATE Employees
+   SET Salary = 1.03 * Salary
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-84" style="background:;">
+  <hgroup>
+    <h2>Transactions: Scenario 3 (Long-lived Transactions)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here is an example of a long-lived transaction
+<br><br>
+
+<ol>
+<li>User asks to purchase tickets for an upcoming concert</li>
+<li>System offers the user a selection of possible seats</li>
+<li>User selects the seats and offers payment</li>
+<li>System processes payment</li>
+<li>System assigns seats to user</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-85" style="background:;">
+  <hgroup>
+    <h2>Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In general, we want <strong>database transactions</strong> to have these properties
+<br><br>
+
+<ol>
+<li><strong>Atomicity</strong> meaning the entire transaction is processed fully or not at all</li>
+<li><strong>Serializability</strong> meaning two transactions \(T_1\) and \(T_2\) act <strong>as if</strong> they
+were executed sequentially (either \(T_1; T_2\) or \(T_2; T_1\))
+<br><br></li>
+</ol></li>
+<li>We normally talk about the ACID properties to refer to the same idea
+
+<ul>
+<li>Atomicity</li>
+<li>Consistency</li>
+<li>Isolation</li>
+<li>Durability</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-86" style="background:;">
+  <hgroup>
+    <h2>Implementing Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are two elements to implementing transactions
+<br><br></li>
+<li>First, we must ensure atomicity
+
+<ul>
+<li>This can be done by writing entries to logs</li>
+<li>Instead of simply replacing X with 2, we write to a log that we&#39;ll be replacing X with 2, and then we replace X with 2</li>
+<li>Once we write to the log, we are <strong>committed</strong> to finishing the operation</li>
+<li>Or, we can commit to <strong>undo</strong> all the operations in the same transaction
+<br><br></li>
+</ul></li>
+<li>Second, we must ensure isolation
+
+<ul>
+<li>This is usually handled by locking</li>
+<li>Variants (e.g., optimistic locking) are also possible</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-87" style="background:;">
+  <hgroup>
+    <h2>Long-lived Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In general, 100s of transactions may be running concurrently</li>
+<li>It&#39;s unfeasible to run only one transaction at a time</li>
+<li>So we need a mechanism that allows us to run multiple transactions while avoiding interactions</li>
+<li>Typically this is done via locking
+<br><br></li>
+<li>Long-lived transactions make this very difficult</li>
+<li>A single long-lived transaction could lock out all the other transactions, and overall throughput drops to zero
+<br><br></li>
+<li>Good database applications avoid long-lived transactions</li>
+<li>E.g., they can go back to the user with
+
+<ul>
+<li>I&#39;m sorry, but that seat is no longer available</li>
+<li>Or they can allow a seat to be available, unavailable, and <strong>reserved</strong> (for a period of time)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-88" style="background:;">
+  <hgroup>
+    <h2>Specifying Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A transaction is one or more database operations that must be executed atomically and (apparently) serially</li>
+<li>Transactions can be bracketed around
+
+<ul>
+<li><code>START TRANSACTION</code></li>
+<li>Either <code>COMMIT</code> or <code>ROLLBACK</code>
+<br><br></li>
+</ul></li>
+<li><p>Programmatic interfaces will offer their own variants</p>
+
+<pre><code>tx = session.beginTransaction();
+...
+tx.commit ();  
+</code></pre></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-89" style="background:;">
+  <hgroup>
+    <h2>Performance of Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Implementing transactions involves tremendous overhead</li>
+<li>This slide shows Stonebraker&#39;s depiction of database performance bottlenecks for typical OLTP applications</li>
+</ul>
+
+<div class="centered">
+    <img width="75%" src="assets/img/01-oltp-pie.png" title="OLTP Overhead Pie" alt="OLTP Overhead Pie">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-90" style="background:;">
+  <hgroup>
+    <h2>Enhancing Performance of Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>For the future: Migrate to new technologies better suited to your needs
+<br><br></li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/dbms-use-cases.png" title="DBMS Use Case Performance Needs" alt="DBMS Use Case Performance Needs">
+</div>
+
+</div>
+<div style='float:right;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/dbms-use-cases-served.png" title="DBMS Use Case Solutions" alt="DBMS Use Case Solutions">
+</div>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-91" style="background:;">
+  <hgroup>
+    <h2>Enhancing Performance of Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In the meantime, we try to squeeze as much performance as we can out of the &quot;elephants&quot; (as Stonebraker calls them)
+<br><br></li>
+<li>Trick #1: If possible, let the database know that the current session is <strong>read only</strong></li>
+<li>You can do this with the command <code>SET TRANSACTION READ ONLY</code></li>
+<li>Since read only transactions do not interfere with each other, the database may be able to execute a bunch of them faster
+<br><br></li>
+<li>Trick #2: If possible, let the database know we&#39;re willing to live with less isolation than it would normally guarantee</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-92" style="background:;">
+  <hgroup>
+    <h2>Dirty Reads</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A common problem of lowered isolation is <strong>dirty reads</strong></li>
+<li>Consider this sequence of steps:
+
+<ol>
+<li>T1 writes new value to X</li>
+<li>T2 reads the value of X</li>
+<li>T1 aborts</li>
+</ol></li>
+<li>In this sequence, T2 reads a value of X that <strong>never existed</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-93" style="background:;">
+  <hgroup>
+    <h2>Do Dirty Reads Matter?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In some cases, absolutely!
+
+<ul>
+<li>Check to see if there is enough money in account</li>
+<li>Perform a withdrawal
+<br><br></li>
+</ul></li>
+<li>In other cases, not so much
+
+<ul>
+<li>Find one of the best seats available and mark it reserved</li>
+<li>Offer the seat to a customer</li>
+<li>If customer buys it, mark seat as occupied</li>
+<li>Otherwise, mark the seat as available again
+<br><br></li>
+</ul></li>
+<li>Or very little
+
+<ul>
+<li>T1: enter final grades for students in this class</li>
+<li>T2: compute average GPA for all students in UW</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-94" style="background:;">
+  <hgroup>
+    <h2>Accepting Dirty Reads</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose that for *<em>your application</em> dirty reads are OK</li>
+<li><p>This may result in significantly better performance for your application <strong>if the database knows dirty reads are OK</strong></p>
+
+<pre><code>SET TRANSACTION READ WRITE
+  ISOLATION LEVEL READ UNCOMMITTED
+</code></pre></li>
+<li><p>The <code>READ UNCOMMITTED</code> tells the database we&#39;re OK with reading data written but not yet committed by another transaction</p></li>
+<li><p>I.e., we&#39;re OK with (potentially) dirty reads
+<br><br></p></li>
+<li><p>Note: It may be safer to allow dirty reads for <strong>read only</strong> transactions</p></li>
+<li><p>If your transactions is read/write, then it may propagate bad information</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-95" style="background:;">
+  <hgroup>
+    <h2>Other Isolation Levels</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Dirty reads are not the only potential problems</li>
+<li>SQL allows other isolation levels
+<br><br></li>
+<li>A little more secure (and more costly) than <code>READ UNCOMMITTED</code> is <code>READ COMMITTED</code></li>
+<li>This means that the transaction may read data from other transactions after they commit</li>
+<li>This is <strong>not</strong> the same as serializable!
+
+<ol>
+<li>T2 sets X to 10</li>
+<li>T1 reads X (and gets the initial value of X, say 0)</li>
+<li>T2 commits</li>
+<li>T1 reads X again (and this time it gets 10)</li>
+</ol></li>
+<li>So <code>READ COMMITTED</code> avoids dirty reads, but it allows <strong>non-repeatable reads</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-96" style="background:;">
+  <hgroup>
+    <h2>Other Isolation Levels</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL allows you to make transactions a little more secure (and more costly) with <code>REPEATABLE READ</code>
+<br><br></li>
+<li>This is <strong>not</strong> the same as serializable!
+
+<ol>
+<li>T1 gets the maximum value of X (and gets 100)</li>
+<li>T2 gets the maximum value of X (and also gets 100)</li>
+<li>T2 adds a new row with X set to max+1 (i.e., 101)</li>
+<li>T1 also adds a new row with X set to max+1 (i.e., 101)</li>
+</ol></li>
+<li>The problem, of course, is that T1 does not see the change that T2 made</li>
+<li>So 101 is no longer the value of max(X)+1</li>
+<li>This is called a <strong>phantom read</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-97" style="background:;">
+  <hgroup>
+    <h2>Other Isolation Levels</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The most restrictive isolation level is <code>SERIALIZABLE</code></li>
+<li>This should be the default (but it&#39;s usually not)</li>
+<li>Oracle, PostgreSQL, and Microsoft SQL Server all default to <code>READ COMMITTED</code> </li>
+<li>MySQL defaults to <code>REPEATABLE READ</code>
+<br><br></li>
+<li><p>You can always be explicit, e.g.,</p>
+
+<pre><code>SET TRANSACTION READ WRITE
+  ISOLATION LEVEL REPEATABLE READ
+</code></pre></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-98" style="background:;">
+  <hgroup>
+    <h2>Isolation Levels</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Isolation Level</th>
+<th>Characteristics</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>READ UNCOMMITTED</td>
+<td>Dirty reads. No locking! Anything goes!</td>
+</tr>
+<tr>
+<td>READ COMMITTED</td>
+<td>Can only read committed rows (but may read different versions of a row)</td>
+</tr>
+<tr>
+<td>REPEATABLE READ</td>
+<td>Multiple reads always retrieve same version of rows, but may have phantom reads</td>
+</tr>
+<tr>
+<td>SERIALIZABLE</td>
+<td>Pure isolation, real transactions</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-99" style="background:;">
+  <hgroup>
+    <h2>Isolation Levels</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Isolation Level</th>
+<th>Dirty Reads</th>
+<th>Non-repeatable Reads</th>
+<th>Phantom Reads</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>READ UNCOMMITTED</td>
+<td>Allowed</td>
+<td>Allowed</td>
+<td>Allowed</td>
+</tr>
+<tr>
+<td>READ COMMITTED</td>
+<td>Not allowed</td>
+<td>Allowed</td>
+<td>Allowed</td>
+</tr>
+<tr>
+<td>REPEATABLE READ</td>
+<td>Not allowed</td>
+<td>Not allowed</td>
+<td>Allowed</td>
+</tr>
+<tr>
+<td>SERIALIZABLE</td>
+<td>Not allowed</td>
+<td>Not allowed</td>
+<td>Not allowed</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
     <slide class="backdrop"></slide>
   </slides>
   <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
@@ -1862,6 +2977,252 @@ and the &quot;selection&quot; conditions in the WHERE</li>
       <a href="#" target="_self" rel='tooltip' 
         data-slide=58 title='Reality and Outer Joins'>
          58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Full-Relation Operations'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Full-Relation Operations'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Duplicate Elimination'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Duplicate Elimination with Set Operations'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Grouping and Aggregation in SQL'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='Flashback: Grouping and Aggregation'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='Grouping and Aggregation in SQL'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='Grouping and Aggregation in SQL'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='Aggregation Operators'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='Aggregation Operators and Duplicates'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='Aggregation Operators and NULLs'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='Grouping and NULLs'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='Grouping and NULLs'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='Grouping and NULLs'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='Database Modifications'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='Database Modifications'>
+         74
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=75 title='Insert Operations'>
+         75
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=76 title='Inserting an Entire Table'>
+         76
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=77 title='Correlated Updates'>
+         77
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=78 title='Deleting Tuples'>
+         78
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=79 title='Updating Tuples'>
+         79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='Transactions in SQL'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title='Transactions in SQL'>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='Transactions: Scenario 1'>
+         82
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=83 title='Transactions: Scenario 2'>
+         83
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=84 title='Transactions: Scenario 3 (Long-lived Transactions)'>
+         84
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=85 title='Transactions'>
+         85
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=86 title='Implementing Transactions'>
+         86
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=87 title='Long-lived Transactions'>
+         87
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=88 title='Specifying Transactions'>
+         88
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=89 title='Performance of Transactions'>
+         89
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=90 title='Enhancing Performance of Transactions'>
+         90
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=91 title='Enhancing Performance of Transactions'>
+         91
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=92 title='Dirty Reads'>
+         92
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=93 title='Do Dirty Reads Matter?'>
+         93
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=94 title='Accepting Dirty Reads'>
+         94
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=95 title='Other Isolation Levels'>
+         95
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=96 title='Other Isolation Levels'>
+         96
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=97 title='Other Isolation Levels'>
+         97
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=98 title='Isolation Levels'>
+         98
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=99 title='Isolation Levels'>
+         99
       </a>
     </li>
   </ul>
