@@ -1468,7 +1468,7 @@ UPDATE Employees
 
 ## Accepting Dirty Reads
 
-* Suppose that for **your application* dirty reads are OK
+* Suppose that for **your application** dirty reads are OK
 * This may result in significantly better performance for your application **if the database knows dirty reads are OK**
 
   ```

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Constraints and Triggers</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>Chapter Overview</h2>
+
+<ul>
+<li>We started studying SQL by looking at its DDL</li>
+<li>I.e., how to create a schema with SQL
+<br><br></li>
+<li>Then we moved on to SQL&#39;s querying capabilities
+<br><br></li>
+<li>Now we&#39;re going back to the schema language!</li>
+<li>The reason is simple:
+
+<ul>
+<li><strong>We are making changes to the schema that require query execution</strong></li>
+</ul></li>
+<li>These <strong>active elements</strong> are query (fragments) that are stored in the database</li>
+<li>Primarily, they serve to implement <strong>integrity constraints</strong>, either by checking
+the database or modifying it automatically</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Keys and Foreign Keys</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Keys and Foreign Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall that a <strong>key</strong> for a table is a set of one or more attributes that must be unique across all rows</li>
+<li>We specify keys with the <code>PRIMARY KEY</code> (or <code>UNIQUE</code>) keywords in the <code>CREATE TABLE</code> command
+<br><br></li>
+<li>When a record in table \(A\) needs to refer to a record in table \(B\), we use the key of \(B\) and store it in \(A\)</li>
+<li>In \(A\), we call this the <strong>foreign key</strong>
+
+<ul>
+<li>&quot;Foreign&quot; because it belongs to \(B\)</li>
+</ul></li>
+<li>In \(B\), it&#39;s just the <strong>primary key</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Keys and Foreign Keys</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE MovieExec (
+    name     VARCHAR(30),
+    address  VARCHAR(200),
+    cert#    INT PRIMARY KEY,
+    netWorth NUMERIC
+);
+
+CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT REFERENCES MovieExecs(cert#)
+);
+
+CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#));
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The database guarantees the following:</li>
+</ul>
+
+<blockquote>
+<p>There is no way for a row of table <code>Studios</code> to reference (or point to) a row of
+table <code>MovieExecs</code> that does not exist</p>
+</blockquote>
+
+<ul>
+<li>This is called <strong>referential integrity</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall: <code>Studios</code> has a foreign key that belongs to <code>MovieExecs</code>
+<br><br></li>
+<li>When can referential integrity be violated?
+<br><br></li>
+<li>MovieExecs
+
+<ol>
+<li>Updates</li>
+<li>Deletes</li>
+</ol></li>
+<li>Studios
+
+<ol>
+<li>Updates</li>
+<li>Inserts</li>
+</ol></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Notice that inserts on MovieExecs and Deletes on Studios cannot create a constraint violation</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What should a database do when it detects a violation of referential integrity?
+<br><br></li>
+<li>There are several alternatives:
+
+<ol>
+<li>We can <strong>reject</strong> updates that violate referential integrity</li>
+<li>We can <strong>cascade</strong> or propagate updates to preserve referential integrity</li>
+<li>We can <strong>set null</strong> the entries that would violate referential integrity</li>
+<li>We can <strong>set default</strong> the entries that would violate referential integrity</li>
+</ol></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>We can make these choices separately for UPDATE and DELETE commands</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Note: We only ever update tuples that <strong>reference</strong> a primary key</li>
+<li>E.g., we never cascade to the primary key</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity: Rejection</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+);
+
+CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+);
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity: Cascade</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+);
+</code></pre>
+
+<ul>
+<li>This is the best semantics for <strong>weak entities</strong></li>
+<li>E.g., if the <strong>supporting tuple</strong> is removed, so are any weak entities that depended on it</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity: Set Null</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL
+);
+</code></pre>
+
+<ul>
+<li>Notice it makes more sense to CASCADE on update, but SET NULL on delete</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity: Set Default</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+            ON UPDATE CASCADE
+            ON DELETE SET DEFAULT
+);
+</code></pre>
+
+<ul>
+<li>In some cases, it is best to keep around unclaimed entities, but it&#39;s not a good idea to set the
+owner to NULL</li>
+<li>We can use a good default value
+
+<ul>
+<li>E.g., a movie must have a director, but a director can withdraw his or her name, and the film
+<strong>defaults to Alan Smithee</strong></li>
+<li>Records related to grades, assignments, etc., are credited to <strong>Test Student</strong> in WyoCourses</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity and Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we perform a transaction with two updates \(Q_1\) and \(Q_2\)
+<br><br></li>
+<li>When do you <strong>check</strong> integrity constraints?
+
+<ol>
+<li>Immediately after executing \(Q_1\)</li>
+<li>Or at the end of the transaction, when both \(Q_1\) and \(Q_2\) are executed?</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity and Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It&#39;s actually fairly common for a transaction to perform multiple updates</li>
+<li>For example, when you enrolled at the university, dozens of records were created or updated on your behalf
+<br><br></li>
+<li>If there are integrity constraints between these records, you have to be very careful about the order in which
+they are inserted</li>
+<li>E.g., you must enter the main record in the <code>Students</code> table before you enter any records in <code>EnrolledIn</code>
+<br><br></li>
+<li>You can create a <strong>dependency graph</strong> that lists which tables reference other tables</li>
+<li>If the dependency graph is <strong>acyclic</strong>, you can order the insertions so that integrity constraints can be
+checked after each update</li>
+<li>But if there are cycles, you have to do all the insertions first, then check the integrity constraints</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity and Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In SQL, we can specify whether we want to check constraints right away or wait until the transaction is complete</li>
+<li>We do this <strong>when we create the constraint</strong> (not when we submit the transaction)</li>
+</ul>
+
+<pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+        DEFERRABLE INITIALLY DEFERRED
+)
+</code></pre>
+
+<ul>
+<li>There are three different levels:
+
+<ol>
+<li><code>NOT DEFERRABLE</code> check constraints immediately</li>
+<li><code>DEFERRABLE INITIALLY IMMEDIATE</code> check constraints after each statement</li>
+<li><code>DEFERRABLE INITIALLY DEFERRED</code> check constraints at the end of a transaction</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Referential Integrity and Transactions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One more thing!</li>
+<li>You can give constraints names by using the <code>CONSTRAINT</code> keyword (and we&#39;ll see this later)</li>
+<li>This has several advantages
+
+<ol>
+<li>Error messages make more sense, e.g., &#39;PRESC#_FK&quot; violated, instead of &quot;FK_59283&quot; violated</li>
+<li>You can turn on or off constraints by giving their name</li>
+<li>You can change whether a constraint is deferred or immediate</li>
+</ol></li>
+</ul>
+
+<pre><code>SET CONSTRAINT PRESC#_FK DEFERRED
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h1>Constraints on Attributes and Tuples</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Constraints on Attributes and Tuples</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now we&#39;ll consider constraints that limit the possible values of a tuple</li>
+<li>These can apply to a single attribute, e.g., &quot;Salary must be positive&quot;</li>
+<li>Or they can apply to a whole row, e.g., &quot;Either Salary is positive or EmpType is equal to intern&quot;</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>NOT NULL Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A simple constraint is <code>NOT NULL</code></li>
+<li>This simply forces the record to have a value for the given attribute</li>
+<li>The keywords NOT NULL appear immediately after the data type of the attribute declaration 
+in the <code>CREATE TABLE</code> or <code>ALTER TABLE</code> commands</li>
+</ul>
+
+<pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT NOT NULL,
+    FOREIGN KEY (presC#) REFERENCES MovieExecs(cert#)
+        DEFERRABLE INITIALLY DEFERRED
+)
+``` `
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Attribute CHECK Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>These constraints allow you to <strong>specify a condition</strong> that an attribute must pass</li>
+<li>They are checked whenever the given attribute is inserted or modified</li>
+</ul>
+
+<pre><code>CREATE TABLE MovieExec (
+    name     VARCHAR(30),
+    address  VARCHAR(200),
+    cert#    INT PRIMARY KEY,
+    netWorth NUMERIC,
+    CHECK (netWorth &gt;= 10000000)
+)
+</code></pre>
+
+<ul>
+<li>This constraint checks that the netWorth of any movie executive is at least $10,000,000</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Attribute CHECK Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here&#39;s a CHECK constraint that <strong>does not work as intended</strong></li>
+</ul>
+
+<pre><code>CREATE TABLE Studios (
+    name    VARCHAR(30) PRIMARY KEY,
+    address VARCHAR(200),
+    presC#  INT NOT NULL
+            CHECK (presC# IN (SELECT cert# FROM MovieExecs))
+)
+</code></pre>
+
+<ul>
+<li>The problem is that this is only checked when a new value of <code>presC#</code> is inserted or updated</li>
+<li>So if the <code>cert#</code> of a movie executive is removed, the check is not performed</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Tuple CHECK Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>These constraints allow you to <strong>specify a condition</strong> that a tup.e must pass</li>
+<li>They are checked whenever a tuple is inserted or modified</li>
+</ul>
+
+<pre><code>CREATE TABLE MovieExec (
+    name     VARCHAR(30),
+    address  VARCHAR(200),
+    cert#    INT PRIMARY KEY,
+    netWorth NUMERIC,
+    CHECK (netWorth &gt;= 10000000 OR
+           cert# NOT IN (SELECT presC# FROM MovieStudios))
+)
+</code></pre>
+
+<ul>
+<li>This constraint checks that the netWorth of any <strong>studio president</strong> is at least $10,000,000</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Or does it?
+
+<ul>
+<li>Hint: What happens when we UPDATE a president in the <code>Studio</code> table?</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h1>Modifying Constraints</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Naming Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Earlier we mentioned that you can name constraints with the <code>CONSTRAINT</code> keyword</li>
+</ul>
+
+<pre><code>CREATE TABLE MovieExec (
+    name     VARCHAR(30),
+    address  VARCHAR(200),
+    cert#    INT CONSTRAINT MovieExecPK PRIMARY KEY,
+    netWorth NUMERIC,
+    CONSTRAINT MovieExecNetWorthCK 
+        CHECK (netWorth &gt;= 10000000 OR
+               cert# NOT IN (SELECT presC# FROM MovieStudios))
+)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Dropping Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Now we can modify constraints</li>
+<li>For example, we can get rid of the CHECK constraint on netWorth as follows:</li>
+</ul>
+
+<pre><code>ALTER TABLE MovieExec DROP CONSTRAINT MovieExecNetWorthCK
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Adding Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can also add new constraints to a relation:</li>
+</ul>
+
+<pre><code>ALTER TABLE MovieExec ADD CONSTRAINT MovieExecNetWorthCK
+            CHECK (netWorth &gt;= 10000000 OR
+                   cert# NOT IN (SELECT presC# FROM MovieStudios))
+</code></pre>
+
+<ul>
+<li>Note: Any constraints added in this way will be at the <strong>tuple level</strong></li>
+<li>This is slightly less efficient than having CHECK constraints at the attribute levels</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Modifying Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Some databases allow you to modify constraints</li>
+</ul>
+
+<pre><code>ALTER TABLE MovieExec ALTER CONSTRAINT MovieExecNetWorthCK
+            CHECK (netWorth &gt;= 20000000 OR
+                   cert# NOT IN (SELECT presC# FROM MovieStudios))
+</code></pre>
+
+<ul>
+<li>But this is not very common</li>
+<li>You may have to DROP a constraint, then ADD a new version</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Disabling and Enabling Constraints</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One more thing!</li>
+<li>Some databases allow you to enable or disable constraints</li>
+<li>This means that checking the constraint can be disabled for a period of time
+<br><br></li>
+<li>If you are inserting <strong>a lot of tuples</strong>, it may be beneficial to
+
+<ol>
+<li>disable the constraints</li>
+<li>insert all the tuples</li>
+<li>re-enable the constraints
+<br><br></li>
+</ol></li>
+<li>Consider dropping and readding the constraints, if that&#39;s the only option!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h1>Assertions</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Assertions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Assertions</strong> are more general than constraints</li>
+<li>They operate on the <strong>entire database</strong>, not just a single table
+<br><br></li>
+<li>So they let you specify conditions that must be true at all times, i.e., <strong>invariants</strong></li>
+<li>The only tricky part is that the condition must return a single Boolean value</li>
+<li>The condition is usually an EXISTS or NOT EXISTS clause</li>
+</ul>
+
+<pre><code>CREATE ASSERTION FullTimeStudentAssertion
+    CHECK (NOT EXISTS (
+                SELECT *
+                  FROM (  SELECT StudentID, COUNT(*) AS CourseCount
+                            FROM Students NATURAL JOIN EnrolledIn
+                        GROUP BY StudentID) AS StudentCourses
+                 WHERE CourseCount &lt; 12
+                    OR CourseCount &gt; 20
+           )
+    )
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Assertions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Just as with constraints, you can DROP assertions
+
+<ul>
+<li><code>DROP ASSERTION FullTimeStudentAssertion</code>
+<br><br></li>
+</ul></li>
+<li>You may also be able to ALTER assertions</li>
+</ul>
+
+<p><br></p>
+
+<ul class = "build incremental">
+<li>Truth in advertising: Assertions are <strong>very expensive</strong></li>
+<li>Very few databases support them</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Keys and Foreign Keys'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Keys and Foreign Keys'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Keys and Foreign Keys'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Referential Integrity'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Referential Integrity'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Referential Integrity'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Referential Integrity: Rejection'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Referential Integrity: Cascade'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Referential Integrity: Set Null'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Referential Integrity: Set Default'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Referential Integrity and Transactions'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Referential Integrity and Transactions'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Referential Integrity and Transactions'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Referential Integrity and Transactions'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Constraints on Attributes and Tuples'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Constraints on Attributes and Tuples'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='NOT NULL Constraints'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Attribute CHECK Constraints'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Attribute CHECK Constraints'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Tuple CHECK Constraints'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Modifying Constraints'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Naming Constraints'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Dropping Constraints'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Adding Constraints'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Modifying Constraints'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Disabling and Enabling Constraints'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Assertions'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Assertions'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Assertions'>
+         30
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
