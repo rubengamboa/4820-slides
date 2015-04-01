@@ -758,6 +758,195 @@ in the <code>CREATE TABLE</code> or <code>ALTER TABLE</code> commands</li>
   <!-- Presenter Notes -->
 </slide>
 
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h1>Triggers in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Triggers are saved queries that are executed automatically when <strong>something happens</strong></li>
+<li>The &quot;something&quot; can be an update, a deletion, etc.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are three parts to a trigger
+<br>
+<br></li>
+</ul>
+
+<ol>
+<li><strong>Event:</strong> typically insert, delete, or update to a particular relation</li>
+<li><strong>Condition:</strong> a test that should be performed when the event happens</li>
+<li><strong>Action:</strong> SQL code performed when the event occurs <strong>and</strong> the condition holds</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TRIGGER NetWorthTrigger
+AFTER UPDATE OF netWorth ON MovieExec
+REFERENCING
+    OLD ROW AS OldTuple,
+    NEW ROW AS NewTuple
+FOR EACH ROW
+WHEN (OldTuple.netWorth &gt; NewTuple.netWorth)
+    UPDATE MovieExec
+       SET netWorth = OldTuple.netWorth
+     WHERE cert# = NewTuple.cert#
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Some key points:</p>
+
+<ol>
+<li>The conditions can access the state before and after the update that activated the trigger</li>
+<li>You can tie a trigger to an update of a single attribute of a relation</li>
+<li>The trigger condition and action may occur
+
+<ul>
+<li><strong>row-level:</strong> once for each modified tuple</li>
+<li><strong>statement-level:</strong> once for each statement</li>
+</ul></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>More Options</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Instead of AFTER, a trigger can run BEFORE an update, deletion, insert</li>
+<li>The action can have many statements inside a BEGIN ... END block</li>
+<li>If you are using a row-level trigger
+
+<ul>
+<li>OLD ROW AS and NEW ROW as give you access to each row</li>
+<li>OLD ROW cannot be used for insertions</li>
+<li>NEW ROW cannot be used for deletions</li>
+</ul></li>
+<li>If you are using a statement-level trigger
+
+<ul>
+<li>OLD TABLE AS and NEW TABLE AS give you access to the <strong>affected tuples</strong></li>
+<li>I.e., this does not give the entire old table!</li>
+<li>Only the tuples modified by the statement</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TRIGGER AvgNetWorthTrigger
+AFTER UPDATE OF netWorth ON MovieExec
+REFERENCING
+    OLD TABLE AS OldRows,
+    NEW TABLE AS NewRows
+FOR EACH STATEMENT
+WHEN (500000 &gt; (SELECT AVG(netWorth) FROM MovieExecs))
+BEGIN
+    DELETE 
+      FROM MovieExecs
+     WHERE cert# IN (SELECT cert# FROM NewRows);
+
+    INSERT INTO MovieExecs
+    SELECT *
+      FROM OldRows;
+END
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TRIGGER AvgNetWorthTrigger
+AFTER UPDATE OF netWorth ON MovieExec
+REFERENCING
+    OLD TABLE AS OldRows,
+    NEW TABLE AS NewRows
+FOR EACH STATEMENT
+WHEN (500000 &gt; (SELECT AVG(netWorth) FROM MovieExecs))
+BEGIN
+    DELETE 
+      FROM MovieExecs
+     WHERE cert# IN (SELECT cert# FROM NewRows);
+
+    INSERT INTO MovieExecs
+    SELECT *
+      FROM OldRows;
+END
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Triggers in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TRIGGER FixYearTrigger
+BEFORE INSERT ON Movies
+REFERENCING
+    NEW ROW AS NewRow,
+    NEW TABLE AS NewRows
+FOR EACH ROW
+WHEN NewRow.year IS NULL
+UPDATE NewRows SET year = to_char(sysdate, &#39;YYYY&#39;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
     <slide class="backdrop"></slide>
   </slides>
   <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
@@ -940,6 +1129,60 @@ in the <code>CREATE TABLE</code> or <code>ALTER TABLE</code> commands</li>
       <a href="#" target="_self" rel='tooltip' 
         data-slide=30 title='Assertions'>
          30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Triggers in SQL'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Triggers in SQL'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Triggers in SQL'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Triggers in SQL'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Triggers in SQL'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='More Options'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Triggers in SQL'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Triggers in SQL'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Triggers in SQL'>
+         39
       </a>
     </li>
   </ul>

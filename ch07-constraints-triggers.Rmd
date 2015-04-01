@@ -483,5 +483,130 @@ CREATE ASSERTION FullTimeStudentAssertion
 > * Truth in advertising: Assertions are **very expensive**
 * Very few databases support them
 
+---
 
+# Triggers in SQL
 
+---
+
+## Triggers in SQL
+
+* Triggers are saved queries that are executed automatically when **something happens**
+* The "something" can be an update, a deletion, etc.
+
+---
+
+## Triggers in SQL
+
+* There are three parts to a trigger
+  <br>
+  <br>
+
+1. **Event:** typically insert, delete, or update to a particular relation
+2. **Condition:** a test that should be performed when the event happens
+3. **Action:** SQL code performed when the event occurs **and** the condition holds
+
+---
+
+## Triggers in SQL
+
+```
+CREATE TRIGGER NetWorthTrigger
+AFTER UPDATE OF netWorth ON MovieExec
+REFERENCING
+    OLD ROW AS OldTuple,
+    NEW ROW AS NewTuple
+FOR EACH ROW
+WHEN (OldTuple.netWorth > NewTuple.netWorth)
+    UPDATE MovieExec
+       SET netWorth = OldTuple.netWorth
+     WHERE cert# = NewTuple.cert#
+```
+
+---
+
+## Triggers in SQL
+
+Some key points:
+
+1. The conditions can access the state before and after the update that activated the trigger
+2. You can tie a trigger to an update of a single attribute of a relation
+3. The trigger condition and action may occur
+   * **row-level:** once for each modified tuple
+   * **statement-level:** once for each statement
+
+---
+
+## More Options
+
+* Instead of AFTER, a trigger can run BEFORE an update, deletion, insert
+* The action can have many statements inside a BEGIN ... END block
+* If you are using a row-level trigger
+  * OLD ROW AS and NEW ROW as give you access to each row
+  * OLD ROW cannot be used for insertions
+  * NEW ROW cannot be used for deletions
+* If you are using a statement-level trigger
+  * OLD TABLE AS and NEW TABLE AS give you access to the **affected tuples**
+  * I.e., this does not give the entire old table!
+  * Only the tuples modified by the statement
+
+---
+
+## Triggers in SQL
+
+```
+CREATE TRIGGER AvgNetWorthTrigger
+AFTER UPDATE OF netWorth ON MovieExec
+REFERENCING
+    OLD TABLE AS OldRows,
+    NEW TABLE AS NewRows
+FOR EACH STATEMENT
+WHEN (500000 > (SELECT AVG(netWorth) FROM MovieExecs))
+BEGIN
+    DELETE 
+      FROM MovieExecs
+     WHERE cert# IN (SELECT cert# FROM NewRows);
+
+    INSERT INTO MovieExecs
+    SELECT *
+      FROM OldRows;
+END
+```
+
+---
+
+## Triggers in SQL
+
+```
+CREATE TRIGGER AvgNetWorthTrigger
+AFTER UPDATE OF netWorth ON MovieExec
+REFERENCING
+    OLD TABLE AS OldRows,
+    NEW TABLE AS NewRows
+FOR EACH STATEMENT
+WHEN (500000 > (SELECT AVG(netWorth) FROM MovieExecs))
+BEGIN
+    DELETE 
+      FROM MovieExecs
+     WHERE cert# IN (SELECT cert# FROM NewRows);
+
+    INSERT INTO MovieExecs
+    SELECT *
+      FROM OldRows;
+END
+```
+
+---
+
+## Triggers in SQL
+
+```
+CREATE TRIGGER FixYearTrigger
+BEFORE INSERT ON Movies
+REFERENCING
+    NEW ROW AS NewRow,
+    NEW TABLE AS NewRows
+FOR EACH ROW
+WHEN NewRow.year IS NULL
+UPDATE NewRows SET year = to_char(sysdate, 'YYYY')
+```
