@@ -34,7 +34,7 @@ widgets:      [mathjax, bootstrap]
 5. [Algebraic and Logical Query Languages](ch05-query-languages.html)
 6. [The Database Language SQL](ch06-sql.html)
 7. [Constraints and Triggers](ch07-constraints-triggers.html)
-8. Views and Indexes
+8. [Views and Indexes](ch08-views-indexes.html)
 <hr>
 9. SQL in a Server Environment
 10. Advanced Topics in Relational Databases *(time permitting)*
