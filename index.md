@@ -36,7 +36,7 @@ widgets:      [mathjax, bootstrap]
 7. [Constraints and Triggers](ch07-constraints-triggers.html)
 8. [Views and Indexes](ch08-views-indexes.html)
 <hr>
-9. SQL in a Server Environment
+9. [SQL in a Server Environment](ch09-db-programming.html)
 10. Advanced Topics in Relational Databases *(time permitting)*
 
 

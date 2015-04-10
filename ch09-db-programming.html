@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>SQL in a Server Environment</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>Chapter Overview</h2>
+
+<ul>
+<li>This chapter is about programming <strong>database applications</strong></li>
+<li>We will begin with the model for client/server computing and how this is really done in modern systems (i.e., the web)</li>
+<li>We will also discuss different ways that a program can interact with a database</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>The Three-Tier Architecture</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>The Three-Tier Architecture</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This is the dominant architecture for modern enterprise systems</li>
+</ul>
+
+<ol>
+<li><strong>Web servers</strong> create a layer for humans to interact with the system</li>
+<li><strong>Application servers</strong> perform the actual business logic of the application
+
+<ul>
+<li>These may be provided strictly to the web servers</li>
+<li>They man also be available to <strong>other programs</strong> via <strong>web services</strong></li>
+</ul></li>
+<li><strong>Database servers</strong> perform queries and manipulate the data</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>The Three-Tier Architecture</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/three-tier-architecture.png" title="Three-Tier Architecture" alt="Three-Tier Architecture">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>The Web Server Tier</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The web server is responsible for creating the <strong>view</strong> or user interface</li>
+<li>This will consist of HTML, CSS, JavaScript, media files, etc.</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>User interaction will be in the way of <strong>requests</strong>, e.g., an filling out HTTP form or clicking on a link</li>
+<li>The server with send <strong>responses</strong>, which may be new HTML pages or documents</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Of course, the UI may be implemented in other ways</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>The Application Tier</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This is responsible for handling user requests <strong>at the database level</strong></li>
+<li>I.e., it does not care about the actual UI</li>
+<li>It only cares about what the requests mean for the enterprise systems</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>In very simple systems, the application tier directly accesses the database</li>
+<li>In more complex systems, there can be a very complicated network of objects or services,
+and the application tier may have to <strong>integrate</strong> them</li>
+<li>Different services may communicate with each other
+
+<ul>
+<li>synchronously</li>
+<li>asynchronously</li>
+<li>via messaging</li>
+<li>indirectly, e.g., via the database</li>
+</ul></li>
+<li>There may even be a need to make transactions that span multiple services!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>The Database Tier</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This are services or classes that interact with the database</li>
+<li>It is also known as the <strong>persistence layer</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Remember that connections to the database are expensive</li>
+<li>Also, connections may take a long time to start up</li>
+<li>These types of details are handled in the database tier, e.g., by <strong>connection pooling</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h1>The SQL Environment</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>The SQL Environment</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>SQL Environment</strong> is a particular installation of a relational database that you can access</li>
+<li>It may consist of one or more database <strong>instances</strong> running on one or more physical servers</li>
+<li>The largest unit of information is a <strong>cluster</strong>, which corresponds to a &quot;database&quot;</li>
+</ul>
+
+<div class="centered">
+    <img src="assets/img/sql-environment.png" title="SQL Environment" alt="SQL Environment">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Components of a SQL Environment</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><strong>Schemas</strong> are collections of related tables, views, indexes, triggers, assertions, etc.
+
+<ul>
+<li>Schemas also have information about the tables, etc., that they contain
+<br><br></li>
+</ul></li>
+<li><strong>Catalogs</strong> are collections of schemas, and they provide information on the schemas they manage
+<br><br></li>
+<li><strong>Clusters</strong> are collections of catalogs</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Schemas</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can create a schema with <code>CREATE SCHEMA ...</code> command
+
+<ul>
+<li><code>CREATE SCHEMA MovieInformation</code></li>
+</ul></li>
+<li>A schema may also be associated with a particular user
+<br><br></li>
+<li>You can also select a particular schema to be the <strong>current</strong> schema
+
+<ul>
+<li><code>SET SCHEMA MovieInformation</code></li>
+<li><code>USE MovieInformation</code></li>
+<li class = '..
+<br><br></li>
+</ul></li>
+<li>After'>this, you can create tables, etc.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Catalogs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Catalogs let you manage multiple schemas</li>
+<li>They often correspond to different <strong>instances</strong> of a database</li>
+<li>I.e., they are managed by different database processes</li>
+<li>There is no standard way to create catalogs or select the current catalog</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Database Processes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>SQL Server</strong> is just a database server</li>
+<li>It handles requests and sends back responses (e.g., query results)
+<br><br></li>
+<li>A <strong>SQL Client</strong> is an application that sends requests to a SQL Server</li>
+<li>Note a &quot;SQL Client&quot; may in turn be an &quot;application server&quot;</li>
+<li>Words like &quot;client&quot; and &quot;server&quot; have limited meaning, but they are useful in the proper context</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Connections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A SQL client needs a <strong>connection</strong> to talk to a database server</li>
+<li><p>This may be as simple as</p>
+
+<pre><code>CONNECT TO server_name AS connection_name AUTHORIZATION username AND password
+</code></pre></li>
+<li><p>Later, you can (and <strong>should</strong>) release the connection with</p>
+
+<pre><code>DISCONNECT connection_name
+</code></pre></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Of course, the syntax for this is very incompatible between systems</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Database Sessions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>session</strong> is associated with each connection</li>
+<li>The session refers to the commands that are executed within a connection</li>
+<li>Note: a session may consist of one or more <strong>transactions</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Sessions have state associated with them, including
+
+<ul>
+<li>current user, with associated privileges</li>
+<li>user preferences (e.g., language)</li>
+<li>current catalog, schema, etc.</li>
+<li>database cursors</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>SQL Modules</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>SQL module</strong> is an application that interacts with the database</li>
+<li>The SQL standard recognizes three types of modules:
+
+<ol>
+<li><strong>Generic SQL Interface</strong> allows a user to type in ad-hoc queries that are executed one at a time</li>
+<li><strong>Embedded SQL</strong> involves SQL statements that are blended with the application language
+
+<ul>
+<li>Usually requires a preprocessor that extracts the SQL from the application language</li>
+<li>The application language used to be COBOL, but it can be C or Java</li>
+</ul></li>
+<li><strong>True modules</strong> include a collection of cooperating application modules and stored procedures</li>
+</ol></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>When a SQL module is executing, it is called a <strong>SQL agent</strong></li>
+<li>This is the same distinction as between programs and processes</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h1>The SQL/Host Language Interface</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>The SQL/Host Language Interface</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/sql-host-interface.png" title="SQL/Host Language Interface" alt="SQL/Host Language Interface">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>The SQL/Host Language Interface</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li><strong>Call-Level Interface</strong> is a set of language functions that communicate with the database
+
+<ul>
+<li>E.g., it can be a set of Java classes that provide access to a database server</li>
+<li>SQL queries are treated as <strong>strings</strong> only</li>
+<li>So there is no syntax checking of SQL queries
+<br><br></li>
+</ul></li>
+<li><strong>Embedded SQL</strong> is an approach where the language is <strong>extended</strong> to allow SQL in program blocks
+
+<ul>
+<li>There can be a specialized compiler than handles the extended language</li>
+<li>Or there can be a preprocessor that converts the X+SQL into plain X using the call-level interface</li>
+<li>In either case, syntax checking of SQL queries is possible</li>
+</ul></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>The Impedance Mismatch</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Procedural languages have a strict set of data types (integers, strings, pointers, etc.)</li>
+<li>They support mutable variables, loops, if statements, etc.</li>
+<li>They work with one data at a time</li>
+<li>In order to process N data items, they would use a loop</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Databases work on many items at a time (e.g., all rows in a table)</li>
+<li>They have predefined data types, some of which are specialized and ill-defined</li>
+<li>They do not (for the most part) support if statements, loops, etc.</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The challenge is to get these two different programming models to coexist</li>
+<li>This is called the <strong>impedance mismatch</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Embedded SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Embedded SQL is one way to solve the impedance mismatch</li>
+<li>This provides a special way to include SQL commands in C (or your programming language of choice)</li>
+<li>The SQL code and C code communicate via shared variables</li>
+</ul>
+
+<pre><code>EXEC SQL BEGIN DECLARE SECTION;
+    char studioName[50];
+    int  presNetWorth;
+    char SQLSTATE[6];
+EXEC SQL END DECLARE SECTION;
+
+strcpy(studioName, &quot;Lucasfilm&quot;);
+
+EXEC SQL SELECT netWorth INTO :presNetWorth
+           FROM Studios JOIN MovieExecs ON presC# = cert#
+          WHERE Studios.name = :studioName;
+
+printf (&quot;The president of Lucasfilm is worth $%d&quot;, presNetWorth);
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Embedded SQL Concepts</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL blocks are introduced via <code>EXEC SQL</code></li>
+<li>The SQL code and C code communicate via shared variables
+
+<ul>
+<li>These look like regular variables to C</li>
+<li>They have a leading &quot;:&quot; in the SQL code</li>
+</ul></li>
+<li>Shared variables are declared inside <code>DECLARE SECTION</code> blocks</li>
+</ul>
+
+<pre><code>EXEC SQL BEGIN DECLARE SECTION;
+    char studioName[50];
+    int  presNetWorth;
+    char SQLSTATE[6];
+EXEC SQL END DECLARE SECTION;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>SQLSTATE</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXEC SQL BEGIN DECLARE SECTION;
+    ...
+    char SQLSTATE[6];
+EXEC SQL END DECLARE SECTION;
+</code></pre>
+
+<ul>
+<li>The variable SQLSTATE is special</li>
+<li><p>If you declare a variable with this name (and you should), it will receive a special status code from the last SQL statement</p>
+
+<ul>
+<li>The codes are <strong>strings</strong> (not numbers) of 5 characters</li>
+<li>(So in C, you must declare an array of 6 characters, to leave room for the trailing &#39;\0&#39; character)</li>
+</ul></li>
+<li><p>Many of the codes are standard (and many more are database-specific)</p>
+
+<ul>
+<li><strong>00000</strong> means &quot;no error&quot;</li>
+<li><strong>02000</strong> means &quot;no (more) answers&quot;</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In the last example, we saw a query that returned <strong>only one row</strong></li>
+<li>But what if you want to find all the Movies made by Lucasfilm?</li>
+<li>This is part of what we mean by <strong>impedance mismatch</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>A modern solution might be to return a <strong>collection</strong> of results</li>
+<li>You  have to be careful, because there may not be enough memory to hold all the results in the client</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A modern solution might be to return an <strong>iterator</strong> over a collection</li>
+<li>This gives the illusion that we are working on a collection of items, but the collection may actually be held in the database</li>
+<li>Note: This does <strong>not</strong> mean that getting the next result means sending a request to the database</li>
+<li>I.e., the iterator may hold several results in memory at a time</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>A <strong>cursor</strong> is the database term for an iterator</li>
+<li>It lets you step through all the rows in your query result</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Using Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>To use a cursor from your code, you need to complete four steps</li>
+</ul>
+
+<p><br></p>
+
+<ol>
+<li><strong>Declare</strong> the cursor, which also associates it with a query</li>
+<li><strong>Open</strong> the cursor, which initializes the query at the database</li>
+<li><strong>Fetch</strong> each row</li>
+<li><p><strong>Close</strong> the cursor when finished</p>
+
+<pre><code>EXEC SQL DECLARE cursor_name CURSOR FOR query;
+EXEC SQL OPEN cursor_name;
+EXEC SQL FETCH FROM cursor_name INTO :var1, :var2, ..., :varn;
+...
+EXEC SQL CLOSE cursor_name;
+</code></pre></li>
+</ol>
+
+<ul>
+<li>Note: You know you&#39;re finished when SQLSTATE has the value <strong>02000</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Using Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXEC SQL BEGIN DECLARE SECTION;
+    int  cert_number;
+    char title[100];
+    int  year;
+    char SQLSTATE[6];
+EXEC SQL END DECLARE SECTION;
+
+EXEC SQL DECLARE c_movies CURSOR FOR
+     SELECT title, year
+       FROM Movies
+      WHERE presC# = :cert_number
+      ORDER BY year;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Using Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXEC SQL OPEN c_movies;
+for (;;) {
+    EXEC SQL FETCH FROM c_movies INTO :title, :year;
+    if (!strcmp(SQLSTATE,&quot;02000&quot;))
+        break;
+    printf (&quot;%d, %s\n&quot;, year, title);
+}
+EXEC SQL CLOSE c_movies;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Modifying Rows</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One way to modify rows is simply to execute an UPDATE command</li>
+<li>Sometimes, it&#39;s convenient to update the row we happen to be reading currently</li>
+<li>This is possible with cursors</li>
+<li>The WHERE clause should be &quot;WHERE CURRENT OF cursor_name&quot;</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Modifying Rows</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXEC SQL DECLARE c_emps CURSOR FOR
+     SELECT employee_id, rating, salary
+       FROM Employees;
+EXEC SQL OPEN c_emps;
+for (;;) {
+    EXEC SQL FETCH FROM c_emps INTO :id, :rating, :salary;
+    if (!strcmp(SQLSTATE,&quot;02000&quot;))
+        break;
+    if (rating &gt;= 9)
+        EXEC SQL UPDATE Employees
+                    SET salary = 1.1 * :salary
+                  WHERE CURRENT OF c_emps;
+    else if (rating &lt;= 2)
+        EXEC SQL DELETE FROM Employees
+                  WHERE CURRENT OF c_emps;
+}
+EXEC SQL CLOSE c_emps;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Dynamic SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>So far, the SQL code that will be executed has been visible in the code</li>
+<li>But what if you have to create the SQL code in C?</li>
+<li><p>E.g., your application can build a string by appending conditions to some base</p>
+
+<pre><code>q = &quot;SELECT * FROM Employees WHERE rating &gt;= 10&quot;;
+q = q + &quot; AND location=&#39;US&#39;&quot;;
+q = q + &quot; AND last_name LIKE &#39;%jones%&quot;;
+</code></pre></li>
+<li><p>Note: You should <strong>avoid</strong> dynamic SQL</p></li>
+<li><p>Repeat: <strong>Avoid</strong> dynamic SQL</p></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Note: If all that changes is a parameter, you can use static SQL and a shared variable</li>
+<li>E.g., &quot;rating &gt;= :min_rating&quot;</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Using Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXEC SQL BEGIN DECLARE SECTION;
+    int  cert_number;
+    char *query = &quot;SELECT title, year
+                     FROM Movies
+                    WHERE presC# = :cert_number&quot;;
+EXEC SQL END DECLARE SECTION;
+EXEC SQL PREPARE sql_query FROM :query USING;
+EXEC SQL DECLARE c_query CURSOR FOR sql_query;
+
+cert_number = 12345;
+EXEC SQL OPEN c_query;
+for (;;) {
+    EXEC SQL FETCH FROM c_query INTO :title, :year;
+    if (!strcmp(SQLSTATE,&quot;02000&quot;))
+        break;
+    printf (&quot;%d, %s\n&quot;, year, title);
+}
+EXEC SQL CLOSE c_movies;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Using Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXEC SQL BEGIN DECLARE SECTION;
+    int  cert_number;
+    char *query = &quot;SELECT title, year
+                     FROM Movies
+                    WHERE presC# = ?&quot;;
+EXEC SQL END DECLARE SECTION;
+EXEC SQL PREPARE sql_query FROM :query USING;
+EXEC SQL DECLARE c_query CURSOR FOR sql_query;
+
+cert_number = 12345;
+EXEC SQL OPEN c_query USING :cert_number;
+for (;;) {
+    EXEC SQL FETCH FROM c_query INTO :title, :year;
+    if (!strcmp(SQLSTATE,&quot;02000&quot;))
+        break;
+    printf (&quot;%d, %s\n&quot;, year, title);
+}
+EXEC SQL CLOSE c_movies;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='The Three-Tier Architecture'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Three-Tier Architecture'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='The Three-Tier Architecture'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='The Web Server Tier'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='The Application Tier'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='The Database Tier'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='The SQL Environment'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='The SQL Environment'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Components of a SQL Environment'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Schemas'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Catalogs'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Database Processes'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Connections'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Database Sessions'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='SQL Modules'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='The SQL/Host Language Interface'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='The SQL/Host Language Interface'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='The SQL/Host Language Interface'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='The Impedance Mismatch'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Embedded SQL'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Embedded SQL Concepts'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='SQLSTATE'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Cursors'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Cursors'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Using Cursors'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Using Cursors'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Using Cursors'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Modifying Rows'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Modifying Rows'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Dynamic SQL'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Using Cursors'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Using Cursors'>
+         33
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

@@ -1018,7 +1018,7 @@ DROP INDEX MovieYearIdx
 ## Clustered Indexes
 
 <div class="centered">
-    <img width="70%" src="assets/img/indexes-unclustered.pdf" title="Unclustered Index" alt="Unclustered Index">
+    <img width="70%" src="assets/img/indexes-unclustered.png" title="Unclustered Index" alt="Unclustered Index">
     <br>    
     An Unclustered Index
 </div>
@@ -1028,7 +1028,7 @@ DROP INDEX MovieYearIdx
 ## Clustered Indexes
 
 <div class="centered">
-    <img width="70%" src="assets/img/indexes-clustered.pdf" title="Clustered Index" alt="Clustered Index">
+    <img width="70%" src="assets/img/indexes-clustered.png" title="Clustered Index" alt="Clustered Index">
     <br>    
     A Clustered Index
 </div>
