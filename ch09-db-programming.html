@@ -765,7 +765,7 @@ q = q + &quot; AND last_name LIKE &#39;%jones%&quot;;
                      FROM Movies
                     WHERE presC# = :cert_number&quot;;
 EXEC SQL END DECLARE SECTION;
-EXEC SQL PREPARE sql_query FROM :query USING;
+EXEC SQL PREPARE sql_query FROM :query;
 EXEC SQL DECLARE c_query CURSOR FOR sql_query;
 
 cert_number = 12345;
@@ -794,7 +794,7 @@ EXEC SQL CLOSE c_movies;
                      FROM Movies
                     WHERE presC# = ?&quot;;
 EXEC SQL END DECLARE SECTION;
-EXEC SQL PREPARE sql_query FROM :query USING;
+EXEC SQL PREPARE sql_query FROM :query;
 EXEC SQL DECLARE c_query CURSOR FOR sql_query;
 
 cert_number = 12345;
@@ -806,6 +806,1374 @@ for (;;) {
     printf (&quot;%d, %s\n&quot;, year, title);
 }
 EXEC SQL CLOSE c_movies;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h1>Stored Procedures</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Stored Procedures and Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The SQL standard defines <strong>stored procedures</strong></li>
+<li>This is a bit of SQL (plus some extensions) that is stored with the database</li>
+<li>You can <strong>call</strong> it from the SQL interface</li>
+<li>You write a stored procedure to <strong>perform an action</strong>, e.g., insert a student to the database
+<br><br></li>
+<li>There are also <strong>stored functions</strong></li>
+<li>These are similar, but also return a value</li>
+<li>You call them from a query, wherever you can use an expression</li>
+<li>E.g., you can write a function that converts a date to a Julian number</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Stored Procedures and Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE PROCEDURE Move(IN oldAddr VARCHAR(255),
+                      IN newAddr VARCHAR(255))
+BEGIN
+    UPDATE MovieStar
+       SET address = newAddr
+     WHERE address = oldAddr;
+END;
+</code></pre>
+
+<pre><code>CALL Move (&#39;1 Innovation Way&#39;, &#39;1 Infinite Loop&#39;);
+</code></pre>
+
+<pre><code>EXEC SQL CALL Move (&#39;1 Innovation Way&#39;, &#39;1 Infinite Loop&#39;);
+</code></pre>
+
+<p>Note: SQL recognizes IN, OUT, and INOUT parameters</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Stored Procedures and Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION NumMovies(IN name VARCHAR(255)) RETURNS NUMBER
+BEGIN
+    RETURN (SELECT COUNT(*)
+              FROM StarsIn
+             WHERE StarsIn.starName = name);
+END;
+</code></pre>
+
+<pre><code>SELECT name, NumMovies(name)
+  FROM Stars
+ WHERE NumMovies(name) &gt; 10
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Procedural Extensions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The body of a procedure or function can be <strong>procedural</strong></li>
+<li>I.e., it can have
+
+<ul>
+<li>variables</li>
+<li>assignment statements</li>
+<li>multiple statements</li>
+<li>conditional statements</li>
+<li>loops</li>
+</ul></li>
+<li>The syntax is loosely based on Ada (but you can&#39;t blame Ada for this)</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Of course, the body can also call other stored procedures or functions</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Variables</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION NumMovies(IN name VARCHAR(255)) RETURNS NUMBER
+DECLARE movieCount NUMBER;
+BEGIN
+    SET movieCount = (SELECT COUNT(*)
+                        FROM StarsIn
+                       WHERE StarsIn.starName = name);
+    RETURN movieCount;
+END;
+</code></pre>
+
+<ul>
+<li>The SET keyword is mandatory</li>
+<li>This is the way we can tell the difference between assignment and equality comparisons</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Conditional Statements</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The syntax is <code>IF ... THEN ... ELSEIF ... THEN ... ELSE ... END IF</code></li>
+</ul>
+
+<pre><code>CREATE FUNCTION StarList(IN name VARCHAR(255)) RETURNS NUMBER
+DECLARE movieCount NUMBER;
+BEGIN
+    SET movieCount = NumMovies(name);
+    IF movieCount &gt; 10 THEN
+        RETURN &#39;A-list&#39;;
+    ELSEIF movieCount &gt; 5 THEN
+        RETURN &#39;B-list&#39;;
+    ELSE
+        RETURN &#39;C-list&#39;;
+    ENDIF;
+END;
+</code></pre>
+
+<p>Note: EXISTS and NOT EXISTS are used in the condition often</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION triangle(IN n NUMBER) RETURNS NUMBER
+DECLARE i NUMBER;
+DECLARE t NUMBER;
+BEGIN
+    SET t = 0;
+    SET i = 0;
+    mainLoop: LOOP
+        IF i &gt; n THEN
+            LEAVE mainLoop;
+        END IF;
+        SET t = t + i;
+        SET i = i + 1;
+    END LOOP;
+    RETURN t;
+END;
+</code></pre>
+
+<ul>
+<li>Loops must have labels</li>
+<li>Use LEAVE to exit loops</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Loops and Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION AvgNumMovies() RETURNS NUMBER
+DECLARE movieSum    NUMBER;
+DECLARE starCount   NUMBER;
+DECLARE starName    VARCHAR(255);
+DECLARE movieCount  NUMBER;
+DECLARE movieCursor FOR
+    SELECT movieStar, COUNT(movieTitle)
+      FROM StarsIn
+     GROUP BY movieStar;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Loops and Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>BEGIN
+    SET movieSum  = 0;
+    SET starCount = 0;
+    OPEN movieCursor;
+    mainLoop: LOOP
+        FETCH FROM movieCursor INTO starName, movieCount;
+        IF SQLSTATE &#39;02000&#39; THEN
+            LEAVE mainLoop;
+        END IF;
+        SET movieSum  = movieSum + movieCount;
+        SET starCount = starCount + 1;
+    END LOOP;
+    CLOSE movieCursor;
+    RETURN movieSum / starCount;
+END;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Loops and Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION AvgMovieLength(IN s VARCHAR(255)) RETURNS NUMBER
+DECLARE movieSum    NUMBER;
+DECLARE movieCount  NUMBER;
+DECLARE title       VARCHAR(255);
+DECLARE year        NUMBER;
+DECLARE length      NUMBER;
+DECLARE movieCursor FOR
+    SELECT title, year, length
+      FROM Movies
+     WHERE studioName = s;
+DECLARE NoMoreRows CONDITION FOR SQLSTATE &#39;02000&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Loops and Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>BEGIN
+    SET movieSum   = 0;
+    SET movieCount = 0;
+    OPEN movieCursor;
+    mainLoop: LOOP
+        FETCH FROM movieCursor INTO title, year, length;
+        IF NoMoreRows THEN
+            LEAVE mainLoop;
+        END IF;
+        SET movieSum   = movieSum + length;
+        SET movieCount = movieCount + 1;
+    END LOOP;
+    CLOSE movieCursor;
+    RETURN movieSum / movieCount;
+END;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>FOR Loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL support FOR loops!</li>
+<li>But they are not like FOR loops in any other language</li>
+<li>They iterate over cursors</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The advantage of using FOR loops is that they handle the details of handling cursors automatically</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>But FOR loops are really syntactic sugar</li>
+<li>A preprocessor converts them into conventional LOOPs before compilation</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>FOR Loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION AvgMovieLength(IN s VARCHAR(255)) RETURNS NUMBER
+DECLARE movieSum    NUMBER;
+DECLARE movieCount  NUMBER;
+BEGIN
+    SET movieSum   = 0;
+    SET movieCount = 0;
+    FOR movieLoop AS movieCursor CURSOR FOR
+        SELECT title, year, length
+          FROM Movies
+         WHERE studioName = s;
+    DO
+        SET movieSum   = movieSum + length;
+        SET movieCount = movieCount + 1;
+    END LOOP;
+    RETURN movieSum / movieCount;
+END;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>WHILE Loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION triangle(IN n NUMBER) RETURNS NUMBER
+DECLARE i NUMBER;
+DECLARE t NUMBER;
+BEGIN
+    SET t = 0;
+    SET i = 0;
+    WHILE i &lt;= n DO
+        SET t = t + i;
+        SET i = i + 1;
+    END WHILE;
+    RETURN t;
+END;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>REPEAT Loops</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION triangle(IN n NUMBER) RETURNS NUMBER
+DECLARE i NUMBER;
+DECLARE t NUMBER;
+BEGIN
+    SET t = 0;
+    SET i = 0;
+    REPEAT
+        SET t = t + i;
+        SET i = i + 1;
+    UNTIL i &gt; n
+    END WHILE;
+    RETURN t;
+END;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Exceptions are tied to SQLSTATE</li>
+<li>I.e., you can add an exception to handle the case when no more tuples are found
+
+<ul>
+<li>SQLSTATE = &#39;02000&#39;</li>
+</ul></li>
+<li>Or when a nested query returns more than one result
+
+<ul>
+<li>SQLSTATE = &#39;21000&#39;</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION GetYear(IN t VARCHAR(255)) RETURNS NUMBER
+DECLARE NoMoreRows  CONDITION FOR SQLSTATE &#39;02000&#39;;
+DECLARE TooManyRows CONDITION FOR SQLSTATE &#39;21000&#39;;
+BEGIN
+    DECLARE EXIT HANDLER FOR NoMoreRows, TooManyRows 
+        RETURN NULL;
+    RETURN (SELECT year FROM Movies WHERE title = t);
+END;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>DECLARE EXIT HANDLER FOR NoMoreRows, TooManyRows 
+    SET year = NULL;
+</code></pre>
+
+<ul>
+<li>The EXIT keyword says that control should follow after the BEGIN ... END block</li>
+<li>You can also specify
+
+<ul>
+<li>CONTINUE, which means go on to the next statement, as if nothing had happened</li>
+<li>UNDO, which is just like EXIT but also enforces transaction semantics,
+including <strong>updates</strong> and <strong>assignment statements</strong></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h1>Call-Level Interface</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>Call-Level Interface</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The more common approach to interacting with a database is to use a <strong>library</strong> that connects
+to the database</li>
+<li>SQL queries are handled as strings</li>
+<li>The library is called a <strong>call-level interface</strong> or <strong>CLI</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><p>Advantages:</p>
+
+<ul>
+<li>No need for a pre-processor</li>
+<li>Programming tools (debugger, editor, syntax highlighter) work &quot;as-is&quot;</li>
+</ul></li>
+<li><p>Disadvantage:</p>
+
+<ul>
+<li>SQL queries are checked at run-time, not at compile-time</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>JDBC</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>JDBC</strong> is Java&#39;s base database connectivity API
+
+<ul>
+<li>Java offers other alternatives, e.g., SQLJ and JDO, which sit on top of JDBC
+<br><br></li>
+</ul></li>
+<li>JDBC is DBMS-neutral
+
+<ul>
+<li>A <strong>driver</strong> traps calls and translates them into DBMS-specific code</li>
+<li>But SQL commands are strings and not completely portable
+<br><br></li>
+</ul></li>
+<li>Database can run across a network, and connection info is passed in the form of URLs </li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>JDBC Architecture</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li> <strong>Application:</strong> initiates and terminates connections, and submits SQL statements
+<br><br></li>
+<li> <strong>Driver Manager:</strong> only one per Java instance.  It loads the right JDBC driver for the given connection
+<br><br></li>
+<li> <strong>Driver:</strong> connects to the data source, transmits requests, and returns/translates results and error codes
+<br><br></li>
+<li> <strong>Data source:</strong> the actual database that processes SQL statements</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Basic JDBC Application</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The Java application must perform the following steps
+
+<ul>
+<li>Load the JDBC driver (e.g., Oracle&#39;s JDBC driver).  This also registers the driver with the driver manager</li>
+<li>Connect to the data source (e.g., provide username/password)</li>
+<li>Execute SQL statements</li>
+<li>Close all open statements and connections</li>
+<li>Handle exceptions</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>DriverManager</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>DriverManager</strong> is a class implemented in the JDBC library</li>
+<li>It&#39;s responsible for creating an instance of the right driver for your database connection</li>
+<li>But, it needs to know which database drivers work for which connections types</li>
+<li>This is done by <strong>registering</strong> the driver, and drivers register themselves when they are loaded</li>
+<li>You can load a driver by creating an instance of it or loading the class</li>
+</ul>
+
+<pre><code>Class.forName(&quot;jdbc.driver.Oracledriver&quot;);
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h2>JDBC Sessions and Connections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We interact with a data source through a session</li>
+<li>This is not just a JDBC notion, but a database notion</li>
+<li>A session has its own set of preferences, etc.</li>
+<li>Sessions are initiated via a URL
+
+<ul>
+<li>jdbc:<em>subprotocol</em>:<em>otherparameters</em></li>
+<li>The <em>subprotocol</em> identifies the driver, e.g., Oracle</li>
+<li>The <em>otherParameters</em> is driver specific, e.g., username/password, network port, database name, etc.</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h2>Starting a Connection</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>Class.forName(&quot;jdbc.driver.Oracledriver&quot;);
+
+String url = &quot;jdbc:oracle:www.bookstore.com:3083&quot;;
+Connection conn;
+try {
+    con = DriverManager.getConnection(url, &quot;scott&quot;, &quot;tiger&quot;);
+}
+catch (SQLException e) {
+    // handle error
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Connection Configuration</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>How do we know to
+
+<ul>
+<li>connect to <em>jdbc:oracle:<a href="http://www.bookstore.com:3083">www.bookstore.com:3083</a></em></li>
+<li>username/password is <em>scott/tiger</em></li>
+</ul></li>
+<li>These credentials should be different in development, testing, production, etc.</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>There are 5 typical solutions:
+
+<ul>
+<li>Hardcode them in the source file (like we did) -- <strong>bad</strong> idea</li>
+<li>Get information from a <strong>property file</strong></li>
+<li>Use <strong>dependency injection</strong> (pass the buck)</li>
+<li>Use a framework (JNDI) that gives you the connection URL</li>
+<li>Use a framework (J2EE, Spring) that connects to the database for you and gives you a Connection</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Aside: Dependency Injection</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Dependency Injection (DI)</strong> is a great technique for writing code that is <strong>loosely coupled</strong></li>
+<li>E.g., the code uses a database, but does not need to know <strong>what database it uses</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>This is huge!</li>
+<li>It allows us to use a bit of code in many different contexts</li>
+<li>So it makes code reuse much more likely</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Aside: Dependency Injection</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>The basic idea is <strong>not to write</strong> code like this:</p>
+
+<pre><code>Class.forName(&quot;jdbc.driver.Oracledriver&quot;);
+
+String url = &quot;jdbc:oracle:www.bookstore.com:3083&quot;;
+Connection conn;
+try {
+  con = DriverManager.getConnection(url, &quot;scott&quot;, &quot;tiger&quot;);
+}
+</code></pre></li>
+<li><p>Notice all the assumptions this little bit of code is making about its environment</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Aside: Dependency Injection</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Instead, write code like this</p>
+
+<pre><code>class Foo {
+  public void setDriverName (String driver) { this.dbDriver = driver; }
+  public void setConnectionUrl (String url) { this.dbUrl = url; }
+  public void setDbUser (String user) { this.dbUser = user; }
+  public void setDbPassword (String password) { this.dbPassword = password; }
+  ...
+  public void connect() {
+      Class.forName(dbDriver);
+      Connection con;
+      try {
+           DriverManager.getConnection (dbUrl, dbUser, dbPassword);
+      }
+      ...
+  }
+}
+</code></pre></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>Connection API</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>getTransactionIsolation()</strong> and <strong>setTransactionIsolation()</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><strong>getReadOnly()</strong> and <strong>setReadOnly()</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><strong>getAutoCommit()</strong> and <strong>setAutoCommit()</strong>
+
+<ul>
+<li>If true (default), each SQL statement executes in its own transaction</li>
+<li>If false, you must explicitly call <strong>commit()</strong> or <strong>rollback()</strong></li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><strong>isClosed()</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>Executing SQL Statements</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>JDBC offers three classes for interacting with SQL statements</p>
+
+<ul>
+<li><strong>Statement:</strong> both static and dynamic</li>
+<li><strong>PreparedStatement:</strong> allows parameters, e.g., :cert_num</li>
+<li><strong>CallableStatement:</strong> calls a stored procedure (if your database supports these)</li>
+</ul></li>
+<li><p>You can call <strong>executeUpdate()</strong> or <strong>executeQuery()</strong> to execute a query</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>Executing SQL Statements</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>// The &quot;?&quot; indicate where the parameters go
+String sql=&quot;INSERT INTO Movies (title, year, genre, length) VALUES(?,?,?,?)&quot;;
+
+PreparedStatment pstmt=con.prepareStatement(sql);
+pstmt.clearParameters(); // not needed here
+pstmt.setString(1, title);     // one- (not zero-)based offsets
+pstmt.setInt(2, year);
+pstmt.setString(3, genre);
+pstmt.setInt(4, length);
+
+// no rows are returned, thus we use executeUpdate()
+int numRowsChanged = pstmt.executeUpdate();
+</code></pre>
+
+<p>Note: You can use column names instead of position indexes in the getXXX() and setXXX() methods</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>Getting Results Back</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>executeUpdate()</strong> returns the number of rows affected by the query
+
+<ul>
+<li>Useful to make sure you changed the expected number of records</li>
+<li>E.g., 1 for an insert</li>
+</ul></li>
+<li><strong>executeQuery()</strong> returns rows encapsulated in a <strong>ResultSet</strong>
+
+<ul>
+<li>ResultSet is JDBC&#39;s class for representing a database cursor</li>
+</ul></li>
+</ul>
+
+<pre><code>ResultSet rs=pstmt.executeQuery(sql);
+// rs is now a cursor
+while (rs.next()) {
+  // process the data
+}
+rs.close ();
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
+  <hgroup>
+    <h2>ResultSet</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>ResultSet has some powerful features
+
+<ul>
+<li><strong>next():</strong> moves to the next row, and returns false if none</li>
+<li><strong>previous():</strong> moves to the previous row</li>
+<li><strong>absolute(n):</strong> moves to the nth row</li>
+<li><strong>relative(n):</strong> moves forward (backward if n is negative) by n rows</li>
+<li><strong>first()} / \textbf{last():</strong> moves to the first / last row</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>If your database supports it, ResultSet also allows you to modify the current row</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>SQL/Java Data Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>SQL Type</th>
+<th>Java Class</th>
+<th>ResultSet get/set Method</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>BIT</td>
+<td>Boolean</td>
+<td>getBoolean()</td>
+</tr>
+<tr>
+<td>CHAR</td>
+<td>String</td>
+<td>getString()</td>
+</tr>
+<tr>
+<td>VARCHAR</td>
+<td>String</td>
+<td>getString()</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>Double</td>
+<td>getDouble()</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>Double</td>
+<td>getDouble()</td>
+</tr>
+<tr>
+<td>INTEGER</td>
+<td>Integer</td>
+<td>getInt()</td>
+</tr>
+<tr>
+<td>REAL</td>
+<td>Double</td>
+<td>getFloat()</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>java.sql.Date</td>
+<td>getDate()</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>java.sql.Time</td>
+<td>getTime()</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>java.sql.TimeStamp</td>
+<td>getTimestamp()</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>Dealing with SQL NULL Values</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>If a field is NULL, the getXXX() will return Java null if possible</p>
+
+<pre><code>String title = rs.getString(1);
+if (title == null) {
+  ...
+}
+</code></pre></li>
+<li><p>But some types (e.g., int, float, double) do not have NULL equivalents</p></li>
+<li><p>In this case, you can use <strong>wasNull()</strong> to check</p>
+
+<pre><code>int year = rs.getInt(2);
+if (rs.wasNull()) {
+...
+}
+</code></pre></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>Handling Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Almost all <strong>java.sql</strong> functions can throw a <strong>SQLException</strong> if an error occurs</li>
+<li>Your code must explicitly deal with this exception
+
+<ul>
+<li>ignore it (i.e., add it to the list of throws and let the caller handle it)</li>
+<li>catch it and recover</li>
+<li>catch it and fail or terminate the program</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><strong>Note:</strong> SQLException is a checked exception, so you must do <strong>something</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h2>Handling Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>try {
+    con = DriverManager.getConnection(url, &quot;scott&quot;, &quot;tiger&quot;);
+    pstmt = con.prepareStatement(sql);
+    rs = pstmt.executeQuery ();
+    while (rs.next ()) {
+        // ... rs.getString(1) ...
+    }
+    // DO NOT close resources here!  
+    // (See finally clause on next page)
+}
+catch (SQLException e) {
+    // handle error, e.g., print message, terminate
+    // ... e.getErrorCode() ...
+    // ... e.getSQLState() ...
+    // ... e.getMessage() ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h2>Handling Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>finally {
+    if (rs != null) {
+        try {
+            rs.close ();
+        }
+        catch (SQLException e2) {
+            // handle it....
+        }
+    }
+    if (pstmt != null) {
+        try {
+            pstmt.close ();
+        }
+        catch (SQLException e2) {
+            // handle it....
+        }
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
+    <h2>Handling Exceptions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>    if (con != null) {
+        try { con.close (); }
+        catch (SQLException e2) {
+            // handle it....
+        }
+    }
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-76" style="background:;">
+  <hgroup>
+    <h2>Database Metadata</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The <strong>DatabaseMetaData</strong> object gives information about the database system and the catalog</p>
+
+<pre><code>DatabaseMetaData md = con.getMetaData();
+System.out.println (&quot;Name: &quot; + md.getDriverName());
+System.out.println (&quot;Version: &quot; + md.getDriverVersion());
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-77" style="background:;">
+  <hgroup>
+    <h2>Database Metadata</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>DatabaseMetaData md=con.getMetaData();
+ResultSet trs=md.getTables(null,null,null,null);
+String tableName;
+while(trs.next()) {
+  tableName = trs.getString(&quot;TABLE_NAME&quot;);
+  System.out.println(&quot;Table: &quot; + tableName);
+  ResultSet crs = md.getColumns(null,null,tableName, null);
+  while (crs.next()) {
+    System.out.println(&quot;  &quot; + crs.getString(&quot;COLUMN_NAME&quot;));
+  }
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-78" style="background:;">
+  <hgroup>
+    <h2>ResultSet Metadata</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can also get metadata from a ResultSet</li>
+<li>The <strong>ResultSetMetaData</strong> class allows you to see the names and types of columns returned by
+a ResultSet
+
+<ul>
+<li>Usually, you don&#39;t need this!</li>
+<li>You <strong>know</strong> what the query is that you&#39;re executing, so you know the columns returned</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>This is only useful with <strong>dynamic SQL</strong></li>
+<li>E.g., a program that provides a GUI to execute arbitrary SQL statements</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-79" style="background:;">
+  <hgroup>
+    <h2>Template for Executing Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>try { 
+    con = DriverManager.getConnection(url, &quot;login&quot;, &quot;pass&quot;); 
+    String query = &quot;SELECT title, year FROM Movies&quot;;
+    stmt = con.prepareStatement(query); 
+    rs = pstmt.executeQuery();
+    while (rs.next()) {
+        String title = rs.getString(&quot;title&quot;);
+        int year = rs.getInt(&quot;year&quot;);
+        System.out.println(title + &quot;    &quot; + year);
+    }
+} 
+catch(SQLException ex) {
+    System.out.println(ex.getMessage ()
+        + ex.getSQLState () + ex.getErrorCode ());
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-80" style="background:;">
+  <hgroup>
+    <h2>Template for Executing Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>finally {
+    if (rs != null) {
+        try {
+            rs.close ();
+        }
+        catch (SQLException e2) {
+            // handle it somehow
+            // e.g., log it or retry N times....
+        }
+    }
+    if (pstmt != null) {
+        try {
+            pstmt.close ();
+        }
+        catch (SQLException e2) {
+            // handle it somehow
+        }
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-81" style="background:;">
+  <hgroup>
+    <h2>Template for Executing Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>    if (con != null) {
+        try {
+            con.close ();
+        }
+        catch (SQLException e2) {
+            // handle it somehow
+        }
+    }
+} // end finally
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-82" style="background:;">
+  <hgroup>
+    <h1>Spring Database Templates</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-83" style="background:;">
+  <hgroup>
+    <h2>Spring Database Templates</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Spring is a Java framework that makes it easier to build enterprise applications</li>
+<li>It started out as a way to access databases via <strong>templates</strong></li>
+<li>It grew to a <strong>dependency injection</strong> framework that 
+
+<ul>
+<li>defines <strong>beans</strong> (run-time objects that perform some functionality)</li>
+<li><strong>wires</strong> beans together (sets up the run-time graph of cooperating objects)</li>
+<li class = '..</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>You&#39;ve'>probably noticed it takes a lot of (repetitive) code to execute even a simple query!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-84" style="background:;">
+  <hgroup>
+    <h2>Specifying the Database</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>First things first -- we need to tell the application what database to use</li>
+</ul>
+
+<pre><code>@Configuration
+@Import({JettyConfiguration.class, SpringSecurityConfiguration.class})
+@ComponentScan(basePackages = {&quot;uwyo.cs.acm2013&quot;},
+               excludeFilters = {@ComponentScan.Filter(Controller.class),
+                                 @ComponentScan.Filter(Configuration.class)})
+public class RootConfiguration {
+    @Bean
+    public DataSource getDataSource() {
+      DataSource dbsrc = null;
+      try {
+          dbsrc = new SimpleDriverDataSource(new com.mysql.jdbc.Driver(),
+                                             &quot;jdbc:mysql://localhost/test&quot;, 
+                                             &quot;root&quot;, &quot;&quot;);
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }      
+      return dbsrc;
+    }
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-85" style="background:;">
+  <hgroup>
+    <h2>Data Access Objects</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Spring uses <strong>Data Access Objects</strong> or <strong>DAOs</strong></li>
+<li>These are classes that interface with the database</li>
+<li>Each method of a DAO corresponds to a concrete chunk of functionality
+
+<ul>
+<li>E.g., find movies made in a certain year</li>
+</ul></li>
+<li>The method returns Java objects called <strong>Data Transfer Objects</strong> or <strong>DTOs</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>DTOs usually don&#39;t have sophisticated behavior</li>
+<li>They can be converted into model objects (which may have behavior)</li>
+<li>But DTOs are only designed to transfer information</li>
+<li>I.e., they do not follow the typical OO design strategies</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-86" style="background:;">
+  <hgroup>
+    <h2>Writing a DAO</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>public class TestDAOImpl implements TestDAO {
+
+    private JdbcTemplate jdbcTemplate = null;
+
+    public TestDAOImpl(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-87" style="background:;">
+  <hgroup>
+    <h2>Writing a DAO</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>    @Override
+    public List&lt;Foo&gt; getFoos() {
+        String sql = &quot;SELECT a, b FROM foo&quot;;
+        List&lt;Foo&gt; foos = jdbcTemplate.query(sql, new RowMapper&lt;Foo&gt;() {
+
+            @Override
+            public Foo mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Foo foo = new Foo(rs.getInt(&quot;a&quot;), rs.getInt(&quot;b&quot;));
+                return foo;
+            }
+
+        });
+
+        return foos;
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-88" style="background:;">
+  <hgroup>
+    <h2>Writing a DAO</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>    @Override
+    public void deleteFoo(int a) {
+        String sql = &quot;DELETE FROM foo WHERE a=?&quot;;
+        jdbcTemplate.update(sql, a);
+    }
+
+}
 </code></pre>
 
   </article>
@@ -1012,6 +2380,336 @@ EXEC SQL CLOSE c_movies;
       <a href="#" target="_self" rel='tooltip' 
         data-slide=33 title='Using Cursors'>
          33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Stored Procedures'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Stored Procedures and Functions'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Stored Procedures and Functions'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Stored Procedures and Functions'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Procedural Extensions'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Variables'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Conditional Statements'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Loops'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Loops and Cursors'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Loops and Cursors'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Loops and Cursors'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Loops and Cursors'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='FOR Loops'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='FOR Loops'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='WHILE Loops'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='REPEAT Loops'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Exceptions'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Exceptions'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='Exceptions'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='Call-Level Interface'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='Call-Level Interface'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='JDBC'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='JDBC Architecture'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Basic JDBC Application'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='DriverManager'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='JDBC Sessions and Connections'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Starting a Connection'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Connection Configuration'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Aside: Dependency Injection'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Aside: Dependency Injection'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='Aside: Dependency Injection'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='Connection API'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='Executing SQL Statements'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='Executing SQL Statements'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='Getting Results Back'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='ResultSet'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='SQL/Java Data Types'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='Dealing with SQL NULL Values'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='Handling Exceptions'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='Handling Exceptions'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='Handling Exceptions'>
+         74
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=75 title='Handling Exceptions'>
+         75
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=76 title='Database Metadata'>
+         76
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=77 title='Database Metadata'>
+         77
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=78 title='ResultSet Metadata'>
+         78
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=79 title='Template for Executing Queries'>
+         79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='Template for Executing Queries'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title='Template for Executing Queries'>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='Spring Database Templates'>
+         82
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=83 title='Spring Database Templates'>
+         83
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=84 title='Specifying the Database'>
+         84
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=85 title='Data Access Objects'>
+         85
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=86 title='Writing a DAO'>
+         86
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=87 title='Writing a DAO'>
+         87
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=88 title='Writing a DAO'>
+         88
       </a>
     </li>
   </ul>

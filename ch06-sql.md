@@ -962,7 +962,7 @@ SELECT name, title, year, genre
 
 * By design, SQL conditions look at each row separately
 * There is no notion of looking at more than one row at a time
-* That's why there is an AVG(x) function in the SHOW clause, but not in the WHEN clause
+* That's why there is an AVG(x) function in the SELECT clause, but not in the WHERE clause
   <br><br>
 * But some operations only make sense in the context of a full relation
 * We'll discuss those operations next
