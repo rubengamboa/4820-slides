@@ -1155,6 +1155,76 @@ if (rs.wasNull()) {
 
 ---
 
+## SQL Injection
+
+* Suppose you have a login form, and you process the input like this
+
+```
+String sql = "SELECT id FROM login " +
+             "WHERE username = '" + form.username + "'" +
+             "AND password = '" + form.password + "'";
+
+// Now execute the SQL statement to get the id for the user
+// (if the username and password are correct)
+```    
+
+* With these inputs, the query translates as follows
+  * Username: ruben
+  * Password: p@ssw0rd
+
+```
+SELECT id
+  FROM login
+ WHERE username = 'ruben'
+   AND password = 'p@ssw0rd'
+```
+
+---
+
+## SQL Injection
+
+* The problem is that not everybody plays fair
+* You're letting the user help you write the SQL queries
+* Some (ab)users will take advantage of this
+* And users are much more creative in their capacity for mischief than you can imagine
+
+---
+
+## SQL Injection
+
+* Suppose you have a login form, and you process the input like this
+
+```
+String sql = "SELECT id FROM login " +
+             "WHERE username = '" + form.username + "'" +
+             "AND password = '" + form.password + "'";
+
+// Now execute the SQL statement to get the id for the user
+// (if the username and password are correct)
+```    
+
+* With these inputs, the query translates as follows
+  * Username: administrator
+  * Password: ' OR 'pwned' = 'pwned
+
+```
+SELECT id
+  FROM login
+ WHERE username = 'administrator'
+   AND password = '' OR 'pwned' = 'pwned'
+```
+
+---
+
+## SQL Injection
+
+<div class="centered">
+    <img src="assets/img/exploits_of_a_mom.png" title="XKCD: Bobby Tables" alt="XKCD: Bobby Tables">
+</div>
+
+
+---
+
 ## Handling Exceptions
 
 * Almost all **java.sql** functions can throw a **SQLException** if an error occurs
@@ -1450,4 +1520,266 @@ public class TestDAOImpl implements TestDAO {
 
 }
 ```
+
+---
+
+# SQLJ
+
+---
+
+## SQLJ
+
+* SQLJ is part of the JDBC standard
+* It is similar in spirit to Embedded SQL, but it is DBMS independent, like JDBC itself
+  * Recall: Embedded SQL is defined by each vendor, and each vendor provides the tools to compile it
+* SQL has the key advantage of Embedded SQL
+  * Compiler can perform syntax checks and even consistency with the schema
+
+---
+
+## SQLJ
+
+```
+int    sid; 
+String name; 
+float  gpa;
+#sql iterator Students(int sid, String name, float gpa);
+Students students;
+#students = {
+    SELECT sname, gpa INTO :name, :gpa
+      FROM Students 
+     WHERE sid = :sid
+};
+while (students.next()) {
+    System.out.println(students.name + " " + students.gpa));
+}
+students.close();
+```
+
+---
+
+## SQLJ Iterators
+
+* Named iterators
+  * Need both variable type and name
+  * Allows retrieval of columns by name
+* Positional iterators
+  * Need only variable type
+  * Uses **FETCH ... INTO** to write to Java variables
+
+---
+
+# Object-Relational Mappers (ORMs)
+
+---
+
+## Object-Relational Mappers (ORMs)
+
+* Another approach is to completely disguise the database behind classes that correspond 
+  to the tables in the database
+* E.g., there would be a Sailor class, a Boat class, etc.
+* Instances of the class correspond to rows in the table
+
+
+<br>
+
+* **Class methods** are used to create instance(s) from row(s) in the database
+* **Instance methods** can read attributes from the instance, modify the instance, 
+  save instance to a new or existing row, etc.
+
+---
+
+## Hibernate Example
+
+```
+Session session = factory.getCurrentSession ();
+session.beginTransaction();
+
+Student student = new Student(9, "John Galt", 4.0);
+session.save (student);
+
+session.getTransaction().commit();
+```
+
+---
+
+## Hibernate Example
+
+```
+String hql = "from Student s where s.gpa <= :min_gpa";
+Query query = session.createQuery ();
+query.setFloat ("min_gpa", 2.0);
+List<Student> students = query.list (hql);
+    // Note: List<Student> is a Java class
+
+for (Student student : students) {
+    // Note: student is a POJO
+    // Now do something with student
+}
+```
+
+---
+
+## Hibernate Mapping
+
+* But how do you map tables to classes?
+* Hibernate offers a solution based on XML configuration files (yuck)
+  * There is a global configuration object
+  * The configuration object creates the session factory
+  * The session factory then creates one or more sessions
+* Hibernate also offers an easier way using Java annotations (yeay!)
+
+---
+
+## Hibernate Mappings with Annotations
+
+```
+@Entity        // Maps to table called "FACULTY"
+public class Faculty
+{
+    private Long fid;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getFid() { return fid; }
+    public void setFid(Long fid) { this.fid = fid; }
+    
+    // Automatically maps to column called "fname"
+    private String fname;
+    public String getFname () { return fname; }
+    public void setFname (String fname) { 
+        this.fname = fname; 
+    }
+```
+
+
+---
+
+## Hibernate Mappings with Annotations
+
+```
+    // Automatically maps to column called "specialty"
+    private String specialty;
+    public String getSpecialty () { return specialty; }
+    public void setSpecialty (String specialty) { 
+        this.specialty = specialty; 
+    }
+
+    // Maps to FK on Student(advisor) => Faculty(fid)
+    private Set<Student> advisees = new HashSet<Student> ();
+
+    @OneToMany(mappedBy="advisor")
+    public Set<Student> getAdvisees() { 
+        return advisees;
+    }
+}
+```
+
+---
+
+## Hibernate Mappings with Annotations
+
+```
+@Entity        // Maps to table called "FACULTY"
+@Table(name="STUDENTS")
+public class Student
+{
+    private Long sid;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getSid() { return sid; }
+    public void setSid(Long sid) { this.sid = sid; }
+    
+    // Automatically maps to column called "sname"
+    private String sname;
+    public String getSname () { return sname; }
+    public void setSname (String sname) { 
+        this.sname = sname; 
+    }
+```
+
+---
+
+## Hibernate Mappings with Annotations
+
+```
+    // Automatically maps to column called "gpa"
+    private Float gpa;
+    public Float getGpa () { return gpa; }
+    public void setGpa (Float gpa) { 
+        this.gpa = gpa; 
+    }
+    
+    private Faculty advisor;
+    @ManyToOne
+    public Faculty getAdvisor () { return advisor; }
+    public void setAdvisor (Faculty advisor) { 
+        this.advisor = advisor; 
+    }
+```
+
+---
+
+## Hibernate Mappings with Annotations
+
+```
+Faculty f = ...;
+for (Student advisee: f.getAdvisees()) {
+    // Send reminder to advisee
+}
+```
+
+<br>
+
+```
+Faculty f = ...;
+Student s = ...;
+s.setAdvisor (f);
+session.save (s);
+session.getTransaction().commit();
+```
+
+---
+
+## ORM Gotchas
+
+* ORMs feel very natural to most programmers
+* Many OO programmers write their own wrapper classes around a database table
+  * I.e., they write their own ORM ... even if they don't know what an ORM is
+* The problem is that writing an efficient ORM is very difficult
+* And sometimes, an efficient ORM leads to some subtle interactions
+* Hibernate also offers an easier way using Java annotations
+
+---
+
+## ORM Gotchas
+
+```
+Faculty f = ...;
+for (Student student : f.getAdvisees ()) {
+    System.out.println (student.getSname());
+}
+```
+
+* How many database calls does this make?
+  * Best case: one, joining Faculty and Students
+  * Worst case: one for the student IDs, then one for each student!
+* This is called the **N+1** problem
+* A good ORM can solve it by **caching** and **prefetching** the associated tables
+  * What if you don't want to prefetch the student details?
+  * What if a student was loaded separately?
+  * What if a record is changed?
+  * What if you run out of memory?
+
+---
+
+## ORM Gotchas
+
+* Writing a good ORM is extremely difficult
+* A lot has to happen on the back end to make ORMs efficient
+* Sun got it completely wrong in J2EE's EJB v. 1.0
+  * EJB v. 2.0 fixed some of the problems, but was very complicated
+  * EJB v. 3.0 is essentially Hibernate
+* Don't ever try to build your own ORM unless you plan to spend a lot of time on it
 
