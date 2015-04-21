@@ -27,7 +27,7 @@ widgets:      [mathjax, bootstrap]
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    44.0    65.8    76.5    75.8    89.2    96.0
+##    44.0    66.5    76.0    75.6    88.5    96.0
 ```
 
 ![plot of chunk unnamed-chunk-1](assets/fig/unnamed-chunk-1.png) 
