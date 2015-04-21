@@ -809,7 +809,7 @@ BEGIN
         SET t = t + i;
         SET i = i + 1;
     UNTIL i > n
-    END WHILE;
+    END REPEAT;
     RETURN t;
 END;
 ```

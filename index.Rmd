@@ -11,7 +11,7 @@ mode:         selfcontained
 framework:    io2012
 widgets:      [mathjax, bootstrap]
 
----
+---&twocol
 
 <style>
 .title-slide {
@@ -24,20 +24,25 @@ widgets:      [mathjax, bootstrap]
 
 ## Database Systems I
 
-*  [Course Introduction](ch00-introduction.html)
-1. [The Worlds of Database Systems](ch01-worlds-of-dbms.html)
-2. [The Relational Model of Data](ch02-relational-model.html)
-3. [Design Theory for Relational Databases](ch03-design-theory.html)
-4. [High-Level Database Models](ch04-high-level-models.html)
-*  [Exam 1 Results](exam1-results.html)
+
+*** =left
+
+* [Course Introduction](ch00-introduction.html)
+* [The Worlds of Database Systems](ch01-worlds-of-dbms.html)
+* [The Relational Model of Data](ch02-relational-model.html)
+* [Design Theory for Relational Databases](ch03-design-theory.html)
+* [High-Level Database Models](ch04-high-level-models.html)
+* [Exam 1 Results](exam1-results.html)
+
+*** =right
+* [Algebraic and Logical Query Languages](ch05-query-languages.html)
+* [The Database Language SQL](ch06-sql.html)
+* [Constraints and Triggers](ch07-constraints-triggers.html)
+* [Views and Indexes](ch08-views-indexes.html)
+* [Exam 2 Results](exam2-results.html)
 <hr>
-5. [Algebraic and Logical Query Languages](ch05-query-languages.html)
-6. [The Database Language SQL](ch06-sql.html)
-7. [Constraints and Triggers](ch07-constraints-triggers.html)
-8. [Views and Indexes](ch08-views-indexes.html)
-<hr>
-9. [SQL in a Server Environment](ch09-db-programming.html)
-10. Advanced Topics in Relational Databases *(time permitting)*
+* [SQL in a Server Environment](ch09-db-programming.html)
+* Advanced Topics in Relational Databases *(time permitting)*
 
 
 
