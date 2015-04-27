@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Advanced Topics in Relational Databases</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>Chapter Overview</h2>
+
+<ul>
+<li>This chapter is a potpourri of advanced topics, including
+
+<ul>
+<li>Security</li>
+<li>Recursion</li>
+<li>Timeseries</li>
+<li>Object-Relational Model</li>
+<li>OLAP</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Relational Database Security</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Relational Database Security</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Access to a database is through <strong>authorization IDs</strong> or <strong>usernames</strong></li>
+<li>Authorization IDs (usernames) may be grouped according to <strong>roles</strong></li>
+<li>A given ID may have many roles, and a role may include many IDs</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Each ID or role can have <strong>privileges</strong>, which grant it access to 
+database objects</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>SQL Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are many different types of privileges an ID may have:</li>
+</ul>
+
+<ol>
+<li>SELECT</li>
+<li>INSERT</li>
+<li>DELETE</li>
+<li>UPDATE</li>
+<li>REFERENCES</li>
+<li>USAGE</li>
+<li>TRIGGER</li>
+<li>EXECUTE</li>
+<li>UNDER</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Table Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SELECT, INSERT, DELETE, UPDATE apply to tables</li>
+<li>They can also apply to table attributes, e.g., SELECT(title, year, length)</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The privilege can be granted with SQL</li>
+</ul>
+
+<pre><code>GRANT SELECT(title, year, genre, length) ON Movies TO PUBLIC;
+GRANT SELECT ON Movies TO movie_admin;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Table Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>REFERENCES also applies to tables</li>
+<li>This privilege allows the user to create a FOREIGN KEY constraint</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The privilege can be granted with SQL</li>
+</ul>
+
+<pre><code>GRANT REFERENCES(title, year) ON Movies TO movie_users
+</code></pre>
+
+<ul>
+<li>Now the movie_users user (or role) can create a table such as</li>
+</ul>
+
+<pre><code>CREATE TABLE ShowTimes (
+    theater_id  VARCHAR(10) REFERENCES Theaters(id),
+    title       VARCHAR(40),
+    year        INTEGER,
+    show_time   DATETIME,
+    PRIMARY KEY (theater_id, title, year),
+    FOREIGN KEY (title, year) REFERENCES Movies(title, year)
+)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Table Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>TRIGGER also applies to tables</li>
+<li>It grants the user the ability to create triggers on a particular table</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Active Element Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>EXECUTE applies to active elements
+
+<ul>
+<li>User-defined functions</li>
+<li>Stored procedures</li>
+<li>Triggers</li>
+</ul></li>
+<li>It grants the user the ability to run the active element</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Other Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The USAGE privilege is a bare bones privilege that everyone should have
+
+<ul>
+<li>MySQL uses this privilege as a synonym for &quot;no privileges&quot;!</li>
+</ul></li>
+<li>Basically, if you have USAGE to a catalog, you can see the relations it contains</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The UDNER privilege applies to user-defined types</li>
+<li>If you have UNDER privilege to a type, you can create a subtype of that type</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Active Elements and Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A subtlety of privileges is that active elements run assuming the privileges of the <strong>creator</strong>, not the user executing the code</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Consider a trigger</li>
+<li>The creator must have TRIGGER privilege on the given table</li>
+<li>The trigger may have a condition, and also code that is executed
+
+<ul>
+<li>The creator must have SELECT privileges on the condition tables</li>
+<li>He or she must also have SELECT/INSERT/DELETE/UDPATE privileges appropriate to the body</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Connections and Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>When a session is initialized with CONNECT, you can provide an AUTHORIZATION clause</li>
+</ul>
+
+<pre><code>CONNECT TO sql-server AS conn AUTHORIZATION john_galt
+</code></pre>
+
+<ul>
+<li>Check the specific syntax for your database!</li>
+<li>If you do not use an AUTHORIZATION class, your database may use a fallback mechanism
+
+<ul>
+<li>E.g., your Unix username</li>
+<li>Or a one-time session authorization</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Creating Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>When you create an object, you become its <strong>owner</strong></li>
+<li>That means you have all privileges on that particular object</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Optionally, you may specifically mention another user that should be the owner</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Checking Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Every SQL statement will take into consideration
+
+<ul>
+<li>The database elements that are accessed</li>
+<li>The current agent (or authorization ID)</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The database will check the privileges of the current agent
+
+<ul>
+<li>The owner has all required privileges</li>
+<li>The owner can delegate (actually GRANT) privileges to other agents</li>
+<li>The PUBLIC agent is an &quot;everyman&quot;. so if PUBLIC has access, so does everyone else</li>
+<li>If an active element is executed, then the privileges of the owner <strong>or</strong> the current user are sufficient</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Granting Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We have already seen the GRANT statement</li>
+</ul>
+
+<pre><code>GRANT SELECT(title, year, genre, length) ON Movies TO PUBLIC;
+GRANT SELECT ON Movies TO movie_admin;
+</code></pre>
+
+<ul>
+<li>Now we add one more wrinkle</li>
+<li>If you add <code>WITH GRANT OPTION</code>, then the new user can also GRANT his or her privileges to other users</li>
+</ul>
+
+<pre><code>GRANT SELECT ON Movies TO movie_admin WITH GRANT OPTION;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Grant Diagrams</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are two ways for a user to have a privilege
+
+<ul>
+<li>The user can be the owner</li>
+<li>The user can receive the privilege from another user who has the GRANT OPTION</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>It is important to know why a user has a particular privilege</li>
+<li>This is because privileges can also be REVOKEd</li>
+<li>If I grant you a privilege, I can REVOKE it, too</li>
+<li>But you may still keep it, if somebody else also granted it!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Grant Diagrams</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/grant-diagram.png" title="Grant Diagram" alt="Grant Diagram">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Revoking Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can revoke a privilege as follows</li>
+</ul>
+
+<pre><code>REVOKE SELECT ON Movies FROM movie_user
+</code></pre>
+
+<ul>
+<li>You can also just remove the ability to grant the privilege to other users</li>
+</ul>
+
+<pre><code>REVOKE GRANT OPTION FOR SELECT ON Movies FROM movie_user
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Cascading Revoking Privileges</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>If you add CASCADE to a REVOKE statement, then any other privileges that were granted
+by this user will also be revoked</li>
+<li>But only if the privilege was not <strong>also</strong> granted by somebody else</li>
+</ul>
+
+<pre><code>REVOKE SELECT ON Movies FROM movie_user CASCADE
+</code></pre>
+
+<p><br></p>
+
+<ul>
+<li>Alternatively, you can specify RESTRICT, in which case the revoke statement will fail
+if any privileges remain that depended exclusively on this particular privilege</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h1>Recursion in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h1>Timeseries in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h1>The Object-Relational Model</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h1>user-Defined Types in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h1>Operations on Object-Relational Data</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h1>On-Line Analytic Processing (OLAP)</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h1>Data Cubes</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Relational Database Security'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Relational Database Security'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='SQL Privileges'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Table Privileges'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Table Privileges'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Table Privileges'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Active Element Privileges'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Other Privileges'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Active Elements and Privileges'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Connections and Privileges'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Creating Privileges'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Checking Privileges'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Granting Privileges'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Grant Diagrams'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Grant Diagrams'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Revoking Privileges'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Cascading Revoking Privileges'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Recursion in SQL'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Timeseries in SQL'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='The Object-Relational Model'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='user-Defined Types in SQL'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Operations on Object-Relational Data'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='On-Line Analytic Processing (OLAP)'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Data Cubes'>
+         25
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

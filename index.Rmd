@@ -42,7 +42,7 @@ widgets:      [mathjax, bootstrap]
 * [Exam 2 Results](exam2-results.html)
 <hr>
 * [SQL in a Server Environment](ch09-db-programming.html)
-* Advanced Topics in Relational Databases *(time permitting)*
+* [Advanced Topics in Relational Databases](ch10-adv-topics.html)
 
 
 
