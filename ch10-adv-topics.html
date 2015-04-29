@@ -476,6 +476,624 @@ if any privileges remain that depended exclusively on this particular privilege<
 
 <slide class="" id="slide-20" style="background:;">
   <hgroup>
+    <h2>Recursion in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Although recursion is not part of the &quot;core&quot; standard, it is a useful construct</li>
+<li>E.g., without recursion, we can&#39;t find all the parts that make up a product in a parts/subparts database</li>
+</ul>
+
+<pre><code>BasicPart(part, supplier, cost)
+Assembly(part, subpart, quantity)
+Inventory(part, qty_on_hand)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Recursion in Datalog</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>BasicPart(part, supplier, cost)
+Assembly(part, subpart, quantity)
+Inventory(part, qty_on_hand)
+</code></pre>
+
+<ul>
+<li>Finding all the subparts is easy <strong>in Datalog</strong></li>
+</ul>
+
+<pre><code>Part_Subpart(Part, Subpart) :- Assembly(Part, Subpart, _).
+Part_Subpart(Part, Subpart) :- Assembly(Part, Interpart, _),
+                               Part_Subpart(Interpart, Subpart).
+</code></pre>
+
+<ul>
+<li>Note: A full bill of materials would require keeping track of the quantities</li>
+<li>This can be done in more powerful languages (e.g., LDL, Coral)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Recursion in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The WITH statement allows you to introduce temporary tables (or views)</li>
+<li>You can then write a query that uses this new temporary table</li>
+</ul>
+
+<pre><code>WITH AnyPart(part) AS
+  (SELECT part 
+     FROM BasicPart)
+  UNION
+  (SELECT part 
+     FROM Assembly)
+SELECT part
+  FROM AnyPart
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Recursion in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The recursive part is that you can use the temporary view in its definition!</li>
+<li>Compare these two definitions</li>
+</ul>
+
+<pre><code>Part_Subpart(Part, Subpart) :- Assembly(Part, Subpart, _).
+Part_Subpart(Part, Subpart) :- Assembly(Part, Interpart, _),
+                               Part_Subpart(Interpart, Subpart).
+</code></pre>
+
+<pre><code>WITH RECURSIVE Part_Subpart(part, subpart) AS
+  (SELECT part, subpart 
+     FROM Assembly)
+  UNION
+  (SELECT Assembly.part, Part_Subpart.subpart
+     FROM Assembly JOIN Part_Subpart ON Assembly.subpart = Part_Subpart.part)
+SELECT part, subpart
+  FROM Part_Subpart
+ WHERE part = &#39;iWatch&#39;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Linear Recursion</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall that Datalog supports <strong>non-linear recursion</strong></li>
+<li>This is when the recursive predicate occurs more than once in the relation</li>
+<li>E.g., Blue-Blooded Frenchman</li>
+</ul>
+
+<pre><code>bbf(X) :- royal(X), french(X).
+bbf(X) :- mother(X, Y), bbf(Y), father(X, Z), bbf(Z).
+</code></pre>
+
+<ul>
+<li>The SQL standard only requires linear recursion</li>
+<li>So you would not be able to write blue-blooded frenchman in SQL</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Transitive Closure</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In fact, many practitioners claim that linear recursion is too much</li>
+<li>All you really need is <strong>transitive closure</strong></li>
+<li>And all the other examples we&#39;ve seen (parts/subparts, ancestry, flight reaches) are just transitive closure</li>
+</ul>
+
+<pre><code>ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+Part_Subpart(Part, Subpart) :- Assembly(Part, Subpart, _).
+Part_Subpart(Part, Subpart) :- Assembly(Part, Interpart, _),
+                               Part_Subpart(Interpart, Subpart).
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Monotonicity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Another restriction on recursion on SQL is <strong>monotonicity</strong></li>
+<li>What this means is that if R is recursive, adding a new tuple to R can result in more tuples</li>
+<li>But it cannot result in losing some tuples</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>For example, if you discover that your grandfather was Lazarus Long&#39;s grandson, you may discover more ancestors
+in your family tree</li>
+<li>But just because Lazarus Long is one of your ancestors does not mean that your grandmother stops being one of your ancestors!</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>That&#39;s what we mean by <strong>monotonicity</strong></li>
+<li>New facts lead to more facts, but never to fewer facts</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Monotonicity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Monotonicity leads to a very effective way of computing all the tuples in relation R</li>
+</ul>
+
+<ol>
+<li>Start with the smallest possible set of tuples, i.e., from the non-recursive part of the definition</li>
+<li>Then find the next set of tuples by trying out the recursive part of the definition</li>
+<li>Keep doing that until no more tuples are discovered</li>
+</ol>
+
+<ul>
+<li>This is (yet another) <strong>fixpoint algorithm</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Breaking Monotonicity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Monotonicity can break if you allow a relation to be negated</li>
+</ul>
+
+<pre><code>WITH RECURSIVE Part_Subpart(part, subpart) AS
+  (SELECT part, NULL 
+     FROM BasicPart)
+  UNION
+  (SELECT part, subpart 
+     FROM Assembly 
+    WHERE NOT EXISTS (SELECT *
+                        FROM Part_Subpart
+                       WHERE Assembly.subpart = Part_Subpart.part))
+SELECT part, subpart
+  FROM Part_Subpart
+ WHERE part = &#39;iWatch&#39;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Breaking Monotonicity</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Monotonicity can also break if you allow aggregation</li>
+</ul>
+
+<pre><code>WITH RECURSIVE Part_Subpart(part, subpart) AS
+  (SELECT part, subpart 
+     FROM Assembly)
+  UNION
+  (SELECT Assembly.part, Part_Subpart.subpart
+     FROM Assembly JOIN Part_Subpart ON Assembly.subpart = Part_Subpart.part
+    WHERE (SELECT num_subparts FROM Part_Count WHERE part = Assembly.part) &lt; 10)
+
+RECURSIVE Part_Count(part, num_subparts) AS
+  SELECT part, COUNT(subpart)
+    FROM Part_Subpart
+   GROUP BY part
+
+SELECT part, num_subparts
+  FROM Part_Count
+ WHERE part = &#39;iWatch&#39;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h1>The Object-Relational Model</h1>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The relational model is dominant in the database world</li>
+<li>But for a short while in the late 80s and early 90s, object-oriented databases threatened to become popular</li>
+<li>As a result, a new model was developed, the <strong>object-relational</strong> database model</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h1>Object-Relational vs. Relational Models</h1>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Attributes can be <strong>structured types</strong>, including <strong>records</strong> and even <strong>nested tables</strong>
+
+<ul>
+<li>Records allow, for example, addresses with city/state/zip fields</li>
+<li>Nested tables look like lists (or sets) or structures</li>
+</ul></li>
+<li>Tables can have <strong>methods</strong>, e.g. &quot;sortedName&quot;</li>
+<li>Tuples have <strong>IDs</strong>, which set them apart even from identical tuples</li>
+<li>Tuples can have <strong>references</strong> to other tuples, i.e., by storing the ID of the other tuple in an attribute
+
+<ul>
+<li>This can be significantly faster than joining on a primary key</li>
+</ul></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h1>Object-Relational Example</h1>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/nested-table.png" title="Nested Tables" alt="Nested Tables">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h1>Object-Relational Example</h1>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/nested-table-refs.png" title="Nested Tables" alt="Nested Tables">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h1>User-Defined Types in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>User-Defined Types in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SQL supports the idea of <strong>user-defined types</strong> or <strong>UDT</strong></li>
+<li>These may be similar to structs in other languages</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>User-defined types can be used as
+
+<ul>
+<li>the type of a <strong>table</strong></li>
+<li>the type of an <strong>attribute</strong> in a table</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Scalar UDTs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The simplest UDTs are <strong>scalar</strong></li>
+<li>These are simply aliases for existing types</li>
+</ul>
+
+<pre><code>CREATE TYPE StudentIdType AS VARCHAR(8)
+</code></pre>
+
+<ul>
+<li>The advantages are
+
+<ul>
+<li>Clarity</li>
+<li>Type checking (e.g., comparing a StudentIdType against an address)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Structural UDTs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>More powerful UDTs are <strong>structural</strong></li>
+<li>These are similar to structs in other languages</li>
+</ul>
+
+<pre><code>CREATE TYPE AddressType AS (
+    street1  VARCHAR(80),
+    street2  VARCHAR(80),
+    city     VARCHAR(20),
+    state    CHAR(2),
+    zip      CHAR(5)
+);
+
+CREATE TABLE MovieStars (
+    name    VARCHAR(80) PRIMARY KEY,
+    address AddressType
+);
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>UDT Methods</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Methods of UDTs look like additional properties of an UDT</li>
+<li>The declarations are separate from the definitions</li>
+</ul>
+
+<pre><code>CREATE TYPE AddressType AS (
+    street1  VARCHAR(80),
+    street2  VARCHAR(80),
+    city     VARCHAR(20),
+    state    CHAR(2),
+    zip      CHAR(5)
+)
+    METHOD mailingLabel() RETURNS VARCHAR(200);
+
+CREATE METHOD mailingLabel() FOR AddressType
+BEGIN
+    RETURN street1 + &quot;\n&quot; + street2 + &quot;\n&quot; + city + &quot;, &quot; + state + &quot; &quot; + zip;
+END
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Using Structural UDTs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can use attributes and methods with a C++-like syntax</li>
+</ul>
+
+<pre><code>SELECT name, address.mailingLabel()
+  FROM MovieStars
+ WHERE address.city = &#39;Hollywood&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Using Structural UDTs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>UDTs have an implicit &quot;constructor&quot; with a parameter for each attribute</li>
+</ul>
+
+<pre><code>INSERT INTO MovieStars(name, address)
+       VALUES (&#39;Carrie Fisher&#39;, AddressType(&#39;1 Princess Way&#39;, NULL, &#39;Hollywood&#39;, &#39;CA&#39;, 90210));
+
+UPDATE MovieStars
+   SET address = AddressType(address.street1, &#39;Suite J&#39;, address.city, address.state, address.zip)
+ WHERE name = &#39;Carrie Fisher&#39;;
+</code></pre>
+
+<ul>
+<li>There are also explicit getter and setter methods for each attribute</li>
+<li>The setters are commonly used in stored procedures (but not on queries, because they have side effects)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Comparing UDTs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>By default, there is no way to compare two instances of an UDT</li>
+<li>You can provide a comparison function that accepts two instances a and b, and returns
+
+<ul>
+<li>-1 if a &lt; b</li>
+<li>0 if a = b</li>
+<li>1 if a &gt; b</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>You also have to explicitly register the function as the comparator for the given type</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Comparing UDTs</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE FUNCTION AddressCmp(a AddressType, b AddressType) RETURNS INTEGER
+BEGIN
+    IF a.city &lt; b.city THEN
+        RETURN -1;
+    ELSEIF a.city &gt; b.city THEN
+        RETURN 1;
+    ELSEIF a.street1 &lt; b.street1 THEN
+        RETURN -1;
+    ELSEIF a.street1 &gt; b.street1 THEN
+        RETURN 1;
+    ELSE
+        RETURN 0;
+    END IF;
+END;
+
+CREATE ORDERING FOR AddressType
+ORDERING FULL BY RELATIVE WITH AddressCmp;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Object Identifiers</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Object identifiers are &quot;pointers&quot; into tuples in a table</li>
+<li>If you want to allow identifiers into a table, you should be explicit
+by adding a REF IS clause in the CREATE TABLE</li>
+</ul>
+
+<pre><code>CREATE TABLE Movies (
+    REF IS movieRef SYSTEM GENERATED,
+    title   VARCHAR(40),
+    year    INTEGER,
+    length  INTEGER,
+    genre   VARCHAR(10),
+    PRIMARY KEY (title, year)
+)
+</code></pre>
+
+<ul>
+<li>Note: Object IDs are not the same thing as PRIMARY KEYs!</li>
+<li>In this example, you can get the Object ID of a row by accessing the attribute movieRef</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Object References</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can store references to objects in another table</li>
+<li>The type of the reference is REF(type)</li>
+<li>An optional SCOPE limits the reference to a particular table</li>
+</ul>
+
+<pre><code>CREATE TABLE MovieStars (
+    name      VARCHAR(80) PRIMARY KEY,
+    address   AddressType,
+    bestMovie REF(Movies) SCOPE Movies
+);
+
+UPDATE MovieStars
+   SET bestMovie = (SELECT movieRef 
+                      FROM Movies
+                     WHERE title = &#39;Star Wars&#39; AND year = 1977)
+ WHERE name = &#39;Carrie Fisher&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Using Object References</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can follow an Object Reference using -&gt; as in C++</li>
+<li>You can also follow the entire record using DEREF(...), similar to *X in C++</li>
+</ul>
+
+<pre><code>SELECT name, DEREF(bestMovie)
+  FROM MovieStars
+ WHERE bestMovie-&gt;year BETWEEN 1980 AND 1989
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
     <h1>Timeseries in SQL</h1>
   </hgroup>
   <article data-timings="">
@@ -484,9 +1102,376 @@ if any privileges remain that depended exclusively on this particular privilege<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-47" style="background:;">
   <hgroup>
-    <h1>The Object-Relational Model</h1>
+    <h2>Timeseries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Timeseries</strong> are an important type of data</li>
+<li>Generally, they refer to any value that changes over time
+
+<ul>
+<li>Stock prices</li>
+<li>Weather data (temperature, atmospheric pressure, etc.)</li>
+<li>Consumer preferences</li>
+<li>Econometric data (housing starts, interest rates, etc.)</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The big problem is that SQL is totally unsuited to timeseries data!</li>
+<li>The semantics of SQL is based on set operations, but timeseries are inherently linear</li>
+<li>This implies problems for
+
+<ul>
+<li>the query language</li>
+<li>efficient storage structures</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Timeseries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A common operation on a timeseries is <strong>smoothing</strong></li>
+<li>E.g., we can compute a &quot;50-day moving average&quot;</li>
+<li>What moves is that we think of a different 50-day window each day</li>
+<li>But the windows mostly overlap!</li>
+</ul>
+
+<pre><code>SELECT date, temp, avgtemp
+  FROM weather as wx,
+       (SELECT AVG(temp) AS avgtemp
+          FROM weather
+         WHERE date BETWEEN wx.date-50 AND wx.date
+           AND location = wx.location) AS avgwx
+ WHERE location = &#39;Laramie&#39;
+   AND date &gt;= &#39;2015-01-01&#39;
+ ORDER BY date
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Types of Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Some timeseries are <strong>regular</strong>, so we can expect a value based on the <strong>calendar</strong>
+
+<ul>
+<li>which days values are expected</li>
+<li>which days values are definitely not expected</li>
+<li>which days are exceptions (e.g., holidays)</li>
+</ul></li>
+<li>Other timeseries are <strong>irregular</strong>, which means data comes in at random intervals</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Timeseries can also vary, depending on the <strong>granularity</strong> of the timestamp</li>
+<li>Instead of &quot;days&quot;, we can have timeseries with values once a week, month, quarter, year, hour, minute, second, millisecond, etc.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Operations on Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>&quot;Moving&quot; aggregations</li>
+<li>Aggregation by time</li>
+<li>Change and %Change</li>
+<li>Leading/Lagging comparisons</li>
+<li>Gap filling</li>
+<li>Arithmetic</li>
+<li>Statistics</li>
+<li>Event filtering, e.g., moving average crossovers</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Storage of Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It makes sense to store timeseries data sorted by date</li>
+<li>We also want the data to be together</li>
+<li>I.e., we want to sort by &quot;date&quot;, but we want all the Laramie data together</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>In general, we want to store many <strong>different</strong> timeseries
+
+<ul>
+<li>Laramie weather, Cheyenne weather, Fort Collins weather, etc.</li>
+<li>AAPL price data, MSFT price data, etc.</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>Storage of Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>So we usually store timeseries data as an attribute of a relation</li>
+</ul>
+
+<pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+)
+</code></pre>
+
+<ul>
+<li>TNumSeries is meant to be similar to a user-defined type</li>
+<li>But it can&#39;t just be user-defined</li>
+<li>We need better support for
+
+<ul>
+<li>storage options</li>
+<li>query execution</li>
+<li>aggregation</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h2>The TNumSeries Type</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It may have a calendar
+
+<ul>
+<li>NYSE is open Monday through Friday</li>
+<li>NYSE is closed during major holidays (and here&#39;s a list)</li>
+<li>NYSE was open on Saturdays until September 29, 1952</li>
+<li>And if you&#39;re worried about minutes, NYSE has five different trading periods since 2004, three since 1991, and times varied depending on day of week before that</li>
+</ul></li>
+<li>The calendar also has a frequency and precision</li>
+</ul>
+
+<pre><code>CREATE TYPE ORDSYS.ORDTNumCell AS OBJECT (tstamp DATE, value NUMBER);
+CREATE TYPE ORDSYS.ORDTNumTab AS TABLE OF ORDTNumCell;
+CREATE TYPE ORDSYS.ORDTNumSeries AS OBJECT (
+     name VARCHAR2(256),  
+     cal ORDTCalendar,  
+     series ORDTNumTab 
+);
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>Timeseries Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ExtractCal</td>
+<td>Returns the Calendar</td>
+</tr>
+<tr>
+<td>ExtractTable</td>
+<td>Provides a view to the nested table</td>
+</tr>
+<tr>
+<td>GetDatedElement</td>
+<td>Gets the element from the date</td>
+</tr>
+<tr>
+<td>GetNthElement</td>
+<td>Gets the nth element</td>
+</tr>
+<tr>
+<td>First</td>
+<td>Gets the first element</td>
+</tr>
+<tr>
+<td>Last</td>
+<td>Gets the last element</td>
+</tr>
+<tr>
+<td>ExtractDate</td>
+<td>The date of an element</td>
+</tr>
+<tr>
+<td>ExtractValue</td>
+<td>The value of an element</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>Timeseries Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+);
+
+SELECT ExtractDate(Last(prices)), ExtractValue(Last(prices))
+  FROM DailyStockPrices
+ WHERE ticker = &#39;AAPL&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>Timeseries Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+);
+
+SELECT p.tstamp, p.value
+  FROM DailyStockPrices dsp,
+       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
+ WHERE ticker = &#39;AAPL&#39;
+   AND p.tstamp = &#39;04-15-2015&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Timeseries Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Lead</td>
+<td>Returns timeseries X &quot;days&quot; later</td>
+</tr>
+<tr>
+<td>Lag</td>
+<td>Returns timeseries X &quot;days&quot; ago</td>
+</tr>
+</tbody></table>
+
+<pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+);
+
+SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
+  FROM DailyStockPrices dsp,
+       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
+       JOIN
+       TABLE (CAST ExtractTable(Lag(dsp.prices, 250) AS ORDTNumTab) AS p250
+       ON p.tstamp = p250.tstamp
+ WHERE ticker = &#39;AAPL&#39;
+   AND p.tstamp BETWEEN &#39;01-01-2014&#39; AND &#39;12-31-2014&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>Timeseries Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>TSAvg/TSCount/TSMax</td>
+<td>Average, count, max of a timeseries</td>
+</tr>
+<tr>
+<td>TSAdd/TSDivide/...</td>
+<td>Arithmetic operations on timeseries</td>
+</tr>
+<tr>
+<td>Cavg/Cmin/Cmax/Csum</td>
+<td>Cumulative average/min/max/sum</td>
+</tr>
+<tr>
+<td>Mavg/Msum</td>
+<td>Moving average/sum</td>
+</tr>
+</tbody></table>
+
+<pre><code>SELECT p.tstamp, p.value, pavg.value
+  FROM DailyStockPrices dsp,
+       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
+       JOIN
+       TABLE (CAST ExtractTable(Mavg(dsp.prices, 50) AS ORDTNumTab) AS pavg
+       ON p.tstamp = pavg.tstamp
+ WHERE ticker = &#39;AAPL&#39;
+   AND p.tstamp BETWEEN &#39;01-01-2014&#39; AND &#39;12-31-2014&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h1>Spatial Queries in SQL</h1>
   </hgroup>
   <article data-timings="">
     
@@ -494,27 +1479,190 @@ if any privileges remain that depended exclusively on this particular privilege<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-22" style="background:;">
+<slide class="" id="slide-60" style="background:;">
   <hgroup>
-    <h1>user-Defined Types in SQL</h1>
+    <h2>Spatial Queries in SQL</h2>
   </hgroup>
   <article data-timings="">
-    
+    <ul>
+<li>Spatial dataset are also increasingly important
+
+<ul>
+<li>GIS data for ecology, energy, etc.</li>
+<li>GPS data</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Again, SQL is ill-suited for dealing with spatial data!</li>
+<li>The problem is that spatial data is inherently two-dimensional</li>
+<li>And SQL indexes work best for one-dimensional data</li>
+<li>Again, we need improvements on the query and the storage sides</li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-23" style="background:;">
+<slide class="" id="slide-61" style="background:;">
   <hgroup>
-    <h1>Operations on Object-Relational Data</h1>
+    <h2>Indexes for Spatial Data</h2>
   </hgroup>
   <article data-timings="">
-    
+    <ul>
+<li>We&#39;ve seen that indexes for regular data include B-trees and hash-based indexes</li>
+<li>Spatial databases introduce new index types, e.g., R-trees or quadtrees</li>
+<li>These indexes recursively narrow down rows based on latitude-then-longitude</li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-24" style="background:;">
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Spatial Data Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>geometry</strong> is the basic data type in spatial queries</li>
+<li>It is a sequence of points that are connected by lines or arcs</li>
+<li>Points, Lines, Polygons, Circles, Rectangles, etc.</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Geometries can be combined using operations, e.g., union, intersection</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Spatial Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SDO_RELATE checks topological criteria
+
+<ul>
+<li>DISJOINT / ANYINTERACT</li>
+<li>TOUCH</li>
+<li>OVERLAPBYDISJOINT</li>
+<li>OVERLAPBYINTERSECT</li>
+<li>EQUAL</li>
+<li>CONTAINS / INSIDE</li>
+<li>COVERS / COVEREDBY</li>
+<li>ON</li>
+</ul></li>
+<li>SDO_WITHIN_DISTANCE checks if two geometries are close to each other</li>
+<li>SDO_NN finds the nearest neighbor to a geometry</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT c.city
+  FROM geod_interstates i, geod_cities c
+ WHERE i.highway = &#39;I80&#39;
+   AND sdo_within_distance (c.location, i.geom, &#39;distance=15 unit=mile&#39;) = &#39;TRUE&#39;
+</code></pre>
+
+<ul>
+<li>Note: sco_within_distance is not symmetric!</li>
+<li>The first argument is the search argument</li>
+<li>The second argument gives the geometry to search for</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT i.highway
+  FROM geod_interstates i, geod_cities c
+ WHERE c.city = &#39;Denver&#39;
+   AND sdo_within_distance (i.geom, c.location, &#39;distance=15 unit=mile&#39;) = &#39;TRUE&#39;
+</code></pre>
+
+<ul>
+<li>Note: sco_within_distance is not symmetric!</li>
+<li>The first argument is the search argument</li>
+<li>The second argument gives the geometry to search for</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT c.city, sdn_nn_distance (1) distance
+  FROM geod_interstates i, geod_cities c
+ WHERE i.highway = &#39;I80&#39;
+   AND sdo_nn (c.location, i.geom, &#39;sdo_num_res=5 unit=mile&#39;, 1) = &#39;TRUE&#39;
+ ORDER BY distance
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT r.name 
+  FROM restaurants r 
+ WHERE sdo_nn(r.geometry, :my_hotel, &#39;distance=1.5 unit=mile&#39;) = &#39;TRUE&#39; 
+   AND r.cuisine = &#39;Italian&#39; 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT friend.userID, friend.location, friend.distance
+  FROM (SELECT location
+          FROM userLocation
+         WHERE userID = :myUserId) AS MyLocation,
+       (SELECT userID, location,
+               sdo_distance(location, MyLocation.location, 0.01) as distance
+          FROM userLocation
+         WHERE userID &lt;&gt; :myUserId
+           AND sdo_within(location, 1, MyLocation.location, 0.01)) AS friend
+ ORDER BY friend.distance
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
   <hgroup>
     <h1>On-Line Analytic Processing (OLAP)</h1>
   </hgroup>
@@ -524,12 +1672,421 @@ if any privileges remain that depended exclusively on this particular privilege<
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-25" style="background:;">
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>On-Line Analytic Processing (OLAP)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are two broad classes of databases
+
+<ul>
+<li>On-Line Transaction Processing (OLTP) databases are optimized for updates and small queries</li>
+<li>On-Line Analytic Processing (OLAP) databases are optimized for complex queries that touch the majority of the data</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Queries in OLAP databases can take a very long time</li>
+<li>So it is not feasible to mix them with update queries (that require locking)</li>
+<li>Typically, OLAP databases are read-only</li>
+<li>A <strong>data warehouse</strong> is a typical OLAP database that is updated from a <strong>master database</strong> periodically (e.g., daily)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>OLAP and Star Schemas</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider the following schema</li>
+</ul>
+
+<pre><code>Sales(serialNo, date, dealer, price)
+Autos(serialNo, model, color)
+Dealers(name, city, state, phone)
+</code></pre>
+
+<ul>
+<li>Sales is called a <strong>Fact Table</strong>
+
+<ul>
+<li>Typically very large</li>
+<li>Contains a record for each transaction</li>
+</ul></li>
+<li>Autos and Dealers are <strong>dimension tables</strong> which explain <strong>dimension attributes</strong> serialNo and dealer</li>
+<li>Date is also a <strong>dimension attribute</strong>, but without a meaningful dimension table</li>
+<li>This type of schema, with a central fact table and surrounding dimension tables, is called a <strong>star schema</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>OLAP and Star Schemas</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider the following schema</li>
+</ul>
+
+<pre><code>Sales(serialNo, date, dealer, price)
+Autos(serialNo, model, color)
+Dealers(name, city, state, phone)
+</code></pre>
+
+<ul>
+<li>Price is the only non-dimension attribute, called a <strong>dependent attribute</strong></li>
+<li>In general, there can be more dependent attributes, e.g., service contracts</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>OLAP aims to understand how the dependent attributes depend on the dimension attributes</li>
+<li>This includes lots of GROUP BYs</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h2>OLAP and Star Schemas</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/star-schema.png" title="Star Schema" alt="Star Schema">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h2>OLAP and Star Schemas</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider the following schema</li>
+</ul>
+
+<pre><code>Sales(serialNo, date, dealer, price)
+Autos(serialNo, model, color)
+Dealers(name, city, state, phone)
+</code></pre>
+
+<ul>
+<li>We observed that date was the only dimension attribute without a dimension table</li>
+<li>That limits our ability to consider the effect of different aspects of date</li>
+<li>We could add a table (even a &quot;fake&quot; table) such as
+<code>
+Days(date, day, week, month, year)
+</code></li>
+<li>Now we can talk about dates that wall between the 20th and 25th weeks of the year, for example</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
+    <h2>OLAP Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT state, AVG(price)
+  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
+ WHERE date &gt;= &#39;2014-01-01&#39;
+ GROUP BY state
+</code></pre>
+
+<pre><code>SELECT state, Days.month, AVG(price)
+  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
+             JOIN Days ON Sales.date = Days.date
+ WHERE date BETWEEN &#39;2014-01-01&#39; AND &#39;2014-12-31&#39;
+   AND state = &#39;WY&#39;
+ GROUP BY Days.month
+ ORDER BY Days.month
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-76" style="background:;">
+  <hgroup>
+    <h2>&quot;Cubes&quot; and Multidimensional Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Even in our simple example, we have three dimensions</li>
+<li>In a typical example, there may be 100s of dimensions</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>In either case, you can think of the data as arranged in a high dimensional &quot;cube&quot;</li>
+<li>Each tuple is a point inside this high-dimensional cube</li>
+<li>Each axis corresponds to a dimension table</li>
+<li>The dimension table explains the points along that dimension</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-77" style="background:;">
+  <hgroup>
+    <h2>Slicing and Dicing</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT state, Days.month, AVG(price)
+  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
+             JOIN Days ON Sales.date = Days.date
+ WHERE date BETWEEN &#39;2014-01-01&#39; AND &#39;2014-12-31&#39;
+   AND state = &#39;WY&#39;
+ GROUP BY Days.month
+ ORDER BY Days.month
+</code></pre>
+
+<ul>
+<li>The WHERE and GROUP BY clauses let us change the way we view the fact table</li>
+<li>GROUP BY partitions the rows into categories, in a process called <strong>dicing</strong>
+
+<ul>
+<li>Dicing -- think of the cube as broken up into many smaller cubes</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The WHERE clause lets us remove (or at least limit) one of the dimensions of the cube</li>
+<li>This is similar to taking a <strong>slice</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-78" style="background:;">
   <hgroup>
     <h1>Data Cubes</h1>
   </hgroup>
   <article data-timings="">
     
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-79" style="background:;">
+  <hgroup>
+    <h2>Data Cubes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Data Cubes</strong> are specialized OLAP databases</li>
+<li>The key characteristic is that they pre-compute aggregated values</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-80" style="background:;">
+  <hgroup>
+    <h2>Data Cubes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider the following fact table</li>
+</ul>
+
+<pre><code>Sales(serialNo, date, dealer, price)
+</code></pre>
+
+<ul>
+<li>The idea is to store both basic and aggregated facts in this table
+
+<ul>
+<li>basic fact: an individual sale</li>
+<li>aggregated facts: sales by Ken&#39;s Toyota</li>
+</ul></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>serialNo</th>
+<th>date</th>
+<th>dealer</th>
+<th>price</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1023482</td>
+<td>2015-04-15</td>
+<td>kens</td>
+<td>30,000</td>
+</tr>
+<tr>
+<td>9182734</td>
+<td>2015-04-15</td>
+<td>kens</td>
+<td>35,000</td>
+</tr>
+<tr>
+<td>9234850</td>
+<td>2014-04-15</td>
+<td>bills</td>
+<td>32,500</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>2015-04-15</td>
+<td>kens</td>
+<td>65,000</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>NULL</td>
+<td>kens</td>
+<td>65,000</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-81" style="background:;">
+  <hgroup>
+    <h2>Data Cubes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Obviously, data cubes are more powerful when we have reasonable columns to aggregate</li>
+<li>SerialNo is a particularly bad column to aggregate
+
+<ul>
+<li>So replace it with model &amp; color</li>
+</ul></li>
+<li>Date isn&#39;t much better
+
+<ul>
+<li>So add explicit week, month, year to fact table</li>
+</ul></li>
+</ul>
+
+<table><thead>
+<tr>
+<th>model</th>
+<th>color</th>
+<th>date</th>
+<th>year</th>
+<th>month</th>
+<th>dealer</th>
+<th>price</th>
+<th>number</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>GX420</td>
+<td>maroon</td>
+<td>2015-04-15</td>
+<td>2015</td>
+<td>04</td>
+<td>kens</td>
+<td>30,000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>GX420</td>
+<td>white</td>
+<td>2015-04-15</td>
+<td>2015</td>
+<td>04</td>
+<td>kens</td>
+<td>35,000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>RX360</td>
+<td>orange</td>
+<td>2014-03-15</td>
+<td>2015</td>
+<td>04</td>
+<td>kens</td>
+<td>32,500</td>
+<td>1</td>
+</tr>
+<tr>
+<td>GX420</td>
+<td>NULL</td>
+<td>2015-04-15</td>
+<td>2015</td>
+<td>04</td>
+<td>kens</td>
+<td>65,000</td>
+<td>2</td>
+</tr>
+<tr>
+<td>NULL</td>
+<td>white</td>
+<td>NULL</td>
+<td>2015</td>
+<td>04</td>
+<td>kens</td>
+<td>35,000</td>
+<td>1</td>
+</tr>
+<tr>
+<td>GX420</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>2015</td>
+<td>NULL</td>
+<td>kens</td>
+<td>65,000</td>
+<td>2</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-82" style="background:;">
+  <hgroup>
+    <h2>Data Cubes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can create a data cube using <strong>materialized views</strong></li>
+</ul>
+
+<pre><code>CREATE MATERIALIZED VIEW SalesCube AS
+SELECT model, color, date, year, month, dealer, SUM(price), COUNT(*) AS number
+  FROM Sales
+ GROUP BY model, color, date, year, month, dealer WITH CUBE
+</code></pre>
+
+<ul>
+<li>Here, we&#39;re assuming that we&#39;ve already added the relevant columns to Sales</li>
+<li>If not, we could perform a JOIN with the dimension tables</li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -654,38 +2211,380 @@ if any privileges remain that depended exclusively on this particular privilege<
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Timeseries in SQL'>
+        data-slide=20 title='Recursion in SQL'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='The Object-Relational Model'>
+        data-slide=21 title='Recursion in Datalog'>
          21
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='user-Defined Types in SQL'>
+        data-slide=22 title='Recursion in SQL'>
          22
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Operations on Object-Relational Data'>
+        data-slide=23 title='Recursion in SQL'>
          23
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='On-Line Analytic Processing (OLAP)'>
+        data-slide=24 title='Linear Recursion'>
          24
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Data Cubes'>
+        data-slide=25 title='Transitive Closure'>
          25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Monotonicity'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Monotonicity'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Breaking Monotonicity'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Breaking Monotonicity'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='The Object-Relational Model'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Object-Relational vs. Relational Models'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Object-Relational Example'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Object-Relational Example'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='User-Defined Types in SQL'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='User-Defined Types in SQL'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Scalar UDTs'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Structural UDTs'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='UDT Methods'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Using Structural UDTs'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Using Structural UDTs'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Comparing UDTs'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Comparing UDTs'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Object Identifiers'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Object References'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Using Object References'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Timeseries in SQL'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Timeseries in SQL'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Timeseries in SQL'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Types of Timeseries Data'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Operations on Timeseries Data'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Storage of Timeseries Data'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='Storage of Timeseries Data'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='The TNumSeries Type'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='Timeseries Functions'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='Timeseries Example'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Timeseries Example'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Timeseries Functions'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='Timeseries Functions'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Spatial Queries in SQL'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Spatial Queries in SQL'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Indexes for Spatial Data'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Spatial Data Types'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Spatial Relationships'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='Spatial Query Examples'>
+         64
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=65 title='Spatial Query Examples'>
+         65
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=66 title='Spatial Query Examples'>
+         66
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=67 title='Spatial Query Examples'>
+         67
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=68 title='Spatial Query Examples'>
+         68
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=69 title='On-Line Analytic Processing (OLAP)'>
+         69
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=70 title='On-Line Analytic Processing (OLAP)'>
+         70
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=71 title='OLAP and Star Schemas'>
+         71
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=72 title='OLAP and Star Schemas'>
+         72
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=73 title='OLAP and Star Schemas'>
+         73
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=74 title='OLAP and Star Schemas'>
+         74
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=75 title='OLAP Query Examples'>
+         75
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=76 title='&quot;Cubes&quot; and Multidimensional Data'>
+         76
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=77 title='Slicing and Dicing'>
+         77
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=78 title='Data Cubes'>
+         78
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=79 title='Data Cubes'>
+         79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='Data Cubes'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title='Data Cubes'>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='Data Cubes'>
+         82
       </a>
     </li>
   </ul>
