@@ -61,9 +61,10 @@
 <ul>
 <li>Security</li>
 <li>Recursion</li>
-<li>Timeseries</li>
 <li>Object-Relational Model</li>
 <li>OLAP</li>
+<li>Timeseries</li>
+<li>Spatial data</li>
 </ul></li>
 </ul>
 
@@ -1094,576 +1095,6 @@ UPDATE MovieStars
 
 <slide class="" id="slide-46" style="background:;">
   <hgroup>
-    <h1>Timeseries in SQL</h1>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-47" style="background:;">
-  <hgroup>
-    <h2>Timeseries in SQL</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li><strong>Timeseries</strong> are an important type of data</li>
-<li>Generally, they refer to any value that changes over time
-
-<ul>
-<li>Stock prices</li>
-<li>Weather data (temperature, atmospheric pressure, etc.)</li>
-<li>Consumer preferences</li>
-<li>Econometric data (housing starts, interest rates, etc.)</li>
-</ul></li>
-</ul>
-
-<p><br></p>
-
-<ul>
-<li>The big problem is that SQL is totally unsuited to timeseries data!</li>
-<li>The semantics of SQL is based on set operations, but timeseries are inherently linear</li>
-<li>This implies problems for
-
-<ul>
-<li>the query language</li>
-<li>efficient storage structures</li>
-</ul></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-48" style="background:;">
-  <hgroup>
-    <h2>Timeseries in SQL</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>A common operation on a timeseries is <strong>smoothing</strong></li>
-<li>E.g., we can compute a &quot;50-day moving average&quot;</li>
-<li>What moves is that we think of a different 50-day window each day</li>
-<li>But the windows mostly overlap!</li>
-</ul>
-
-<pre><code>SELECT date, temp, avgtemp
-  FROM weather as wx,
-       (SELECT AVG(temp) AS avgtemp
-          FROM weather
-         WHERE date BETWEEN wx.date-50 AND wx.date
-           AND location = wx.location) AS avgwx
- WHERE location = &#39;Laramie&#39;
-   AND date &gt;= &#39;2015-01-01&#39;
- ORDER BY date
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-49" style="background:;">
-  <hgroup>
-    <h2>Types of Timeseries Data</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Some timeseries are <strong>regular</strong>, so we can expect a value based on the <strong>calendar</strong>
-
-<ul>
-<li>which days values are expected</li>
-<li>which days values are definitely not expected</li>
-<li>which days are exceptions (e.g., holidays)</li>
-</ul></li>
-<li>Other timeseries are <strong>irregular</strong>, which means data comes in at random intervals</li>
-</ul>
-
-<p><br></p>
-
-<ul>
-<li>Timeseries can also vary, depending on the <strong>granularity</strong> of the timestamp</li>
-<li>Instead of &quot;days&quot;, we can have timeseries with values once a week, month, quarter, year, hour, minute, second, millisecond, etc.</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-50" style="background:;">
-  <hgroup>
-    <h2>Operations on Timeseries Data</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>&quot;Moving&quot; aggregations</li>
-<li>Aggregation by time</li>
-<li>Change and %Change</li>
-<li>Leading/Lagging comparisons</li>
-<li>Gap filling</li>
-<li>Arithmetic</li>
-<li>Statistics</li>
-<li>Event filtering, e.g., moving average crossovers</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-51" style="background:;">
-  <hgroup>
-    <h2>Storage of Timeseries Data</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>It makes sense to store timeseries data sorted by date</li>
-<li>We also want the data to be together</li>
-<li>I.e., we want to sort by &quot;date&quot;, but we want all the Laramie data together</li>
-</ul>
-
-<p><br></p>
-
-<ul>
-<li>In general, we want to store many <strong>different</strong> timeseries
-
-<ul>
-<li>Laramie weather, Cheyenne weather, Fort Collins weather, etc.</li>
-<li>AAPL price data, MSFT price data, etc.</li>
-</ul></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-52" style="background:;">
-  <hgroup>
-    <h2>Storage of Timeseries Data</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>So we usually store timeseries data as an attribute of a relation</li>
-</ul>
-
-<pre><code>CREATE TABLE DailyStockPrices (
-    ticker      VARCHAR(10) PRIMARY KEY,
-    prices      TNumSeries
-)
-</code></pre>
-
-<ul>
-<li>TNumSeries is meant to be similar to a user-defined type</li>
-<li>But it can&#39;t just be user-defined</li>
-<li>We need better support for
-
-<ul>
-<li>storage options</li>
-<li>query execution</li>
-<li>aggregation</li>
-</ul></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-53" style="background:;">
-  <hgroup>
-    <h2>The TNumSeries Type</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>It may have a calendar
-
-<ul>
-<li>NYSE is open Monday through Friday</li>
-<li>NYSE is closed during major holidays (and here&#39;s a list)</li>
-<li>NYSE was open on Saturdays until September 29, 1952</li>
-<li>And if you&#39;re worried about minutes, NYSE has five different trading periods since 2004, three since 1991, and times varied depending on day of week before that</li>
-</ul></li>
-<li>The calendar also has a frequency and precision</li>
-</ul>
-
-<pre><code>CREATE TYPE ORDSYS.ORDTNumCell AS OBJECT (tstamp DATE, value NUMBER);
-CREATE TYPE ORDSYS.ORDTNumTab AS TABLE OF ORDTNumCell;
-CREATE TYPE ORDSYS.ORDTNumSeries AS OBJECT (
-     name VARCHAR2(256),  
-     cal ORDTCalendar,  
-     series ORDTNumTab 
-);
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-54" style="background:;">
-  <hgroup>
-    <h2>Timeseries Functions</h2>
-  </hgroup>
-  <article data-timings="">
-    <table><thead>
-<tr>
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ExtractCal</td>
-<td>Returns the Calendar</td>
-</tr>
-<tr>
-<td>ExtractTable</td>
-<td>Provides a view to the nested table</td>
-</tr>
-<tr>
-<td>GetDatedElement</td>
-<td>Gets the element from the date</td>
-</tr>
-<tr>
-<td>GetNthElement</td>
-<td>Gets the nth element</td>
-</tr>
-<tr>
-<td>First</td>
-<td>Gets the first element</td>
-</tr>
-<tr>
-<td>Last</td>
-<td>Gets the last element</td>
-</tr>
-<tr>
-<td>ExtractDate</td>
-<td>The date of an element</td>
-</tr>
-<tr>
-<td>ExtractValue</td>
-<td>The value of an element</td>
-</tr>
-</tbody></table>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-55" style="background:;">
-  <hgroup>
-    <h2>Timeseries Example</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>CREATE TABLE DailyStockPrices (
-    ticker      VARCHAR(10) PRIMARY KEY,
-    prices      TNumSeries
-);
-
-SELECT ExtractDate(Last(prices)), ExtractValue(Last(prices))
-  FROM DailyStockPrices
- WHERE ticker = &#39;AAPL&#39;;
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-56" style="background:;">
-  <hgroup>
-    <h2>Timeseries Example</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>CREATE TABLE DailyStockPrices (
-    ticker      VARCHAR(10) PRIMARY KEY,
-    prices      TNumSeries
-);
-
-SELECT p.tstamp, p.value
-  FROM DailyStockPrices dsp,
-       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
- WHERE ticker = &#39;AAPL&#39;
-   AND p.tstamp = &#39;04-15-2015&#39;;
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-57" style="background:;">
-  <hgroup>
-    <h2>Timeseries Functions</h2>
-  </hgroup>
-  <article data-timings="">
-    <table><thead>
-<tr>
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Lead</td>
-<td>Returns timeseries X &quot;days&quot; later</td>
-</tr>
-<tr>
-<td>Lag</td>
-<td>Returns timeseries X &quot;days&quot; ago</td>
-</tr>
-</tbody></table>
-
-<pre><code>CREATE TABLE DailyStockPrices (
-    ticker      VARCHAR(10) PRIMARY KEY,
-    prices      TNumSeries
-);
-
-SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
-  FROM DailyStockPrices dsp,
-       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
-       JOIN
-       TABLE (CAST ExtractTable(Lag(dsp.prices, 250) AS ORDTNumTab) AS p250
-       ON p.tstamp = p250.tstamp
- WHERE ticker = &#39;AAPL&#39;
-   AND p.tstamp BETWEEN &#39;01-01-2014&#39; AND &#39;12-31-2014&#39;;
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-58" style="background:;">
-  <hgroup>
-    <h2>Timeseries Functions</h2>
-  </hgroup>
-  <article data-timings="">
-    <table><thead>
-<tr>
-<th>Function</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>TSAvg/TSCount/TSMax</td>
-<td>Average, count, max of a timeseries</td>
-</tr>
-<tr>
-<td>TSAdd/TSDivide/...</td>
-<td>Arithmetic operations on timeseries</td>
-</tr>
-<tr>
-<td>Cavg/Cmin/Cmax/Csum</td>
-<td>Cumulative average/min/max/sum</td>
-</tr>
-<tr>
-<td>Mavg/Msum</td>
-<td>Moving average/sum</td>
-</tr>
-</tbody></table>
-
-<pre><code>SELECT p.tstamp, p.value, pavg.value
-  FROM DailyStockPrices dsp,
-       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
-       JOIN
-       TABLE (CAST ExtractTable(Mavg(dsp.prices, 50) AS ORDTNumTab) AS pavg
-       ON p.tstamp = pavg.tstamp
- WHERE ticker = &#39;AAPL&#39;
-   AND p.tstamp BETWEEN &#39;01-01-2014&#39; AND &#39;12-31-2014&#39;;
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-59" style="background:;">
-  <hgroup>
-    <h1>Spatial Queries in SQL</h1>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-60" style="background:;">
-  <hgroup>
-    <h2>Spatial Queries in SQL</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Spatial dataset are also increasingly important
-
-<ul>
-<li>GIS data for ecology, energy, etc.</li>
-<li>GPS data</li>
-</ul></li>
-</ul>
-
-<p><br></p>
-
-<ul>
-<li>Again, SQL is ill-suited for dealing with spatial data!</li>
-<li>The problem is that spatial data is inherently two-dimensional</li>
-<li>And SQL indexes work best for one-dimensional data</li>
-<li>Again, we need improvements on the query and the storage sides</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-61" style="background:;">
-  <hgroup>
-    <h2>Indexes for Spatial Data</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>We&#39;ve seen that indexes for regular data include B-trees and hash-based indexes</li>
-<li>Spatial databases introduce new index types, e.g., R-trees or quadtrees</li>
-<li>These indexes recursively narrow down rows based on latitude-then-longitude</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-62" style="background:;">
-  <hgroup>
-    <h2>Spatial Data Types</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>A <strong>geometry</strong> is the basic data type in spatial queries</li>
-<li>It is a sequence of points that are connected by lines or arcs</li>
-<li>Points, Lines, Polygons, Circles, Rectangles, etc.</li>
-</ul>
-
-<p><br></p>
-
-<ul>
-<li>Geometries can be combined using operations, e.g., union, intersection</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-63" style="background:;">
-  <hgroup>
-    <h2>Spatial Relationships</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>SDO_RELATE checks topological criteria
-
-<ul>
-<li>DISJOINT / ANYINTERACT</li>
-<li>TOUCH</li>
-<li>OVERLAPBYDISJOINT</li>
-<li>OVERLAPBYINTERSECT</li>
-<li>EQUAL</li>
-<li>CONTAINS / INSIDE</li>
-<li>COVERS / COVEREDBY</li>
-<li>ON</li>
-</ul></li>
-<li>SDO_WITHIN_DISTANCE checks if two geometries are close to each other</li>
-<li>SDO_NN finds the nearest neighbor to a geometry</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-64" style="background:;">
-  <hgroup>
-    <h2>Spatial Query Examples</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>SELECT c.city
-  FROM geod_interstates i, geod_cities c
- WHERE i.highway = &#39;I80&#39;
-   AND sdo_within_distance (c.location, i.geom, &#39;distance=15 unit=mile&#39;) = &#39;TRUE&#39;
-</code></pre>
-
-<ul>
-<li>Note: sco_within_distance is not symmetric!</li>
-<li>The first argument is the search argument</li>
-<li>The second argument gives the geometry to search for</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-65" style="background:;">
-  <hgroup>
-    <h2>Spatial Query Examples</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>SELECT i.highway
-  FROM geod_interstates i, geod_cities c
- WHERE c.city = &#39;Denver&#39;
-   AND sdo_within_distance (i.geom, c.location, &#39;distance=15 unit=mile&#39;) = &#39;TRUE&#39;
-</code></pre>
-
-<ul>
-<li>Note: sco_within_distance is not symmetric!</li>
-<li>The first argument is the search argument</li>
-<li>The second argument gives the geometry to search for</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-66" style="background:;">
-  <hgroup>
-    <h2>Spatial Query Examples</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>SELECT c.city, sdn_nn_distance (1) distance
-  FROM geod_interstates i, geod_cities c
- WHERE i.highway = &#39;I80&#39;
-   AND sdo_nn (c.location, i.geom, &#39;sdo_num_res=5 unit=mile&#39;, 1) = &#39;TRUE&#39;
- ORDER BY distance
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-67" style="background:;">
-  <hgroup>
-    <h2>Spatial Query Examples</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>SELECT r.name 
-  FROM restaurants r 
- WHERE sdo_nn(r.geometry, :my_hotel, &#39;distance=1.5 unit=mile&#39;) = &#39;TRUE&#39; 
-   AND r.cuisine = &#39;Italian&#39; 
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-68" style="background:;">
-  <hgroup>
-    <h2>Spatial Query Examples</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>SELECT friend.userID, friend.location, friend.distance
-  FROM (SELECT location
-          FROM userLocation
-         WHERE userID = :myUserId) AS MyLocation,
-       (SELECT userID, location,
-               sdo_distance(location, MyLocation.location, 0.01) as distance
-          FROM userLocation
-         WHERE userID &lt;&gt; :myUserId
-           AND sdo_within(location, 1, MyLocation.location, 0.01)) AS friend
- ORDER BY friend.distance
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-69" style="background:;">
-  <hgroup>
     <h1>On-Line Analytic Processing (OLAP)</h1>
   </hgroup>
   <article data-timings="">
@@ -1672,7 +1103,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-70" style="background:;">
+<slide class="" id="slide-47" style="background:;">
   <hgroup>
     <h2>On-Line Analytic Processing (OLAP)</h2>
   </hgroup>
@@ -1699,7 +1130,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-71" style="background:;">
+<slide class="" id="slide-48" style="background:;">
   <hgroup>
     <h2>OLAP and Star Schemas</h2>
   </hgroup>
@@ -1729,7 +1160,7 @@ Dealers(name, city, state, phone)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-72" style="background:;">
+<slide class="" id="slide-49" style="background:;">
   <hgroup>
     <h2>OLAP and Star Schemas</h2>
   </hgroup>
@@ -1759,7 +1190,7 @@ Dealers(name, city, state, phone)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-73" style="background:;">
+<slide class="" id="slide-50" style="background:;">
   <hgroup>
     <h2>OLAP and Star Schemas</h2>
   </hgroup>
@@ -1772,7 +1203,7 @@ Dealers(name, city, state, phone)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-74" style="background:;">
+<slide class="" id="slide-51" style="background:;">
   <hgroup>
     <h2>OLAP and Star Schemas</h2>
   </hgroup>
@@ -1800,7 +1231,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-75" style="background:;">
+<slide class="" id="slide-52" style="background:;">
   <hgroup>
     <h2>OLAP Query Examples</h2>
   </hgroup>
@@ -1824,7 +1255,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-76" style="background:;">
+<slide class="" id="slide-53" style="background:;">
   <hgroup>
     <h2>&quot;Cubes&quot; and Multidimensional Data</h2>
   </hgroup>
@@ -1847,7 +1278,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-77" style="background:;">
+<slide class="" id="slide-54" style="background:;">
   <hgroup>
     <h2>Slicing and Dicing</h2>
   </hgroup>
@@ -1881,7 +1312,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-78" style="background:;">
+<slide class="" id="slide-55" style="background:;">
   <hgroup>
     <h1>Data Cubes</h1>
   </hgroup>
@@ -1891,7 +1322,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-79" style="background:;">
+<slide class="" id="slide-56" style="background:;">
   <hgroup>
     <h2>Data Cubes</h2>
   </hgroup>
@@ -1905,7 +1336,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-80" style="background:;">
+<slide class="" id="slide-57" style="background:;">
   <hgroup>
     <h2>Data Cubes</h2>
   </hgroup>
@@ -1970,7 +1401,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-81" style="background:;">
+<slide class="" id="slide-58" style="background:;">
   <hgroup>
     <h2>Data Cubes</h2>
   </hgroup>
@@ -2067,7 +1498,7 @@ Days(date, day, week, month, year)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-82" style="background:;">
+<slide class="" id="slide-59" style="background:;">
   <hgroup>
     <h2>Data Cubes</h2>
   </hgroup>
@@ -2086,6 +1517,576 @@ SELECT model, color, date, year, month, dealer, SUM(price), COUNT(*) AS number
 <li>Here, we&#39;re assuming that we&#39;ve already added the relevant columns to Sales</li>
 <li>If not, we could perform a JOIN with the dimension tables</li>
 </ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h1>Timeseries in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Timeseries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Timeseries</strong> are an important type of data</li>
+<li>Generally, they refer to any value that changes over time
+
+<ul>
+<li>Stock prices</li>
+<li>Weather data (temperature, atmospheric pressure, etc.)</li>
+<li>Consumer preferences</li>
+<li>Econometric data (housing starts, interest rates, etc.)</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The big problem is that SQL is totally unsuited to timeseries data!</li>
+<li>The semantics of SQL is based on set operations, but timeseries are inherently linear</li>
+<li>This implies problems for
+
+<ul>
+<li>the query language</li>
+<li>efficient storage structures</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Timeseries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A common operation on a timeseries is <strong>smoothing</strong></li>
+<li>E.g., we can compute a &quot;50-day moving average&quot;</li>
+<li>What moves is that we think of a different 50-day window each day</li>
+<li>But the windows mostly overlap!</li>
+</ul>
+
+<pre><code>SELECT date, temp, avgtemp
+  FROM weather as wx,
+       (SELECT AVG(temp) AS avgtemp
+          FROM weather
+         WHERE date BETWEEN wx.date-50 AND wx.date
+           AND location = wx.location) AS avgwx
+ WHERE location = &#39;Laramie&#39;
+   AND date &gt;= &#39;2015-01-01&#39;
+ ORDER BY date
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Types of Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Some timeseries are <strong>regular</strong>, so we can expect a value based on the <strong>calendar</strong>
+
+<ul>
+<li>which days values are expected</li>
+<li>which days values are definitely not expected</li>
+<li>which days are exceptions (e.g., holidays)</li>
+</ul></li>
+<li>Other timeseries are <strong>irregular</strong>, which means data comes in at random intervals</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Timeseries can also vary, depending on the <strong>granularity</strong> of the timestamp</li>
+<li>Instead of &quot;days&quot;, we can have timeseries with values once a week, month, quarter, year, hour, minute, second, millisecond, etc.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Operations on Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>&quot;Moving&quot; aggregations</li>
+<li>Aggregation by time</li>
+<li>Change and %Change</li>
+<li>Leading/Lagging comparisons</li>
+<li>Gap filling</li>
+<li>Arithmetic</li>
+<li>Statistics</li>
+<li>Event filtering, e.g., moving average crossovers</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-65" style="background:;">
+  <hgroup>
+    <h2>Storage of Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It makes sense to store timeseries data sorted by date</li>
+<li>We also want the data to be together</li>
+<li>I.e., we want to sort by &quot;date&quot;, but we want all the Laramie data together</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>In general, we want to store many <strong>different</strong> timeseries
+
+<ul>
+<li>Laramie weather, Cheyenne weather, Fort Collins weather, etc.</li>
+<li>AAPL price data, MSFT price data, etc.</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-66" style="background:;">
+  <hgroup>
+    <h2>Storage of Timeseries Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>So we usually store timeseries data as an attribute of a relation</li>
+</ul>
+
+<pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+)
+</code></pre>
+
+<ul>
+<li>TNumSeries is meant to be similar to a user-defined type</li>
+<li>But it can&#39;t just be user-defined</li>
+<li>We need better support for
+
+<ul>
+<li>storage options</li>
+<li>query execution</li>
+<li>aggregation</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-67" style="background:;">
+  <hgroup>
+    <h2>The TNumSeries Type</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It may have a calendar
+
+<ul>
+<li>NYSE is open Monday through Friday</li>
+<li>NYSE is closed during major holidays (and here&#39;s a list)</li>
+<li>NYSE was open on Saturdays until September 29, 1952</li>
+<li>And if you&#39;re worried about minutes, NYSE has five different trading periods since 2004, three since 1991, and times varied depending on day of week before that</li>
+</ul></li>
+<li>The calendar also has a frequency and precision</li>
+</ul>
+
+<pre><code>CREATE TYPE ORDSYS.ORDTNumCell AS OBJECT (tstamp DATE, value NUMBER);
+CREATE TYPE ORDSYS.ORDTNumTab AS TABLE OF ORDTNumCell;
+CREATE TYPE ORDSYS.ORDTNumSeries AS OBJECT (
+     name VARCHAR2(256),  
+     cal ORDTCalendar,  
+     series ORDTNumTab 
+);
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-68" style="background:;">
+  <hgroup>
+    <h2>Timeseries Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ExtractCal</td>
+<td>Returns the Calendar</td>
+</tr>
+<tr>
+<td>ExtractTable</td>
+<td>Provides a view to the nested table</td>
+</tr>
+<tr>
+<td>GetDatedElement</td>
+<td>Gets the element from the date</td>
+</tr>
+<tr>
+<td>GetNthElement</td>
+<td>Gets the nth element</td>
+</tr>
+<tr>
+<td>First</td>
+<td>Gets the first element</td>
+</tr>
+<tr>
+<td>Last</td>
+<td>Gets the last element</td>
+</tr>
+<tr>
+<td>ExtractDate</td>
+<td>The date of an element</td>
+</tr>
+<tr>
+<td>ExtractValue</td>
+<td>The value of an element</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-69" style="background:;">
+  <hgroup>
+    <h2>Timeseries Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+);
+
+SELECT ExtractDate(Last(prices)), ExtractValue(Last(prices))
+  FROM DailyStockPrices
+ WHERE ticker = &#39;AAPL&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-70" style="background:;">
+  <hgroup>
+    <h2>Timeseries Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+);
+
+SELECT p.tstamp, p.value
+  FROM DailyStockPrices dsp,
+       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
+ WHERE ticker = &#39;AAPL&#39;
+   AND p.tstamp = &#39;04-15-2015&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-71" style="background:;">
+  <hgroup>
+    <h2>Timeseries Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Lead</td>
+<td>Returns timeseries X &quot;days&quot; later</td>
+</tr>
+<tr>
+<td>Lag</td>
+<td>Returns timeseries X &quot;days&quot; ago</td>
+</tr>
+</tbody></table>
+
+<pre><code>CREATE TABLE DailyStockPrices (
+    ticker      VARCHAR(10) PRIMARY KEY,
+    prices      TNumSeries
+);
+
+SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
+  FROM DailyStockPrices dsp,
+       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
+       JOIN
+       TABLE (CAST ExtractTable(Lag(dsp.prices, 250) AS ORDTNumTab) AS p250
+       ON p.tstamp = p250.tstamp
+ WHERE ticker = &#39;AAPL&#39;
+   AND p.tstamp BETWEEN &#39;01-01-2014&#39; AND &#39;12-31-2014&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-72" style="background:;">
+  <hgroup>
+    <h2>Timeseries Functions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>TSAvg/TSCount/TSMax</td>
+<td>Average, count, max of a timeseries</td>
+</tr>
+<tr>
+<td>TSAdd/TSDivide/...</td>
+<td>Arithmetic operations on timeseries</td>
+</tr>
+<tr>
+<td>Cavg/Cmin/Cmax/Csum</td>
+<td>Cumulative average/min/max/sum</td>
+</tr>
+<tr>
+<td>Mavg/Msum</td>
+<td>Moving average/sum</td>
+</tr>
+</tbody></table>
+
+<pre><code>SELECT p.tstamp, p.value, pavg.value
+  FROM DailyStockPrices dsp,
+       TABLE (CAST ExtractTable(dsp.prices) AS ORDTNumTab) AS p
+       JOIN
+       TABLE (CAST ExtractTable(Mavg(dsp.prices, 50) AS ORDTNumTab) AS pavg
+       ON p.tstamp = pavg.tstamp
+ WHERE ticker = &#39;AAPL&#39;
+   AND p.tstamp BETWEEN &#39;01-01-2014&#39; AND &#39;12-31-2014&#39;;
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-73" style="background:;">
+  <hgroup>
+    <h1>Spatial Queries in SQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-74" style="background:;">
+  <hgroup>
+    <h2>Spatial Queries in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Spatial dataset are also increasingly important
+
+<ul>
+<li>GIS data for ecology, energy, etc.</li>
+<li>GPS data</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Again, SQL is ill-suited for dealing with spatial data!</li>
+<li>The problem is that spatial data is inherently two-dimensional</li>
+<li>And SQL indexes work best for one-dimensional data</li>
+<li>Again, we need improvements on the query and the storage sides</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
+    <h2>Indexes for Spatial Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We&#39;ve seen that indexes for regular data include B-trees and hash-based indexes</li>
+<li>Spatial databases introduce new index types, e.g., R-trees or quadtrees</li>
+<li>These indexes recursively narrow down rows based on latitude-then-longitude</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-76" style="background:;">
+  <hgroup>
+    <h2>Spatial Data Types</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>geometry</strong> is the basic data type in spatial queries</li>
+<li>It is a sequence of points that are connected by lines or arcs</li>
+<li>Points, Lines, Polygons, Circles, Rectangles, etc.</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Geometries can be combined using operations, e.g., union, intersection</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-77" style="background:;">
+  <hgroup>
+    <h2>Spatial Relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>SDO_RELATE checks topological criteria
+
+<ul>
+<li>DISJOINT / ANYINTERACT</li>
+<li>TOUCH</li>
+<li>OVERLAPBYDISJOINT</li>
+<li>OVERLAPBYINTERSECT</li>
+<li>EQUAL</li>
+<li>CONTAINS / INSIDE</li>
+<li>COVERS / COVEREDBY</li>
+<li>ON</li>
+</ul></li>
+<li>SDO_WITHIN_DISTANCE checks if two geometries are close to each other</li>
+<li>SDO_NN finds the nearest neighbor to a geometry</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-78" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT c.city
+  FROM geod_interstates i, geod_cities c
+ WHERE i.highway = &#39;I80&#39;
+   AND sdo_within_distance (c.location, i.geom, &#39;distance=15 unit=mile&#39;) = &#39;TRUE&#39;
+</code></pre>
+
+<ul>
+<li>Note: sco_within_distance is not symmetric!</li>
+<li>The first argument is the search argument</li>
+<li>The second argument gives the geometry to search for</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-79" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT i.highway
+  FROM geod_interstates i, geod_cities c
+ WHERE c.city = &#39;Denver&#39;
+   AND sdo_within_distance (i.geom, c.location, &#39;distance=15 unit=mile&#39;) = &#39;TRUE&#39;
+</code></pre>
+
+<ul>
+<li>Note: sco_within_distance is not symmetric!</li>
+<li>The first argument is the search argument</li>
+<li>The second argument gives the geometry to search for</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-80" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT c.city, sdn_nn_distance (1) distance
+  FROM geod_interstates i, geod_cities c
+ WHERE i.highway = &#39;I80&#39;
+   AND sdo_nn (c.location, i.geom, &#39;sdo_num_res=5 unit=mile&#39;, 1) = &#39;TRUE&#39;
+ ORDER BY distance
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-81" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT r.name 
+  FROM restaurants r 
+ WHERE sdo_nn(r.geometry, :my_hotel, &#39;distance=1.5 unit=mile&#39;) = &#39;TRUE&#39; 
+   AND r.cuisine = &#39;Italian&#39; 
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-82" style="background:;">
+  <hgroup>
+    <h2>Spatial Query Examples</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT friend.userID, friend.location, friend.distance
+  FROM (SELECT location
+          FROM userLocation
+         WHERE userID = :myUserId) AS MyLocation,
+       (SELECT userID, location,
+               sdo_distance(location, MyLocation.location, 0.01) as distance
+          FROM userLocation
+         WHERE userID &lt;&gt; :myUserId
+           AND sdo_within(location, 1, MyLocation.location, 0.01)) AS friend
+ ORDER BY friend.distance
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
@@ -2367,223 +2368,223 @@ SELECT model, color, date, year, month, dealer, SUM(price), COUNT(*) AS number
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=46 title='Timeseries in SQL'>
+        data-slide=46 title='On-Line Analytic Processing (OLAP)'>
          46
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=47 title='Timeseries in SQL'>
+        data-slide=47 title='On-Line Analytic Processing (OLAP)'>
          47
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=48 title='Timeseries in SQL'>
+        data-slide=48 title='OLAP and Star Schemas'>
          48
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=49 title='Types of Timeseries Data'>
+        data-slide=49 title='OLAP and Star Schemas'>
          49
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=50 title='Operations on Timeseries Data'>
+        data-slide=50 title='OLAP and Star Schemas'>
          50
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=51 title='Storage of Timeseries Data'>
+        data-slide=51 title='OLAP and Star Schemas'>
          51
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=52 title='Storage of Timeseries Data'>
+        data-slide=52 title='OLAP Query Examples'>
          52
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=53 title='The TNumSeries Type'>
+        data-slide=53 title='&quot;Cubes&quot; and Multidimensional Data'>
          53
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=54 title='Timeseries Functions'>
+        data-slide=54 title='Slicing and Dicing'>
          54
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=55 title='Timeseries Example'>
+        data-slide=55 title='Data Cubes'>
          55
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=56 title='Timeseries Example'>
+        data-slide=56 title='Data Cubes'>
          56
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=57 title='Timeseries Functions'>
+        data-slide=57 title='Data Cubes'>
          57
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=58 title='Timeseries Functions'>
+        data-slide=58 title='Data Cubes'>
          58
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=59 title='Spatial Queries in SQL'>
+        data-slide=59 title='Data Cubes'>
          59
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=60 title='Spatial Queries in SQL'>
+        data-slide=60 title='Timeseries in SQL'>
          60
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=61 title='Indexes for Spatial Data'>
+        data-slide=61 title='Timeseries in SQL'>
          61
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=62 title='Spatial Data Types'>
+        data-slide=62 title='Timeseries in SQL'>
          62
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=63 title='Spatial Relationships'>
+        data-slide=63 title='Types of Timeseries Data'>
          63
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=64 title='Spatial Query Examples'>
+        data-slide=64 title='Operations on Timeseries Data'>
          64
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=65 title='Spatial Query Examples'>
+        data-slide=65 title='Storage of Timeseries Data'>
          65
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=66 title='Spatial Query Examples'>
+        data-slide=66 title='Storage of Timeseries Data'>
          66
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=67 title='Spatial Query Examples'>
+        data-slide=67 title='The TNumSeries Type'>
          67
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=68 title='Spatial Query Examples'>
+        data-slide=68 title='Timeseries Functions'>
          68
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=69 title='On-Line Analytic Processing (OLAP)'>
+        data-slide=69 title='Timeseries Example'>
          69
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=70 title='On-Line Analytic Processing (OLAP)'>
+        data-slide=70 title='Timeseries Example'>
          70
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=71 title='OLAP and Star Schemas'>
+        data-slide=71 title='Timeseries Functions'>
          71
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=72 title='OLAP and Star Schemas'>
+        data-slide=72 title='Timeseries Functions'>
          72
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=73 title='OLAP and Star Schemas'>
+        data-slide=73 title='Spatial Queries in SQL'>
          73
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=74 title='OLAP and Star Schemas'>
+        data-slide=74 title='Spatial Queries in SQL'>
          74
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=75 title='OLAP Query Examples'>
+        data-slide=75 title='Indexes for Spatial Data'>
          75
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=76 title='&quot;Cubes&quot; and Multidimensional Data'>
+        data-slide=76 title='Spatial Data Types'>
          76
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='Slicing and Dicing'>
+        data-slide=77 title='Spatial Relationships'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='Data Cubes'>
+        data-slide=78 title='Spatial Query Examples'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='Data Cubes'>
+        data-slide=79 title='Spatial Query Examples'>
          79
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=80 title='Data Cubes'>
+        data-slide=80 title='Spatial Query Examples'>
          80
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=81 title='Data Cubes'>
+        data-slide=81 title='Spatial Query Examples'>
          81
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=82 title='Data Cubes'>
+        data-slide=82 title='Spatial Query Examples'>
          82
       </a>
     </li>

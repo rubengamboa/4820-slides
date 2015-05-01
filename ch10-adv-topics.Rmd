@@ -26,9 +26,10 @@ widgets:      [mathjax, bootstrap]
 * This chapter is a potpourri of advanced topics, including
   * Security
   * Recursion
-  * Timeseries
   * Object-Relational Model
   * OLAP
+  * Timeseries
+  * Spatial data
 
 ---
 
@@ -698,6 +699,218 @@ SELECT name, DEREF(bestMovie)
 
 ---
 
+# On-Line Analytic Processing (OLAP)
+
+---
+
+## On-Line Analytic Processing (OLAP)
+
+* There are two broad classes of databases
+  * On-Line Transaction Processing (OLTP) databases are optimized for updates and small queries
+  * On-Line Analytic Processing (OLAP) databases are optimized for complex queries that touch the majority of the data
+
+<br>
+
+* Queries in OLAP databases can take a very long time
+* So it is not feasible to mix them with update queries (that require locking)
+* Typically, OLAP databases are read-only
+* A **data warehouse** is a typical OLAP database that is updated from a **master database** periodically (e.g., daily)
+
+---
+
+## OLAP and Star Schemas
+
+* Consider the following schema
+
+```
+Sales(serialNo, date, dealer, price)
+Autos(serialNo, model, color)
+Dealers(name, city, state, phone)
+```
+
+* Sales is called a **Fact Table**
+  * Typically very large
+  * Contains a record for each transaction
+* Autos and Dealers are **dimension tables** which explain **dimension attributes** serialNo and dealer
+* Date is also a **dimension attribute**, but without a meaningful dimension table
+* This type of schema, with a central fact table and surrounding dimension tables, is called a **star schema**
+
+---
+
+## OLAP and Star Schemas
+
+* Consider the following schema
+
+```
+Sales(serialNo, date, dealer, price)
+Autos(serialNo, model, color)
+Dealers(name, city, state, phone)
+```
+
+* Price is the only non-dimension attribute, called a **dependent attribute**
+* In general, there can be more dependent attributes, e.g., service contracts
+
+<br>
+
+* OLAP aims to understand how the dependent attributes depend on the dimension attributes
+* This includes lots of GROUP BYs
+
+---
+
+## OLAP and Star Schemas
+
+<div class="centered">
+    <img src="assets/img/star-schema.png" title="Star Schema" alt="Star Schema">
+</div>
+
+---
+
+## OLAP and Star Schemas
+
+* Consider the following schema
+
+```
+Sales(serialNo, date, dealer, price)
+Autos(serialNo, model, color)
+Dealers(name, city, state, phone)
+```
+
+* We observed that date was the only dimension attribute without a dimension table
+* That limits our ability to consider the effect of different aspects of date
+* We could add a table (even a "fake" table) such as
+```
+Days(date, day, week, month, year)
+```
+* Now we can talk about dates that wall between the 20th and 25th weeks of the year, for example
+
+---
+
+## OLAP Query Examples
+
+```
+SELECT state, AVG(price)
+  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
+ WHERE date >= '2014-01-01'
+ GROUP BY state
+```
+
+```
+SELECT state, Days.month, AVG(price)
+  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
+             JOIN Days ON Sales.date = Days.date
+ WHERE date BETWEEN '2014-01-01' AND '2014-12-31'
+   AND state = 'WY'
+ GROUP BY Days.month
+ ORDER BY Days.month
+```
+
+---
+
+## "Cubes" and Multidimensional Data
+
+* Even in our simple example, we have three dimensions
+* In a typical example, there may be 100s of dimensions
+
+<br>
+
+* In either case, you can think of the data as arranged in a high dimensional "cube"
+* Each tuple is a point inside this high-dimensional cube
+* Each axis corresponds to a dimension table
+* The dimension table explains the points along that dimension
+
+---
+
+## Slicing and Dicing
+
+```
+SELECT state, Days.month, AVG(price)
+  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
+             JOIN Days ON Sales.date = Days.date
+ WHERE date BETWEEN '2014-01-01' AND '2014-12-31'
+   AND state = 'WY'
+ GROUP BY Days.month
+ ORDER BY Days.month
+```
+
+* The WHERE and GROUP BY clauses let us change the way we view the fact table
+* GROUP BY partitions the rows into categories, in a process called **dicing**
+  * Dicing -- think of the cube as broken up into many smaller cubes
+
+<br>
+
+* The WHERE clause lets us remove (or at least limit) one of the dimensions of the cube
+* This is similar to taking a **slice**
+
+---
+
+# Data Cubes
+
+---
+
+## Data Cubes
+
+* **Data Cubes** are specialized OLAP databases
+* The key characteristic is that they pre-compute aggregated values
+
+---
+
+## Data Cubes
+
+* Consider the following fact table
+
+```
+Sales(serialNo, date, dealer, price)
+```
+
+* The idea is to store both basic and aggregated facts in this table
+  * basic fact: an individual sale
+  * aggregated facts: sales by Ken's Toyota
+
+serialNo     | date            | dealer          | price
+-------------|-----------------|-----------------|-------------
+1023482      | 2015-04-15      | kens            | 30,000
+9182734      | 2015-04-15      | kens            | 35,000
+9234850      | 2014-04-15      | bills           | 32,500
+NULL         | 2015-04-15      | kens            | 65,000
+NULL         | NULL            | kens            | 65,000
+
+---
+
+## Data Cubes
+
+* Obviously, data cubes are more powerful when we have reasonable columns to aggregate
+* SerialNo is a particularly bad column to aggregate
+  * So replace it with model & color
+* Date isn't much better
+  * So add explicit week, month, year to fact table
+
+model    | color     | date            | year   | month  | dealer          | price   | number
+---------|-----------|-----------------|--------|--------|-----------------|---------|-----------
+GX420    | maroon    | 2015-04-15      | 2015   | 04     | kens            | 30,000  | 1
+GX420    | white     | 2015-04-15      | 2015   | 04     | kens            | 35,000  | 1
+RX360    | orange    | 2014-03-15      | 2015   | 04     | kens            | 32,500  | 1
+GX420    | NULL      | 2015-04-15      | 2015   | 04     | kens            | 65,000  | 2
+NULL     | white     | NULL            | 2015   | 04     | kens            | 35,000  | 1
+GX420    | NULL      | NULL            | 2015   | NULL   | kens            | 65,000  | 2
+
+---
+
+## Data Cubes
+
+* You can create a data cube using **materialized views**
+
+```
+CREATE MATERIALIZED VIEW SalesCube AS
+SELECT model, color, date, year, month, dealer, SUM(price), COUNT(*) AS number
+  FROM Sales
+ GROUP BY model, color, date, year, month, dealer WITH CUBE
+```
+
+* Here, we're assuming that we've already added the relevant columns to Sales
+* If not, we could perform a JOIN with the dimension tables
+
+---
+
 # Timeseries in SQL
 
 ---
@@ -1041,217 +1254,5 @@ SELECT friend.userID, friend.location, friend.distance
            AND sdo_within(location, 1, MyLocation.location, 0.01)) AS friend
  ORDER BY friend.distance
 ```
-
----
-
-# On-Line Analytic Processing (OLAP)
-
----
-
-## On-Line Analytic Processing (OLAP)
-
-* There are two broad classes of databases
-  * On-Line Transaction Processing (OLTP) databases are optimized for updates and small queries
-  * On-Line Analytic Processing (OLAP) databases are optimized for complex queries that touch the majority of the data
-
-<br>
-
-* Queries in OLAP databases can take a very long time
-* So it is not feasible to mix them with update queries (that require locking)
-* Typically, OLAP databases are read-only
-* A **data warehouse** is a typical OLAP database that is updated from a **master database** periodically (e.g., daily)
-
----
-
-## OLAP and Star Schemas
-
-* Consider the following schema
-
-```
-Sales(serialNo, date, dealer, price)
-Autos(serialNo, model, color)
-Dealers(name, city, state, phone)
-```
-
-* Sales is called a **Fact Table**
-  * Typically very large
-  * Contains a record for each transaction
-* Autos and Dealers are **dimension tables** which explain **dimension attributes** serialNo and dealer
-* Date is also a **dimension attribute**, but without a meaningful dimension table
-* This type of schema, with a central fact table and surrounding dimension tables, is called a **star schema**
-
----
-
-## OLAP and Star Schemas
-
-* Consider the following schema
-
-```
-Sales(serialNo, date, dealer, price)
-Autos(serialNo, model, color)
-Dealers(name, city, state, phone)
-```
-
-* Price is the only non-dimension attribute, called a **dependent attribute**
-* In general, there can be more dependent attributes, e.g., service contracts
-
-<br>
-
-* OLAP aims to understand how the dependent attributes depend on the dimension attributes
-* This includes lots of GROUP BYs
-
----
-
-## OLAP and Star Schemas
-
-<div class="centered">
-    <img src="assets/img/star-schema.png" title="Star Schema" alt="Star Schema">
-</div>
-
----
-
-## OLAP and Star Schemas
-
-* Consider the following schema
-
-```
-Sales(serialNo, date, dealer, price)
-Autos(serialNo, model, color)
-Dealers(name, city, state, phone)
-```
-
-* We observed that date was the only dimension attribute without a dimension table
-* That limits our ability to consider the effect of different aspects of date
-* We could add a table (even a "fake" table) such as
-```
-Days(date, day, week, month, year)
-```
-* Now we can talk about dates that wall between the 20th and 25th weeks of the year, for example
-
----
-
-## OLAP Query Examples
-
-```
-SELECT state, AVG(price)
-  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
- WHERE date >= '2014-01-01'
- GROUP BY state
-```
-
-```
-SELECT state, Days.month, AVG(price)
-  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
-             JOIN Days ON Sales.date = Days.date
- WHERE date BETWEEN '2014-01-01' AND '2014-12-31'
-   AND state = 'WY'
- GROUP BY Days.month
- ORDER BY Days.month
-```
-
----
-
-## "Cubes" and Multidimensional Data
-
-* Even in our simple example, we have three dimensions
-* In a typical example, there may be 100s of dimensions
-
-<br>
-
-* In either case, you can think of the data as arranged in a high dimensional "cube"
-* Each tuple is a point inside this high-dimensional cube
-* Each axis corresponds to a dimension table
-* The dimension table explains the points along that dimension
-
----
-
-## Slicing and Dicing
-
-```
-SELECT state, Days.month, AVG(price)
-  FROM Sales JOIN Dealers ON Sales.dealer = Dealers.name
-             JOIN Days ON Sales.date = Days.date
- WHERE date BETWEEN '2014-01-01' AND '2014-12-31'
-   AND state = 'WY'
- GROUP BY Days.month
- ORDER BY Days.month
-```
-
-* The WHERE and GROUP BY clauses let us change the way we view the fact table
-* GROUP BY partitions the rows into categories, in a process called **dicing**
-  * Dicing -- think of the cube as broken up into many smaller cubes
-
-<br>
-
-* The WHERE clause lets us remove (or at least limit) one of the dimensions of the cube
-* This is similar to taking a **slice**
-
----
-
-# Data Cubes
-
----
-
-## Data Cubes
-
-* **Data Cubes** are specialized OLAP databases
-* The key characteristic is that they pre-compute aggregated values
-
----
-
-## Data Cubes
-
-* Consider the following fact table
-
-```
-Sales(serialNo, date, dealer, price)
-```
-
-* The idea is to store both basic and aggregated facts in this table
-  * basic fact: an individual sale
-  * aggregated facts: sales by Ken's Toyota
-
-serialNo     | date            | dealer          | price
--------------|-----------------|-----------------|-------------
-1023482      | 2015-04-15      | kens            | 30,000
-9182734      | 2015-04-15      | kens            | 35,000
-9234850      | 2014-04-15      | bills           | 32,500
-NULL         | 2015-04-15      | kens            | 65,000
-NULL         | NULL            | kens            | 65,000
-
----
-
-## Data Cubes
-
-* Obviously, data cubes are more powerful when we have reasonable columns to aggregate
-* SerialNo is a particularly bad column to aggregate
-  * So replace it with model & color
-* Date isn't much better
-  * So add explicit week, month, year to fact table
-
-model    | color     | date            | year   | month  | dealer          | price   | number
----------|-----------|-----------------|--------|--------|-----------------|---------|-----------
-GX420    | maroon    | 2015-04-15      | 2015   | 04     | kens            | 30,000  | 1
-GX420    | white     | 2015-04-15      | 2015   | 04     | kens            | 35,000  | 1
-RX360    | orange    | 2014-03-15      | 2015   | 04     | kens            | 32,500  | 1
-GX420    | NULL      | 2015-04-15      | 2015   | 04     | kens            | 65,000  | 2
-NULL     | white     | NULL            | 2015   | 04     | kens            | 35,000  | 1
-GX420    | NULL      | NULL            | 2015   | NULL   | kens            | 65,000  | 2
-
----
-
-## Data Cubes
-
-* You can create a data cube using **materialized views**
-
-```
-CREATE MATERIALIZED VIEW SalesCube AS
-SELECT model, color, date, year, month, dealer, SUM(price), COUNT(*) AS number
-  FROM Sales
- GROUP BY model, color, date, year, month, dealer WITH CUBE
-```
-
-* Here, we're assuming that we've already added the relevant columns to Sales
-* If not, we could perform a JOIN with the dimension tables
 
 
