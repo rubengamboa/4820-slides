@@ -463,13 +463,17 @@ SELECT part, num_subparts
 
 # The Object-Relational Model
 
+---
+
+## The Object-Relational Model
+
 * The relational model is dominant in the database world
 * But for a short while in the late 80s and early 90s, object-oriented databases threatened to become popular
 * As a result, a new model was developed, the **object-relational** database model
 
 ---
 
-# Object-Relational vs. Relational Models
+## Object-Relational vs. Relational Models
 
 1. Attributes can be **structured types**, including **records** and even **nested tables**
    * Records allow, for example, addresses with city/state/zip fields
@@ -481,7 +485,7 @@ SELECT part, num_subparts
 
 ---
 
-# Object-Relational Example
+## Object-Relational Example
 
 <div class="centered">
     <img src="assets/img/nested-table.png" title="Nested Tables" alt="Nested Tables">
@@ -489,7 +493,7 @@ SELECT part, num_subparts
 
 ---
 
-# Object-Relational Example
+## Object-Relational Example
 
 <div class="centered">
     <img src="assets/img/nested-table-refs.png" title="Nested Tables" alt="Nested Tables">
