@@ -43,6 +43,8 @@ widgets:      [mathjax, bootstrap]
 <hr>
 * [SQL in a Server Environment](ch09-db-programming.html)
 * [Advanced Topics in Relational Databases](ch10-adv-topics.html)
+<hr>
+* [Introduction to NoSQL](cha1-nosql.html)
 
 
 

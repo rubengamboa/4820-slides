@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Introduction to NoSQL</h2>
+    <p>Ruben Gamboa<br/>Associate Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>Chapter Overview</h2>
+
+<ul>
+<li>This chapter covers NoSQL databases at a very high level
+
+<ul>
+<li>Motivation for NoSQL</li>
+<li>Types of NoSQL Databases</li>
+<li>MongoDB</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h1>Motivation for NoSQL</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The relational data model is remarkably weak</li>
+<li>That is both a strength and a limitation</li>
+<li>In many cases, it is more convenient to use an &quot;OO&quot; data model</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>E.g, think of Twitter&#39;s tables
+
+<ul>
+<li>Tweets</li>
+<li>Users</li>
+<li>Follows</li>
+</ul></li>
+<li>To look at your page requires joining these tables <strong>all the time</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Database Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Some NoSQL advocates consider joins to be the death of your application</li>
+<li>And yet, database researchers have concentrated their efforts on joins</li>
+<li>So what gives?</li>
+</ul>
+
+<p><br></p>
+
+<ul class = "build incremental">
+<li>Joins are fast when all but one of the tables fit in memory</li>
+<li>Joins can be superfast in combination with a selection (and the right indexes)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Twitter&#39;s Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Think again of Twitter&#39;s tables
+
+<ul>
+<li>Tweets</li>
+<li>Users</li>
+<li>Follows</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Not a single one of these tables fits in memory!</li>
+<li>We can take advantage of selections and indexes, but only if we have the right type of indexes
+
+<ul>
+<li>Clustered indexes won&#39;t work, because the data in Tweets cannot be in the &quot;right&quot; order for different users</li>
+<li>The best the database can do is follow disk pointers around</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Facebook&#39;s Database Evolution</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Facebook started with MySQL</li>
+<li>Pretty soon, they pushed the boundaries of MySQL, so they instituted code discipline:
+
+<ul>
+<li>No joins in SQL</li>
+<li>Instead, get references (PKs) to the application side, and chase PKs from there</li>
+</ul></li>
+<li>The database got too large, so they instituted more discipline:
+
+<ul>
+<li>Split the database into lots of smaller databases (e.g., As go here, Bs go there, etc.)</li>
+<li>This is called <strong>sharding</strong></li>
+<li>All the code needed to know the sharding strategy</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul class = "build incremental">
+<li>Eventually, they built their own database, called <strong>Cassandra</strong></li>
+<li>It has the same underlying storage architecture as Amazon&#39;s <strong>Dynamo</strong></li>
+<li>It uses the data model from Google&#39;s <strong>BigTable</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Dynamo/Cassandra Storage Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/dynamo-ring.png" title="Dynamo/Cassandra Ring" alt="Dynamo/Cassandra Ring">
+</div>
+
+<ul>
+<li>The ring takes care of replication
+
+<ul>
+<li>Redundancy</li>
+<li>Speed</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Web 2.0</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Another driver for NoSQL databases is Web 2.0</li>
+<li>Tim O&#39;Reilly noted a distinction:
+
+<ul>
+<li>Web 1.0: Content producers (e.g., movie studios) generate content, and the rest of us enjoy it on the Internet</li>
+<li>Web 2.0: Content is generated both by producers and by &quot;consumers&quot;, and it is served seamlessly and typically with user preferences in mind</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The big consequence of this is that <strong>caching</strong> no longer works</li>
+<li>There is some thought that caching works for the 80%, but not for the 20% 
+
+<ul>
+<li><em>Pareto Principle</em></li>
+<li>Also, the <em>Long Tail</em></li>
+</ul></li>
+<li>But it really doesn&#39;t work well for Facebook, Twitter, etc.</li>
+<li>So we have to make the databases more responsive</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>The CAP Theorem</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>This is one of those &quot;pick any 2&quot; triangles</li>
+<li>It applies to any distributed system (e.g., the Internet, distributed databases)</li>
+</ul>
+
+<p><br></p>
+
+<p>No distributed system can achieve all three of these goals
+1. Consistency
+2. Availability
+3. Partition tolerance</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Giving Up Consistency</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We have Availability and Partition Tolerance</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>All clients can access some version of the data (but not necessarily the same one)</li>
+<li>Data is split across different servers</li>
+<li>e.g., DNS, web caching</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Typical issues
+
+<ul>
+<li>expiration/leases</li>
+<li>conflict resolution</li>
+<li>optimistic locking</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Giving Up Availability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We are left with Consistency and Partition Tolerance</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>If clients can connect to the server, they see the same data at any time.  But the server may be unavailable.</li>
+<li>Data can be distributed across several nodes</li>
+<li>E.g., Distributed databases, distributed locking, majority protocols</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Typical issues
+
+<ul>
+<li>pessimistic locking</li>
+<li>minority partitions are unavailable</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Giving Up Partition Tolerance</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We are left with Consistency and Availability</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>All clients see the same data at any given time, but they may not be able to see all of the data</li>
+<li>Data can be distributed across several nodes</li>
+<li>E.g., single-server and cluster databases, LDAP</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Typical issues
+
+<ul>
+<li>2-phase commit</li>
+<li>cache validation protocols</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>What Should We Give Up?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It depends on your situation, of course</li>
+<li>But if you are a large Internet company with millions of users, the most reasonable choice is <strong>consistency</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Giving up partition tolerance is not good for your users
+
+<ul>
+<li>E.g., they can use Twitter, but not tweets from their favorite sources</li>
+<li>Or they can see Amazon, but not the science-fiction books</li>
+</ul></li>
+<li>Giving up availability is even worse
+
+<ul>
+<li>Users will find an alternative</li>
+<li>Amazon loses millions of dollars when their system is even slightly slow</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>From ACID to BASE</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p><strong>B</strong>asic <strong>A</strong>vailability</p>
+
+<ul>
+<li>System is available</li>
+<li>Not all items are available are any given point in time</li>
+</ul></li>
+<li><p><strong>S</strong>oft State</p>
+
+<ul>
+<li>State information is not necessarily persisted immediately</li>
+<li>Maybe it needs to be refreshed</li>
+<li>Maybe it is saved locally and persisted later</li>
+</ul></li>
+<li><p><strong>E</strong>ventual Consistency</p>
+
+<ul>
+<li>At any given point, the nodes in the database may be inconsistent</li>
+<li>Eventually, after sufficient downtime, they will become consistent</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Quick Review: Why NoSQL?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Better data models</li>
+<li>Efficiency</li>
+<li>Work with Internet scale</li>
+<li>Don&#39;t need all the ACID overhead</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h1>Types of NoSQL Systems</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Types of NoSQL Systems</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are many types of NoSQL systems
+
+<ul>
+<li>Some of us were building NoSQL databases before there was a name for them!</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Today, three main types are recognized
+
+<ol>
+<li>Key/Value Stores</li>
+<li>Graph Databases</li>
+<li>Document Databases</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Key-Value Stores</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>At its simplest, a key-value store looks just like a hash table:
+
+<ul>
+<li>PutItem(Key, Value)</li>
+<li>GetItem(Value)</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><p>The important characteristics are scalability and speed</p>
+
+<ul>
+<li>The data is stored in one of many different nodes (e.g., by hashing)</li>
+<li>Data is replicated across several nodes automatically</li>
+<li>Data can be retrieved from any replicant</li>
+<li>Storing a value is atomic</li>
+<li>But storing two values is not</li>
+</ul></li>
+<li><p>E.g., Riak, Dynamo</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Key-Value Stores</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A &quot;pure&quot; key-value store does not know anything about the structure of the value</li>
+<li>The value is just a binary object, as far as the database is concerned</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Some key-value stores provide more structure</li>
+<li>BigTable &amp; Cassandra treat values as &quot;records&quot;</li>
+<li>These are not traditional database records, though</li>
+<li>They are also (large) collections of key-value pairs!</li>
+<li>Bottom line: two different records may have totally different columns</li>
+<li>E.g., a &quot;record&quot; can contain all of the tweets you ever made
+<br><br></li>
+<li>There can even be support for indexes (but you may have to do all the work)</li>
+<li>I.e., where are the record IDs for the users with lastname &quot;Gamboa&quot;
+
+<ul>
+<li>Key: &quot;Gamboa&quot;, Value: the record IDs</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Graph Databases</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Graph databases focus on the data model and query language aspects of NoSQL</li>
+<li>The idea is that many problems can be usefully thought of as graph problems
+
+<ul>
+<li>That&#39;s why so much of 3020 is spent on graph algorithms!</li>
+</ul></li>
+<li>The internet is basically a large graph</li>
+<li>The Facebook network of friends is also a graph
+
+<ul>
+<li>The Facebook API is called &quot;the Graph API&quot;</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>So why not design a database that can support large-scale graphs?</li>
+<li>E.g., Neo4J</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>In practical terms, we can do very cool things with graph databases</li>
+<li>But they are mostly limited to in-memory applications</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Document Databases</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A document database is the logical extension of key-value stores</li>
+<li>The database consists of a number of &quot;documents&quot;</li>
+<li>Each document is of a given type, e.g., JSON or JPEG</li>
+<li>Documents can be grouped into <strong>collections</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Try not to think of
+
+<ul>
+<li>documents as records</li>
+<li>collections as tables</li>
+</ul></li>
+<li>But you can go far with that analogy</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>The key point is that the database understands the content of your documents</li>
+<li>So it can help you by creating indexes, performing searches, etc.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h1>MongoDB</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>MongoDB</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>MongoDB is a document database
+
+<ul>
+<li>high performance</li>
+<li>high availability</li>
+<li>easy scalability</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>MongoDB: Document Database</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Rich data model maps naturally to program data structures</li>
+<li>Embedded (nested) documents and arrays mostly replace joins</li>
+<li>Dynamic schema supports polymorphism</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>MongoDB: High Performance</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Embedding is key to making reads and writes fast</li>
+<li>Indexes can include keys from top-level documents</li>
+<li>Indexes can also include keys from nested documents and arrays</li>
+<li>Optional &quot;streaming&quot; writes (i.e., no ACKs)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>MongoDB: High Availability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Replicated servers</li>
+<li>Automatic master failover</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>MongoDB: Easy Scalability</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Automatic <strong>sharding</strong></li>
+<li>Reads are automatically distributed over replicated servers</li>
+<li>Eventual consistency</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Data Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A <strong>database</strong> consists of many <strong>collections</strong></li>
+<li>A <strong>collection</strong> contains many <strong>documents</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>A document is essentially a JSON document</li>
+<li>It is stored in a binary form (BSON) for efficiency</li>
+</ul>
+
+<pre><code>var mydoc = {
+               _id: ObjectId(&quot;5099803df3f4948bd2f98391&quot;),
+               name: { first: &quot;Alan&quot;, last: &quot;Turing&quot; },
+               birth: new Date(&#39;Jun 23, 1912&#39;),
+               death: new Date(&#39;Jun 07, 1954&#39;),
+               contribs: [ &quot;Turing machine&quot;, &quot;Turing test&quot;, &quot;Turingery&quot; ],
+               views : NumberLong(1250000)
+            }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Documents</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The document type is really the central type in MongoDB</li>
+<li>It is (of course) the natural unit of storage</li>
+<li>ACID properties are guaranteed on document writes, but not across document writes</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>But documents are also used throughout MongoDB
+
+<ul>
+<li>query selectors</li>
+<li>update definitions</li>
+<li>index specification</li>
+<li>status reporting</li>
+<li>database configuration</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Queries</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A query is a set of operations that determine which records are desired</li>
+<li>The find() method of a collection executes queries</li>
+</ul>
+
+<div style='float:left;width:48%;'>
+  <pre><code>db.users.find(
+    { age: { $gt: 18 }, 
+      class: &quot;senior&quot; },
+    {name: 1, address: 1}
+).limit(5)
+</code></pre>
+
+</div>
+<div style='float:right;width:48%;'>
+  <pre><code>SELECT _id, name, address
+  FROM users
+ WHERE age &gt; 18
+   AND class = &#39;senior&#39;
+ LIMIT 5
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Cursors</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The result of a find() operation is a <strong>cursor</strong></li>
+<li>Cursors have methods such as hasNext() and next()</li>
+</ul>
+
+<pre><code>var students = [];
+var cursor = db.users.find(...);
+while (cursor.hasNext()) {
+    var doc = cursor.next ();
+    students.push ({ sid:  doc._id,
+                     name: doc.name });
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>db.users.find(
+    { age: { $gt: 18 }, 
+      class: &quot;senior&quot; },
+    {name: 1, address: 1}
+).limit(5);
+
+db.users.createIndex( { class: 1 } );
+db.users.createIndex( { class: 1, age: 1 } );
+db.users.createIndex( { class: 1, age: 1, name: 1, address: 1 } );
+</code></pre>
+
+<ul>
+<li>The query optimizer determines which index to use</li>
+<li>Unlike relational query optimizers that use <strong>estimates</strong>, the MongoDB optimizer 
+uses <strong>experiments</strong> to find the best index</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Insertions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>db.users.insert({
+    firstname: &quot;Dagny&quot;,
+    lastname:  &quot;Taggart&quot;,
+    age:       20,
+    class:     &quot;junior&quot;,
+    interests: [ &quot;railroads&quot;, &quot;leadership&quot;, &quot;progress&quot; ]
+})
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Updates</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>db.users.udpate(
+    {  age: { $ge: 18 } },
+    { $set: { vote: true } },
+    {multi: true }
+)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Deletes</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>db.users.remove(
+    {  age: { $lt: 18 } }
+)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Sharding</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/mongo-sharded-cluster.png" title="Mongo Sharded Cluster" alt="Mongo Sharded Cluster">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Reads with a Key</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/mongo-sharded-cluster-targeted-query.png" title="Mongo Shared Cluster Read with Key" alt="Mongo Shared Cluster Read with Key">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Reads without a Key</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/mongo-sharded-cluster-scatter-gather-query.png" title="Mongo Shared Cluster Read without Key" alt="Mongo Shared Cluster Read without Key">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Replication</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/mongo-replica-set-read-write-operations-primary.png" title="Mongo Replication" alt="Mongo Replication">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Reading from Replicants</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img src="assets/img/mongo-replica-set-read-preference.png" title="Mongo Reading from Secondary" alt="Mongo Reading from Secondary">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Getting MEAN</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The MEAN stack is a new/hot/trending/hyped web development platform</li>
+<li>It is an alternative to LAMP for small sites, and maybe will be a serious competitor to Java/Struts or Java/Spring in the future
+
+<ul>
+<li>LAMP = <strong>L</strong>inux, <strong>A</strong>pache, <strong>M</strong>ysql, <strong>P</strong>hp</li>
+</ul></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li><strong>M</strong>ongoDB</li>
+<li><strong>E</strong>xpressJS</li>
+<li><strong>A</strong>ngularJS</li>
+<li><strong>N</strong>odeJS</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Motivation for NoSQL'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Data Model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Database Joins'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Twitter&#39;s Joins'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Facebook&#39;s Database Evolution'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Dynamo/Cassandra Storage Model'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Web 2.0'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='The CAP Theorem'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Giving Up Consistency'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Giving Up Availability'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Giving Up Partition Tolerance'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='What Should We Give Up?'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='From ACID to BASE'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Quick Review: Why NoSQL?'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Types of NoSQL Systems'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Types of NoSQL Systems'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Key-Value Stores'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Key-Value Stores'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Graph Databases'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Document Databases'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='MongoDB'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='MongoDB'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='MongoDB: Document Database'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='MongoDB: High Performance'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='MongoDB: High Availability'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='MongoDB: Easy Scalability'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Data Model'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Documents'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Queries'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Cursors'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Indexes'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Insertions'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Updates'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Deletes'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Sharding'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Reads with a Key'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Reads without a Key'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Replication'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Reading from Replicants'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Getting MEAN'>
+         41
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
