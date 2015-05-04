@@ -1137,6 +1137,29 @@ SELECT p.tstamp, p.value, pavg.value
 
 ---
 
+## Timeseries Queries in the MIM
+
+```
+SHOW
+  Price: Close of AAPL
+  Avg50: 50 day average of Close of AAPL
+WHEN
+  Date is 2014
+```
+
+```
+SHOW
+  Gas: Bar of HU repeated from 10 days ago to 50 days later
+WHEN
+  Date is June
+ AND
+  CL is down more than 40% from 6 months to today
+ AND
+  ConsumerConfidence > 75
+```
+
+---
+
 # Spatial Queries in SQL
 
 ---

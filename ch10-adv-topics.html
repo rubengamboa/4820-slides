@@ -1912,6 +1912,32 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
 
 <slide class="" id="slide-74" style="background:;">
   <hgroup>
+    <h2>Timeseries Queries in the MIM</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SHOW
+  Price: Close of AAPL
+  Avg50: 50 day average of Close of AAPL
+WHEN
+  Date is 2014
+</code></pre>
+
+<pre><code>SHOW
+  Gas: Bar of HU repeated from 10 days ago to 50 days later
+WHEN
+  Date is June
+ AND
+  CL is down more than 40% from 6 months to today
+ AND
+  ConsumerConfidence &gt; 75
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-75" style="background:;">
+  <hgroup>
     <h1>Spatial Queries in SQL</h1>
   </hgroup>
   <article data-timings="">
@@ -1920,7 +1946,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-75" style="background:;">
+<slide class="" id="slide-76" style="background:;">
   <hgroup>
     <h2>Spatial Queries in SQL</h2>
   </hgroup>
@@ -1947,7 +1973,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-76" style="background:;">
+<slide class="" id="slide-77" style="background:;">
   <hgroup>
     <h2>Indexes for Spatial Data</h2>
   </hgroup>
@@ -1962,7 +1988,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-77" style="background:;">
+<slide class="" id="slide-78" style="background:;">
   <hgroup>
     <h2>Spatial Data Types</h2>
   </hgroup>
@@ -1983,7 +2009,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-78" style="background:;">
+<slide class="" id="slide-79" style="background:;">
   <hgroup>
     <h2>Spatial Relationships</h2>
   </hgroup>
@@ -2009,7 +2035,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-79" style="background:;">
+<slide class="" id="slide-80" style="background:;">
   <hgroup>
     <h2>Spatial Query Examples</h2>
   </hgroup>
@@ -2030,7 +2056,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-80" style="background:;">
+<slide class="" id="slide-81" style="background:;">
   <hgroup>
     <h2>Spatial Query Examples</h2>
   </hgroup>
@@ -2051,7 +2077,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-81" style="background:;">
+<slide class="" id="slide-82" style="background:;">
   <hgroup>
     <h2>Spatial Query Examples</h2>
   </hgroup>
@@ -2067,7 +2093,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-82" style="background:;">
+<slide class="" id="slide-83" style="background:;">
   <hgroup>
     <h2>Spatial Query Examples</h2>
   </hgroup>
@@ -2082,7 +2108,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-83" style="background:;">
+<slide class="" id="slide-84" style="background:;">
   <hgroup>
     <h2>Spatial Query Examples</h2>
   </hgroup>
@@ -2547,7 +2573,7 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=74 title='Spatial Queries in SQL'>
+        data-slide=74 title='Timeseries Queries in the MIM'>
          74
       </a>
     </li>
@@ -2559,25 +2585,25 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=76 title='Indexes for Spatial Data'>
+        data-slide=76 title='Spatial Queries in SQL'>
          76
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='Spatial Data Types'>
+        data-slide=77 title='Indexes for Spatial Data'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='Spatial Relationships'>
+        data-slide=78 title='Spatial Data Types'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='Spatial Query Examples'>
+        data-slide=79 title='Spatial Relationships'>
          79
       </a>
     </li>
@@ -2603,6 +2629,12 @@ SELECT p.tstamp, p.value, 100 * (p.value - p250.value) / p250.value AS PctChange
       <a href="#" target="_self" rel='tooltip' 
         data-slide=83 title='Spatial Query Examples'>
          83
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=84 title='Spatial Query Examples'>
+         84
       </a>
     </li>
   </ul>
