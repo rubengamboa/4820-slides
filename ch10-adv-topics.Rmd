@@ -984,6 +984,7 @@ SELECT date, temp, avgtemp
 * Arithmetic
 * Statistics
 * Event filtering, e.g., moving average crossovers
+* Changes of time granularity
 
 ---
 
