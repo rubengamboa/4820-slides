@@ -22,9 +22,22 @@ widgets:      [mathjax, bootstrap]
 </style>
 
 
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1         |     20 | SQL, Read
+q2         |     25 | SQL, Write
+q3         |     15 | SQL DDL Constraints
+q4         |     15 | Triggers
+q5         |     15 | Views
+q6         |     15 | Index Selection and Creation
+
+---
+
 ## Grade Distribution
 
-```{r echo=FALSE, cache=FALSE}
+```{r exam2_grades, echo=FALSE, cache=FALSE}
 points <- c(20, 25, 15, 15, 15, 15)
 g <- data.frame(q1 = points[1] - c(0, 4,  6, 0, 0, 0, 0,  0,  4,  0, 0, 0,  0,  0,  0,  6,  0,  0,  0,  0, 0, 0, 0,  5, 0,  0,  0),
                 q2 = points[2] - c(5, 8, 13, 3, 1, 3, 4, 15, 12,  4, 6, 5, 10, 14,  9, 12, 10,  3, 14, 15, 4, 2, 1,  7, 4,  3,  7),
@@ -45,7 +58,7 @@ title('Exam 2 Results')
 
 ## Grade Distribution by Question
 
-```{r echo=FALSE, cache=FALSE}
+```{r exam2_questions, echo=FALSE, cache=FALSE}
 g2 <- data.frame(question = c(rep('q1', length(g$q1)),
                               rep('q2', length(g$q2)),
                               rep('q3', length(g$q3)),

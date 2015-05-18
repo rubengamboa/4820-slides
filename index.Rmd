@@ -45,6 +45,8 @@ widgets:      [mathjax, bootstrap]
 * [Advanced Topics in Relational Databases](ch10-adv-topics.html)
 <hr>
 * [Introduction to NoSQL](cha1-nosql.html)
+<hr>
+* [Final Exam Results](exam3-results.html)
 
 
 

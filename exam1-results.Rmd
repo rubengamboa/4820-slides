@@ -22,9 +22,22 @@ widgets:      [mathjax, bootstrap]
 </style>
 
 
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1         |     15 | Relational Algebra, Read
+q2         |     15 | Relational Algebra, Write
+q3         |     20 | E/R Diagram Design
+q4         |     20 | ERD to SQL DDL
+q5         |     30 | Normalization
+bonus      |      5 | Attend Meeting
+
+---
+
 ## Grade Distribution
 
-```{r echo=FALSE, cache=FALSE}
+```{r exam1_grades, echo=FALSE, cache=FALSE}
 g <- data.frame(q1    = c(15, 12, 15, 15, 13, 15, 15, 14, 11, 15, 15, 15, 15, 15, 13, 15,   15, 11, 15, 15,   15, 15, 15, 15, 15, 15, 15, 15),
                 q2    = c(9,  12, 8,  8,  6,  10, 9,  8,  6,  10, 6,  11, 14, 8,  4,  13,   7,  10, 8,  7,    13, 8,  8,  3,  4,  9,  3,  4),
                 q3    = c(19, 0,  16, 19, 18, 19, 17, 15, 16, 19, 12, 18, 19, 18, 15, 19.5, 19, 19, 18, 19.5, 18, 20, 15, 16, 16, 17, 15, 15),
@@ -44,13 +57,14 @@ title('Exam 1 Results')
 
 ## Grade Distribution by Question
 
-```{r echo=FALSE, cache=FALSE}
+```{r exam1_questions, echo=FALSE, cache=FALSE}
 g2 <- data.frame(question = c(rep('q1', length(g$q1)),
                               rep('q2', length(g$q2)),
                               rep('q3', length(g$q3)),
                               rep('q4', length(g$q4)),
-                              rep('q5', length(g$q5))),
-                 score = 100*c(g$q1/15, g$q2/15, g$q3/20, g$q4/20, g$q5/30))
+                              rep('q5', length(g$q5)),
+                              rep('bonus', length(g$bonus))),
+                 score = 100*c(g$q1/15, g$q2/15, g$q3/20, g$q4/20, g$q5/30, g$bonus/5))
 plot(g2$question, g2$score)
 title('Individual Question Results')
 ```

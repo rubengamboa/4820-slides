@@ -22,6 +22,19 @@ widgets:      [mathjax, bootstrap]
 </style>
 
 
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1         |     20 | SQL, Read
+q2         |     25 | SQL, Write
+q3         |     15 | SQL DDL Constraints
+q4         |     15 | Triggers
+q5         |     15 | Views
+q6         |     15 | Index Selection and Creation
+
+---
+
 ## Grade Distribution
 
 
@@ -30,10 +43,10 @@ widgets:      [mathjax, bootstrap]
 ##    44.0    66.5    76.0    75.8    88.5    99.0
 ```
 
-![plot of chunk unnamed-chunk-1](assets/fig/unnamed-chunk-1.png) 
+![plot of chunk exam2_grades](assets/fig/exam2_grades.png) 
 
 ---
 
 ## Grade Distribution by Question
 
-![plot of chunk unnamed-chunk-2](assets/fig/unnamed-chunk-2.png) 
+![plot of chunk exam2_questions](assets/fig/exam2_questions.png) 
