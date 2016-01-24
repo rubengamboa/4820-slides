@@ -44,13 +44,13 @@ bonus      |     10 | NoSQL Design
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    44.0    64.8    75.5    77.0    91.2   105.0
+##   44.00   64.75   75.50   77.04   91.25  105.00
 ```
 
-![plot of chunk exam2_grades](assets/fig/exam2_grades.png) 
+![plot of chunk exam3_grades](assets/fig/exam3_grades-1.png) 
 
 ---
 
 ## Grade Distribution by Question
 
-![plot of chunk exam3_questions](assets/fig/exam3_questions.png) 
+![plot of chunk exam3_questions](assets/fig/exam3_questions-1.png) 

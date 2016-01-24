@@ -3,7 +3,7 @@ subtitle:     The Relational Model of Data
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -438,7 +438,7 @@ MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
 
 ## Studios Schema
 
-```{css}
+```
 Studios(_name_:string, address:string, presC#:integer)
 ```
 

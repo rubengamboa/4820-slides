@@ -3,7 +3,7 @@ subtitle:     The Worlds of Database Systems
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -177,9 +177,11 @@ widgets:      [mathjax, bootstrap]
 
 # Studying Database Systems
 
----
+--- &twocol
 
 ## Studying Database Systems
+
+*** =left
 
 1. Relational Database Modeling
    * basic concepts
@@ -191,10 +193,15 @@ widgets:      [mathjax, bootstrap]
    * abstract query languages
    * SQL
    * database application programs
-3. Semistructured Data Modeling and Programming
-4. Database System Implementation
-5. Modern Database Issues
+3. Database Performance and Integrity
+   * indexes
+   * constraints
+   * views
 
+*** =right
 
-
-6. foo
+<ol start="4">
+    <li> Semistructured Data Modeling and Programming </li>
+    <li> Database System Implementation </li>
+    <li> Modern Database Issues </li>
+</ol>

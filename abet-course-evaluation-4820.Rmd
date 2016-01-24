@@ -1,0 +1,279 @@
+title:        COSC 4820 Database Systems
+subtitle:     Spring 2015 Course Evaluation
+author:       Ruben Gamboa
+#logo:         uw-logo-small.png
+#biglogo:      uw-logo-large.png
+job:          Professor
+highlighter:  highlight.js
+hitheme:      tomorrow
+mode:         selfcontained
+framework:    io2012
+widgets:      [mathjax, bootstrap]
+
+---
+
+<style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+## Catalog Description
+
+COSC 4820. **Database Systems.** 3 CR. Provides comprehensive coverage of the problems involved in database design, 
+in-depth coverage of data models and database languages. Students acquire practical skills of conceptual/logical 
+database design and general familiarity with the problems and issues of database management. 
+
+**Prerequisite:** COSC 3020, Algorithms and Data Structures.
+
+---
+
+## Course Topics
+
+**Textbook:** *A First Course in Database Systems* by J. Ullman and J. Widom. Prentice Hall. 3<sup>rd</sup> Edition.  2007.
+
+* The Relational Data Model
+* Relational Design Theory and Normalization
+* High-Level Database Models
+* Relational Algebra
+* SQL
+* Constraints & Triggers
+* Views & Indexes
+* Accessing Databases from Java Programs
+* Data Warehousing
+
+---
+
+## Course Objectives
+
+Students who complete this course should be able to perform the following tasks:
+
+* Utilize database management systems that are used in industry and the computing profession.
+* Express database queries in modern database languages such as SQL.
+* Analyze, design, and implement database projects in accordance with industry standards (i.e. relational model, ER model, UML model, ODL model, SQL).
+* Provide written, oral, and visual presentation of database projects.
+* Perform basic database administration tasks.
+
+---
+
+## Evaluation Summary
+
+There were 24 students in this course.
+
+15 of the 24 passed the course.
+
+The table below shows the students' performance over time. Not reflected in the table is a steady improvement of the most
+important material, e.g., SQL.
+
+Topic                                       | Assessed                       | % Satisfactory
+--------------------------------------------|--------------------------------|---------------------------------------
+The Relational Data Model                   | 1.4, 2.3, f.1b                 | `r sprintf("%.1f", mean(c(20, 75, 90)))`
+Relational Design Theory and Normalization  | 1.5                            | `r sprintf("%.1f", mean(c(50)))`
+High-Level Database Models                  | 1.3, f.1a                      | `r sprintf("%.1f", mean(c(85, 70)))`
+Relational Algebra                          | 1.1, 1.2, f.2a, f.2b           | `r sprintf("%.1f", mean(c(100, 25, 100, 100)))`
+SQL                                         | 1.4, 2.1, 2.2, 2.3, f.2c, f.2d | `r sprintf("%.1f", mean(c(30, 100, 50, 50, 100, 60)))`
+Constraints & Triggers                      | 2.3, 2.4                       | `r sprintf("%.1f", mean(c(50, 30)))`
+Views & Indexes                             | 2.5, 2.6, f.5                  | `r sprintf("%.1f", mean(c(70, 20, 60)))`
+Accessing Databases from Java Programs      | f.3, f.4                       | `r sprintf("%.1f", mean(c(65, 60)))`
+Data Warehousing                            | f.6                            | `r sprintf("%.1f", mean(c(20)))`
+
+---
+
+## Action Items
+
+1. Students struggle with conversion from high-level database models to SQL, 
+   and they also struggle with relational design theory. But they do well with
+   relational algebra and SQL.
+   
+   We should leverage their comfort level with OOP concepts by introducing Hibernate
+   early and using it to connect the high-level E/R diagrams with lower-level OOP
+   classes, as a step towards very-low-level tables.
+
+2. Few students are engaging with the advanced/optional material at the end of the
+   course, e.g., Data Warehousing.  This is partly due to the nature of the last week
+   of the semester.
+   
+   We should remove this material from the course altogether, and use the last week
+   of the semester to better prepare students for the final.
+
+---
+
+# Appendix: Exam #1 Results
+
+---
+
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1         |     15 | Relational Algebra, Read
+q2         |     15 | Relational Algebra, Write
+q3         |     20 | E/R Diagram Design
+q4         |     20 | ERD to SQL DDL
+q5         |     30 | Normalization
+bonus      |      5 | Attend Meeting
+
+---
+
+## Grade Distribution
+
+```{r exam1_grades, echo=FALSE, cache=FALSE}
+g <- data.frame(q1    = c(15, 12, 15, 15, 13, 15, 15, 14, 11, 15, 15, 15, 15, 15, 13, 15,   15, 11, 15, 15,   15, 15, 15, 15, 15, 15, 15, 15),
+                q2    = c(9,  12, 8,  8,  6,  10, 9,  8,  6,  10, 6,  11, 14, 8,  4,  13,   7,  10, 8,  7,    13, 8,  8,  3,  4,  9,  3,  4),
+                q3    = c(19, 0,  16, 19, 18, 19, 17, 15, 16, 19, 12, 18, 19, 18, 15, 19.5, 19, 19, 18, 19.5, 18, 20, 15, 16, 16, 17, 15, 15),
+                q4    = c(17, 15, 0,  8,  8,  10, 6,  15, 8,  20, 2,  17, 6,  6,  5,  20,   10, 16, 8,  8,    5,  8,  5,  8,  8,  15, 18, 12),
+                q5    = c(25, 23, 16, 19, 22, 24, 19, 17, 16, 24, 22, 24, 25, 28, 21, 22,   19, 12, 26, 21,   16, 14, 21, 17, 17, 18, 18, 20),
+                bonus = c(5,   0,  5,  5,  5,  0,  0,  0,  5,  0,  5,  0,  0,  0,  0,  0,    0,  0,  0,  0,    0,  0,  0,  0,  0,  0,  5, 0))
+g$grades <- g$q1 + g$q2 + g$q3 + g$q4 + g$q5 + g$bonus
+summary(g$grades)
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Exam 1 Results')
+```
+
+---
+
+## Grade Distribution by Question
+
+```{r exam1_questions, echo=FALSE, cache=FALSE}
+g2 <- data.frame(question = c(rep('q1', length(g$q1)),
+                              rep('q2', length(g$q2)),
+                              rep('q3', length(g$q3)),
+                              rep('q4', length(g$q4)),
+                              rep('q5', length(g$q5)),
+                              rep('bonus', length(g$bonus))),
+                 score = 100*c(g$q1/15, g$q2/15, g$q3/20, g$q4/20, g$q5/30, g$bonus/5))
+plot(g2$question, g2$score)
+title('Individual Question Results')
+```
+
+---
+
+# Appendix: Exam #2 Results
+
+---
+
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1         |     20 | SQL, Read
+q2         |     25 | SQL, Write
+q3         |     15 | SQL DDL Constraints
+q4         |     15 | Triggers
+q5         |     15 | Views
+q6         |     15 | Index Selection and Creation
+
+---
+
+## Grade Distribution
+
+```{r exam2_grades, echo=FALSE, cache=FALSE}
+points <- c(20, 25, 15, 15, 15, 15)
+g <- data.frame(q1 = points[1] - c(0, 4,  6, 0, 0, 0, 0,  0,  4,  0, 0, 0,  0,  0,  0,  6,  0,  0,  0,  0, 0, 0, 0,  5, 0,  0,  0),
+                q2 = points[2] - c(5, 8, 13, 3, 1, 3, 4, 15, 12,  4, 6, 5, 10, 14,  9, 12, 10,  3, 14, 15, 4, 2, 1,  7, 4,  3,  7),
+                q3 = points[3] - c(2, 5, 12, 2, 0, 2, 0, 10,  8,  4, 2, 3,  5,  4, 10, 10,  3,  5,  5, 10, 4, 2, 4,  4, 1,  1,  5),
+                q4 = points[4] - c(2, 3, 10, 7, 3, 3, 1,  4,  7, 15, 6, 7,  8,  7, 12, 13, 12,  4, 12,  8, 7, 0, 4, 10, 2,  5,  8),
+                q5 = points[5] - c(3, 0,  9, 0, 0, 0, 8,  2,  8,  8, 2, 2,  2,  3,  0,  8,  0,  1,  8,  2, 0, 0, 0,  7, 0,  5,  0),
+                q6 = points[6] - c(3, 8, 11, 8, 6, 1, 5,  2,  9,  6, 9, 8,  7,  6, 12,  5,  9,  0,  9,  8, 5, 2, 5,  7, 8, 15, 15))
+g$grades <- rowSums(g)
+summary(g$grades)
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Exam 2 Results')
+```
+
+---
+
+## Grade Distribution by Question
+
+```{r exam2_questions, echo=FALSE, cache=FALSE}
+g2 <- data.frame(question = c(rep('q1', length(g$q1)),
+                              rep('q2', length(g$q2)),
+                              rep('q3', length(g$q3)),
+                              rep('q4', length(g$q4)),
+                              rep('q5', length(g$q5)),
+                              rep('q6', length(g$q6))),
+                 score = 100*c(g$q1/points[1], g$q2/points[2], g$q3/points[3], g$q4/points[4], g$q5/points[5], g$q6/points[6]))
+plot(g2$question, g2$score)
+title('Individual Question Results')
+```
+
+---
+
+# Appendix: Final Exam Results
+
+---
+
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1a        |     10 | E/R Diagram Design
+q1b        |     10 | SQL DDL
+q2a        |      6 | Relational Algebra, Read
+q2b        |      6 | Relational Algebra, Write
+q2c        |     10 | SQL, Read
+q2d        |     10 | SQL, Write
+q3         |     15 | Programming, SQL Injection
+q4         |     15 | Programming, Closing Resources
+q5         |      8 | Types of Indexes
+q6         |     10 | Data Warehousing Basics
+bonus      |     10 | NoSQL Design
+
+----
+
+## Grade Distribution
+
+```{r abet_exam3_grades, echo=FALSE, cache=FALSE}
+points <- c(10, 10, 10, 6, 6, 10, 10, 15, 15, 8, 10)
+g <- data.frame(q1a    = points[1]  - c(0,  1, 0,  1,  1,  1,  4, 4,  1, 0, 4, 2,  1, 2,  5, 2, 5,  1, 3,  3,  2, 4,  4,  2),
+                q1b    = points[2]  - c(0,  0, 0,  2,  0,  3,  5, 4,  1, 0, 4, 0,  2, 0,  1, 0, 0,  2, 0,  0,  1, 0,  8,  3),
+                qbonus =              c(7,  8, 1,  0,  4,  1,  1, 0,  3, 1, 1, 8,  0, 7,  0, 0, 5,  6, 1, 10,  0, 2,  0,  4),
+                q2a    = points[4]  - c(0,  0, 0,  0,  0,  0,  1, 0,  0, 0, 0, 0,  0, 0,  0, 0, 0,  0, 2,  0,  0, 0,  2,  1),
+                q2b    = points[5]  - c(0,  0, 0,  0,  0,  1,  0, 2,  1, 0, 2, 1,  0, 1,  1, 1, 0,  2, 0,  0,  2, 1,  3,  2),
+                q2c    = points[6]  - c(0,  1, 0,  0,  1,  0,  2, 0,  0, 0, 2, 0,  0, 0,  0, 0, 3,  3, 2,  0,  0, 2,  1,  1),
+                q2d    = points[7]  - c(0,  0, 4,  2,  0,  2,  2, 5,  1, 0, 5, 4,  1, 0,  2, 3, 1,  4, 6,  0,  5, 2,  6,  6),
+                q3     = points[8]  - c(0,  0, 6, 10,  8,  8, 12, 3,  0, 0, 0, 0,  0, 0,  8, 6, 0,  0, 3,  0,  5, 1, 10, 13),
+                q4     = points[9]  - c(0,  0, 0, 12, 12, 13,  3, 9,  0, 0, 0, 0,  6, 0, 12, 4, 0, 10, 8,  0, 10, 2,  8, 11),
+                q5     = points[10] - c(0,  0, 0,  6,  4,  8,  4, 5,  0, 0, 3, 0,  0, 0,  8, 3, 0,  6, 5,  3,  0, 3,  6,  6),
+                q6     = points[11] - c(2, 10, 5,  5,  1, 10,  4, 2, 10, 0, 7, 9, 10, 4, 10, 8, 5,  7, 7,  1,  7, 8,  8,  4))
+g$grades <- rowSums(g)
+summary(g$grades)
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Final Exam Results')
+```
+
+---
+
+## Grade Distribution by Question
+
+```{r abet_exam3_questions, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+g2 <- data.frame(question = c(rep('q1a', length(g$q1a)),
+                              rep('q1b', length(g$q1b)),
+                              rep('q2a', length(g$q2a)),
+                              rep('q2b', length(g$q2b)),
+                              rep('q2c', length(g$q2c)),
+                              rep('q2d', length(g$q2d)),
+                              rep('q3', length(g$q3)),
+                              rep('q4', length(g$q4)),
+                              rep('q5', length(g$q5)),
+                              rep('q6', length(g$q6)),
+                              rep('bonus', length(g$qbonus))),
+                 score = 100*c(g$q1a/points[1], g$q1b/points[2], 
+                               g$q2a/points[4], g$q2b/points[5], g$q2c/points[6], g$q2d/points[7], 
+                               g$q3/points[8], g$q4/points[9], g$q5/points[10], g$q6/points[11],
+                               g$qbonus/points[3]))
+plot(g2$question, g2$score)
+title('Individual Question Results')
+```

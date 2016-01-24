@@ -41,7 +41,7 @@ bonus      |     10 | NoSQL Design
 
 ## Grade Distribution
 
-```{r exam2_grades, echo=FALSE, cache=FALSE}
+```{r exam3_grades, echo=FALSE, cache=FALSE}
 points <- c(10, 10, 10, 6, 6, 10, 10, 15, 15, 8, 10)
 g <- data.frame(q1a    = points[1]  - c(0,  1, 0,  1,  1,  1,  4, 4,  1, 0, 4, 2,  1, 2,  5, 2, 5,  1, 3,  3,  2, 4,  4,  2),
                 q1b    = points[2]  - c(0,  0, 0,  2,  0,  3,  5, 4,  1, 0, 4, 0,  2, 0,  1, 0, 0,  2, 0,  0,  1, 0,  8,  3),

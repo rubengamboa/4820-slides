@@ -5,7 +5,7 @@ subtitle:     Course Introduction
 author:       Ruben Gamboa
 #logo:         uw-logo-large.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -71,9 +71,9 @@ widgets:      [mathjax, bootstrap]
 > * Those topics are covered in the second course (next semester???) of this two-course sequence
 
 > * Finally, you will **not** learn about data mining or data warehousing
-	  * Data mining is partially covered in Van Baalen's AI class
+	  * Data mining is covered in Craig Douglas's Data Mining course
 	  * Data warehousing is partially covered in the College of Business information management courses
-	  * We may do a little bit of data warehousing in Week 14
+	  * We may do a little bit of data warehousing in Week 14 (but probably not)
 
 ---
 
@@ -140,30 +140,50 @@ widgets:      [mathjax, bootstrap]
 * In doing the assignments, you may collaborate, search the internet, read different database books, etc.
 * Feel free to **learn** with others, but always **do your own work** so you're prepared for the exams
 
----
-
-## Other Policies
+<br />
 
 * Academic dishonesty
   * Zero tolerance
   * You will get a zero for the offending work
   * You will **also** lose a letter grade at the end of the semester
   * Do your own work, and come see me if you need help
-* WyoCourses Website
-  * Handouts, grades, and announcements
-  * First task: Update your profile to include your picture
-* Gradiance Website
-  * Assignments
-  * First task: Create an account (Access token on syllabus)
-  * Check early, check often for new assignments
+
+
+--- &twocol
+
+## WyoCourses Policy
+
+* Handouts, grades, and announcements
+* First task: Update your profile to include your picture
+  * And upload a useful photo, not one of these:
+
+*** =left
+
+<div class="centered">
+  <img src="assets/img/student-cat.png" title="Bad WyoCourses Student Detail" alt="Bad WyoCourses Student Detail">
+</div>
+
+*** =right
+
+<div class="centered">
+  <img src="assets/img/student-sunset.png" title="Bad WyoCourses Student Detail" alt="Bad WyoCourses Student Detail">
+</div>
+
+---
+
+  
+## Gradiance Policy
+
+* Assignments
+* First task: Create an account (Access token on syllabus)
+* Check early, check often for new assignments
 
 ---
 
 ## Meetings
 
 * Come see me during office hours
-  * MWF 11-11:45am
-  * MF 1-2:45pm
+  * MWF 10-11:45am
   * or by appointment
 * Email is OK for private matters
 * But I prefer that you ask class-related questions by creating a new discussion thread
@@ -181,10 +201,10 @@ widgets:      [mathjax, bootstrap]
 <hr>
 5. Algebraic and Logical Query Languages
 6. The Database Language SQL
+9. SQL in a Server Environment
+<hr>
 7. Constraints and Triggers
 8. Views and Indexes
-<hr>
-9. SQL in a Server Environment
 10. Advanced Topics in Relational Databases *(time permitting)*
 
 

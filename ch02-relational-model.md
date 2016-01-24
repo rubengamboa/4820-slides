@@ -3,7 +3,7 @@ subtitle:     The Relational Model of Data
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -438,7 +438,7 @@ MovieExecs(name:string, address:string, _cert#_:integer, netWorth:integer)
 
 ## Studios Schema
 
-```{css}
+```
 Studios(_name_:string, address:string, presC#:integer)
 ```
 
@@ -1108,9 +1108,9 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 * Suppose we need to compute $S \bowtie S$, where $S$ is the Students table at UW
 * Since $|S| \approx 13000$, the naive method takes up $13000^2 =$ 1.69 &times; 10<sup>8</sup> steps
 * Each step is a disk access, so even if disk I/O is 1ms, that works out to 1.69 &times; 10<sup>5</sup> seconds
-* Which is 2816.6667 minutes
-* Which is 46.9444 hours
-* Which is 1.956 days
+* Which is 2816.6666667 minutes
+* Which is 46.9444444 hours
+* Which is 1.9560185 days
   <br><br>
 * UW's database can probably join those in a matter of seconds, or minutes at most
   <br><br>

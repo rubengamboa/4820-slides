@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Spring 2015 Course Evaluation</h2>
+    <p>Ruben Gamboa<br/>Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h2>Catalog Description</h2>
+
+<p>COSC 4820. <strong>Database Systems.</strong> 3 CR. Provides comprehensive coverage of the problems involved in database design, 
+in-depth coverage of data models and database languages. Students acquire practical skills of conceptual/logical 
+database design and general familiarity with the problems and issues of database management. </p>
+
+<p><strong>Prerequisite:</strong> COSC 3020, Algorithms and Data Structures.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Course Topics</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><strong>Textbook:</strong> <em>A First Course in Database Systems</em> by J. Ullman and J. Widom. Prentice Hall. 3<sup>rd</sup> Edition.  2007.</p>
+
+<ul>
+<li>The Relational Data Model</li>
+<li>Relational Design Theory and Normalization</li>
+<li>High-Level Database Models</li>
+<li>Relational Algebra</li>
+<li>SQL</li>
+<li>Constraints &amp; Triggers</li>
+<li>Views &amp; Indexes</li>
+<li>Accessing Databases from Java Programs</li>
+<li>Data Warehousing</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Course Objectives</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Students who complete this course should be able to perform the following tasks:</p>
+
+<ul>
+<li>Utilize database management systems that are used in industry and the computing profession.</li>
+<li>Express database queries in modern database languages such as SQL.</li>
+<li>Analyze, design, and implement database projects in accordance with industry standards (i.e. relational model, ER model, UML model, ODL model, SQL).</li>
+<li>Provide written, oral, and visual presentation of database projects.</li>
+<li>Perform basic database administration tasks.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Evaluation Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>There were 24 students in this course.</p>
+
+<p>15 of the 24 passed the course.</p>
+
+<p>The table below shows the students&#39; performance over time. Not reflected in the table is a steady improvement of the most
+important material, e.g., SQL.</p>
+
+<table><thead>
+<tr>
+<th>Topic</th>
+<th>Assessed</th>
+<th>% Satisfactory</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>The Relational Data Model</td>
+<td>1.4, 2.3, f.1b</td>
+<td>61.7</td>
+</tr>
+<tr>
+<td>Relational Design Theory and Normalization</td>
+<td>1.5</td>
+<td>50.0</td>
+</tr>
+<tr>
+<td>High-Level Database Models</td>
+<td>1.3, f.1a</td>
+<td>77.5</td>
+</tr>
+<tr>
+<td>Relational Algebra</td>
+<td>1.1, 1.2, f.2a, f.2b</td>
+<td>81.2</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>1.4, 2.1, 2.2, 2.3, f.2c, f.2d</td>
+<td>65.0</td>
+</tr>
+<tr>
+<td>Constraints &amp; Triggers</td>
+<td>2.3, 2.4</td>
+<td>40.0</td>
+</tr>
+<tr>
+<td>Views &amp; Indexes</td>
+<td>2.5, 2.6, f.5</td>
+<td>50.0</td>
+</tr>
+<tr>
+<td>Accessing Databases from Java Programs</td>
+<td>f.3, f.4</td>
+<td>62.5</td>
+</tr>
+<tr>
+<td>Data Warehousing</td>
+<td>f.6</td>
+<td>20.0</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h1>Appendix: Exam #1 Results</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Exam Questions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Question</th>
+<th>Points</th>
+<th>Topic</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>q1</td>
+<td>15</td>
+<td>Relational Algebra, Read</td>
+</tr>
+<tr>
+<td>q2</td>
+<td>15</td>
+<td>Relational Algebra, Write</td>
+</tr>
+<tr>
+<td>q3</td>
+<td>20</td>
+<td>E/R Diagram Design</td>
+</tr>
+<tr>
+<td>q4</td>
+<td>20</td>
+<td>ERD to SQL DDL</td>
+</tr>
+<tr>
+<td>q5</td>
+<td>30</td>
+<td>Normalization</td>
+</tr>
+<tr>
+<td>bonus</td>
+<td>5</td>
+<td>Attend Meeting</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Grade Distribution</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   58.00   63.50   69.50   70.79   75.00   90.00
+</code></pre>
+
+<p><img src="assets/fig/exam1_grades-1.png" alt="plot of chunk exam1_grades"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Grade Distribution by Question</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/exam1_questions-1.png" alt="plot of chunk exam1_questions"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h1>Appendix: Exam #2 Results</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Exam Questions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Question</th>
+<th>Points</th>
+<th>Topic</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>q1</td>
+<td>20</td>
+<td>SQL, Read</td>
+</tr>
+<tr>
+<td>q2</td>
+<td>25</td>
+<td>SQL, Write</td>
+</tr>
+<tr>
+<td>q3</td>
+<td>15</td>
+<td>SQL DDL Constraints</td>
+</tr>
+<tr>
+<td>q4</td>
+<td>15</td>
+<td>Triggers</td>
+</tr>
+<tr>
+<td>q5</td>
+<td>15</td>
+<td>Views</td>
+</tr>
+<tr>
+<td>q6</td>
+<td>15</td>
+<td>Index Selection and Creation</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Grade Distribution</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   44.00   66.50   76.00   75.78   88.50   99.00
+</code></pre>
+
+<p><img src="assets/fig/exam2_grades-1.png" alt="plot of chunk exam2_grades"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Grade Distribution by Question</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/exam2_questions-1.png" alt="plot of chunk exam2_questions"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h1>Appendix: Final Exam Results</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Exam Questions</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Question</th>
+<th>Points</th>
+<th>Topic</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>q1a</td>
+<td>10</td>
+<td>E/R Diagram Design</td>
+</tr>
+<tr>
+<td>q1b</td>
+<td>10</td>
+<td>SQL DDL</td>
+</tr>
+<tr>
+<td>q2a</td>
+<td>6</td>
+<td>Relational Algebra, Read</td>
+</tr>
+<tr>
+<td>q2b</td>
+<td>6</td>
+<td>Relational Algebra, Write</td>
+</tr>
+<tr>
+<td>q2c</td>
+<td>10</td>
+<td>SQL, Read</td>
+</tr>
+<tr>
+<td>q2d</td>
+<td>10</td>
+<td>SQL, Write</td>
+</tr>
+<tr>
+<td>q3</td>
+<td>15</td>
+<td>Programming, SQL Injection</td>
+</tr>
+<tr>
+<td>q4</td>
+<td>15</td>
+<td>Programming, Closing Resources</td>
+</tr>
+<tr>
+<td>q5</td>
+<td>8</td>
+<td>Types of Indexes</td>
+</tr>
+<tr>
+<td>q6</td>
+<td>10</td>
+<td>Data Warehousing Basics</td>
+</tr>
+<tr>
+<td>bonus</td>
+<td>10</td>
+<td>NoSQL Design</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Grade Distribution</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   44.00   64.75   75.50   77.04   91.25  105.00
+</code></pre>
+
+<p><img src="assets/fig/abet_exam3_grades-1.png" alt="plot of chunk abet_exam3_grades"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Grade Distribution by Question</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/fig/abet_exam3_questions-1.png" alt="plot of chunk abet_exam3_questions"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Course Topics'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Course Objectives'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Evaluation Summary'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Appendix: Exam #1 Results'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Exam Questions'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Grade Distribution'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Grade Distribution by Question'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Appendix: Exam #2 Results'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Exam Questions'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Grade Distribution'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Grade Distribution by Question'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Appendix: Final Exam Results'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Exam Questions'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Grade Distribution'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Grade Distribution by Question'>
+         16
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
