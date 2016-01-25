@@ -4,7 +4,7 @@ title:        COSC 4820 Database Systems
 subtitle:     Course Introduction
 author:       Ruben Gamboa
 #logo:         uw-logo-large.png
-#biglogo:      uw-logo-large.png
+biglogo:      broncos-patriots-cg16.png
 job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
