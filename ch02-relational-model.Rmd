@@ -1134,6 +1134,22 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 
 ## Join Lesson #4
 
+* In the third quarter of 2015, Facebook had 1.55 billion active users
+  <br><br>
+* That is roughly equivalent to 120,000 Universities of Wyoming
+* (There's a little over 4,000 universities in the US, including community colleges)
+  <br><br>
+* Joining Facebook's users table with itself would take `r (1.55e9)^2/1000` seconds, or `r (1.55e9)^2/1000/60/60/24` days
+* That would be `r (1.55e9)^2/1000/60/60/24/365` years
+* You would have had to start 11 million years *before* the dinosaurs went extinct to finish by now
+  <br><br>
+* That's why the conventional wisdom when dealing with very (very, very, very) large databases is that joins are a disaster
+* That may not be entirely true, but it explains why the big technology companies developed their own database systems
+
+---
+
+## Join Lesson #5
+
 * Suppose you want to find all `Movies` and their producers
   <br><br>
 * We can do this by joining the tables
@@ -1148,7 +1164,7 @@ $$\text{Movies} \bowtie_{\text{producerC#} = \text{cert#}} \text{MovieExecs}$$
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * Now suppose we want to find all producers
 * This is not everybody in `MovieExecs`
@@ -1166,7 +1182,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * Now suppose we want to find all producers who have produced more than 1 movie
 * This is not everybody in `MovieExecs`
@@ -1174,7 +1190,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * We can do this by joining the tables
   ```
@@ -1191,7 +1207,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * Now suppose we want to find all `Movies` and the `MovieStars` in them
   <br><br>
@@ -1210,7 +1226,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * Now suppose we want to play the Kevin Bacon game
 * Find all `MovieStars` in `Movies` that Kevin Bacon stars in
@@ -1227,7 +1243,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * Basic strategy:
    $$\text{Movies} \bowtie \text{StarsIn}_1 \bowtie \sigma(\text{MovieStars}_1) \bowtie \text{StarsIn}_2 \bowtie \text{MovieStars}_2$$
@@ -1237,7 +1253,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 
 ---
 
-## Join Lesson #4
+## Join Lesson #5
 
 * Key Lesson: Join is extremely useful, easily the most useful relational algebra operator
 * It can be helpful to join a table with itself!
