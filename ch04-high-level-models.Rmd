@@ -1195,10 +1195,10 @@ Movies(_title_, _year_, length, genre)
 Stars(_name_, address)
 Studios(_name_, address)
 StarsIn(movieTitle, movieYear, starName)
-Owns(movieTitle, movieYear, movieName)
+Owns(movieTitle, movieYear, studioName)
 ```
 
-We need the FD movieName $\rightarrow$ movieTitle, movieYear
+We need the FD movieTitle, movieYear $\rightarrow$ studioName 
 
 ---
 

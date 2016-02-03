@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>High-Level Database Models: Object-Oriented Model</h2>
+    <p>Ruben Gamboa<br/>Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h1>Unified Modeling Language</h1>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Unified Modeling Language</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Unified Modeling Language (UML)</strong> is a graphical language designed to describe object-oriented designs</li>
+<li>Since there is a close correspondence between classes/entity sets and objects/entities, it&#39;s natural to
+use UML to describe database designs as well</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>UML Classes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A class consists of
+
+<ol>
+<li>a name</li>
+<li>one or more attributes (with keys identified by <strong>PK</strong>)</li>
+<li>methods (but not for entity sets)</li>
+</ol></li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-classes.png" alt="UML Classes" title="UML Classes" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>UML Associations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>A associations is an <strong>edge</strong> linking two classes</li>
+<li>The edges can have names</li>
+<li>They can also specify cardinalities for the endpoints</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-associations.png" alt="UML Associations" title="UML Associations" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Arrowheads in UML Associations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Important:</strong> UML associations can have arrowheads, but they <strong>do not mean cardinality</strong></li>
+<li>Arrowheads in UML denote <strong>navigation</strong>, i.e., you can get from an instance of one class to the related instances in the other</li>
+<li>Navigability is not a notion in relational databases</li>
+<li>So we won&#39;t be using them</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Cardinality in UML Associations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Cardinalities are listed at the endpoints, and read like this:
+
+<ol>
+<li>Suppose we have a relationship between A and B</li>
+<li>The cardinality on end B is 1..1</li>
+<li>We read &quot;Each A has one B&quot;</li>
+</ol></li>
+<li>E.g., below, you should read
+
+<ul>
+<li>Each Movie has <strong>one</strong> Studio</li>
+<li>Each Studio has <strong>one or more</strong> Movies</li>
+<li>Each President has <strong>one</strong> Studio</li>
+<li>Each Studio has <strong>zero or one</strong> President</li>
+</ul></li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-associations-2.png" alt="UML Associations" title="UML Associations" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Cardinality in UML Associations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Spot the typo!</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-associations.png" alt="UML Associations" title="UML Associations" class="img-responsive">
+</p>
+
+<ul>
+<li>Be sure to get this right!!!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>UML Self-Associations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Nothing much to see here</li>
+<li>Notice the multiplicities
+
+<ul>
+<li>The original can have <strong>zero or more</strong> sequels</li>
+<li>A sequel can have <strong>zero or one</strong> originals</li>
+</ul></li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-self-associations.png" alt="UML Self Associations" title="UML Self Associations" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Association Classes in UML</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Relationships can have attributes!</li>
+<li>This is true in any (useful) modeling language
+<br><br></li>
+<li>But associations in UML are just lines between classes</li>
+<li>So UML developed the idea of an <strong>association class</strong></li>
+<li>This is an auxiliary class that is attached to a relationship</li>
+<li>The association class is attached to the middle of the relationship edge (with a dashed line, according to the standard)</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-association-class.png" alt="UML Association Classes" title="UML Association Classes" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Subclasses in UML</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>UML was built to describe inheritance hierarchies!</li>
+<li>UML supports all four types of inheritance:
+
+<ol>
+<li><strong>Coverage:</strong> Incomplete vs. Complete</li>
+<li><strong>Exclusivity:</strong> Disjoint vs. Overlapping
+<br><br></li>
+</ol></li>
+<li>The default has changed from
+
+<ul>
+<li>Unspecified</li>
+<li>incomplete &amp; disjoint (UML 2.0 to 2.4.1)</li>
+<li>incomplete &amp; overlapping (as of UML 2.5)</li>
+</ul></li>
+<li>You can actually specify what you mean in the diagram by labeling an inheritance link,
+e.g., as <strong>{complete, overlapping}</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Subclasses in UML</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
+</p>
+
+<ul>
+<li>Note: The book assumes <strong>complete &amp; disjoint</strong>, but this is no longer the default</li>
+<li>It pays to be explicit</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Aggregation and Composition in UML</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>UML has a special notation for two types of relationships:
+
+<ul>
+<li><strong>Aggregation</strong> from \(A\) to \(B\) means that \(A\) <em>contains</em> zero or more $B$s, e.g., a course section contains one or more students</li>
+<li><strong>Composition</strong> from \(A\) to \(B\) means that \(A\) <em>is made up of</em> zero or more $B$s, e.g., a book is made up of one or more chapters
+<br><br></li>
+</ul></li>
+<li>Aggregation is represented by an open diamond on the <strong>owner</strong> class</li>
+<li>Composition is represented by a filled diamond on the <strong>owner</strong> class
+<br><br></li>
+<li>Note: aggregation and composition are <strong>special cases</strong> of plain associations between classes</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Association, Aggregation, and Composition in UML</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Here are the subtle differences:
+
+<ul>
+<li>An association from \(A\) to \(B\) means that there is some relationship between them, but each entity is independent</li>
+<li>An aggregation from \(A\) to \(B\) means that each \(B\) entity is owned by some \(A\) entity </li>
+<li>A composition from \(A\) to \(B\) means that each \(B\) entity is owned by some \(A\) entity, and that a \(B\) entity cannot live on its own
+(i.e., without an \(A\) parent)
+<br><br></li>
+</ul></li>
+<li>Pragmatics:
+
+<ul>
+<li>If there is no notion of &quot;parent&quot;, then use a plain association</li>
+<li>If you delete the parent \(A\), does that mean the related $B$s should also be deleted?</li>
+<li>If so, use composition</li>
+<li>If not, use aggregation (or association)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>UML Association, Aggregation, Composition Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-linkedin.png" alt="UML Aggregation Composition Example" title="UML Aggregation Composition Example" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Association, Aggregation, and Composition in UML</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There is also a difference in cardinalities
+
+<ul>
+<li>For association, there is no restriction (unless you write one on the endpoint)</li>
+<li>For aggregation, it&#39;s zero or one on the parent</li>
+<li>For composition, it&#39;s exactly one on the parent
+<br><br></li>
+</ul></li>
+<li>This is the distinction that the book focuses on</li>
+<li>It has a direct translation to a database schema</li>
+<li>But if you use aggregation and composition, make sure that you are using them to
+model the world correctly!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>UML Association, Aggregation, Composition Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-aggregation-composition.png" alt="UML Aggregation Composition Example" title="UML Aggregation Composition Example" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h1>Converting UML Diagrams to Relations</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Converting UML Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The basic strategy is 
+
+<ul>
+<li>turn each class into a relation with the same name and attributes</li>
+<li>turn each association into an entity set with attributes corresponding to the primary keys of the connected classes,
+as well as any attributes defined in an association class</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Converting UML Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <p class="centered">
+    <img src="assets/img/uml-associations-fixed.png" alt="UML Associations" title="UML Associations" class="img-responsive">
+</p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <pre><code>Movies(_title_, _year_, length, genre)
+Stars(_name_, address)
+Studios(_name_, address)
+StarsIn(movieTitle, movieYear, starName)
+Owns(movieTitle, movieYear, studioName)
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Converting UML Diagrams to Relations</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-associations-fixed.png" alt="UML Associations" title="UML Associations" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre, studioName)
+Stars(_name_, address)
+Studios(_name_, address)
+StarsIn(title, year, name)
+</code></pre>
+
+<p>Of course, we can avoid adding a relationship table for the many-to-one relationship</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There are three different approaches to handling subclasses</li>
+<li>Suppose \(A_1\), \(A_2\), and \(A_3\) are subclasses of \(A\)</li>
+</ul>
+
+<ol>
+<li>Use a table for each subclass
+
+<ul>
+<li>We create a relation for each entity set, including \(A\) and the \(A_i\)</li>
+<li>Each of the \(A_i\) must have all the attributes in the key of \(A\)</li>
+<li>I.e., the \(A_i\) explicitly inherit the key attributes from \(A\)</li>
+<li>That becomes the key of the \(A_i\), so if an \(A_i\) participates  in a relationship, the entire key is used to identify an entity</li>
+</ul></li>
+<li>Use a single-class for each path to one of the possible concrete classes
+
+<ul>
+<li>The relation contains all the attributes of each class on the path, e.g., \(A, A_1\)</li>
+</ul></li>
+<li>Use just one table 
+
+<ul>
+<li>It has the attributes of \(A\) and all of the \(A_i\), and NULL values as appropriate</li>
+</ul></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Explicitly considering coverage and exclusivity, we can 
+tailor our approach:
+
+<ol>
+<li>If all classes are disjoint, then the single-class-per-path approach is not as crazy as it sounds.
+Simply, the attributes of the parent are pushed into each descendant table.
+It&#39;s still crazy, in that it&#39;s hard to find the data for a single row if you don&#39;t know
+where it is.</li>
+<li>If the hierarchy is both complete and disjoint, then the only classes that are needed
+are at the leaves.</li>
+<li>Otherwise, just use one table with NULLs for the irrelevant columns</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre)
+MurderMysteries(_title_, _year_, length, genre, weapon)
+Cartoons(_title_, _year_, length, genre)
+CartoonMurderMysteries(_title_, _year_, length, genre, weapon)
+</code></pre>
+
+<p>Using the single-class approach</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre)
+MurderMysteries(_title_, _year_, weapon)
+Cartoons(_title_, _year_)
+CartoonMurderMysteries(_title_, _year_, weapon)
+</code></pre>
+
+<p>Using the table-per-class approach</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Handling Subclasses</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
+</p>
+
+<pre><code>Movies(_title_, _year_, length, genre, type, weapon)
+</code></pre>
+
+<p>Using the just-one-class approach</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Handling Aggregations and Compositions</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Recall that cardinality view that
+
+<ul>
+<li><strong>Aggregation</strong> really means at most one parent</li>
+<li><strong>Composition</strong> really means exactly one parent
+<br><br></li>
+</ul></li>
+<li>Then aggregations and compositions are translated using nothing more than the cardinality-based rules</li>
+<li>In particular, since both denote a many-to-one relationship, we never create the explicit relationship table</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Handling Aggregations and Compositions</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>Studios(_name_, address)
+Movies(_title_, _year_, length, genre, studioName)
+MovieExecs(_cert#_, name, address, networth)
+Presidents(_cert#_, studioName)
+</code></pre>
+
+<div style='float:left;width:48%;'>
+  <p class="centered">
+    <img src="assets/img/uml-aggregation-composition.png" alt="UML Aggregation Composition Example" title="UML Aggregation Composition Example" class="img-responsive">
+</p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Notice that the empty diamond is just treated as a 0..1 annotation
+<br><br></li>
+<li>We also have the constraint that studioName in Presidents cannot be NULL</li>
+<li>That constraint handles the &quot;filled&quot; diamond</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h2>Handling Weak Entities</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There is really <strong>no concept</strong> of weak entities in UML</li>
+<li>Note: Please do not confuse this with the notion of <strong>weak references</strong> in OOP
+<br><br></li>
+<li>The related concept in UML is actually <strong>composition</strong>
+
+<ul>
+<li>If class \(A\) is the owner of class \(B\) under composition, then each
+instance of \(B\) is scoped inside an instance of \(A\) and can&#39;t live outside \(A\)</li>
+<li>That just about captures &quot;weak entity&quot; by itself
+<br><br></li>
+</ul></li>
+<li>We can emphasize this fact by using a special &quot;PK&quot; notation on the weak class</li>
+<li>If we do so, we drop the part of the key that comes from the relationship</li>
+</ul>
+
+<p class="centered">
+    <img src="assets/img/uml-weak-entity.png" alt="UML Weak Entities" title="UML Weak Entities" class="img-responsive">
+</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Handling Weak Entities</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/uml-weak-entity.png" alt="UML Weak Entities" title="UML Weak Entities" class="img-responsive">
+</p>
+
+<p>The translation to a schema is just as before</p>
+
+<pre><code>Studios(_name_, address)
+Crews(_number_, _studioName_, crewChief)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h1>Hibernate</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Hibernate Mapping</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Hibernate is an Object-Relational Mapper</li>
+<li>We&#39;ll talk more about it later, but for now, we&#39;ll consider how it helps us describe a schema using Java classes]</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>But how do you map tables to classes?</li>
+<li>Hibernate offers a solution based on XML configuration files (yuck)
+
+<ul>
+<li>There is a global configuration object</li>
+<li>The configuration object creates the session factory</li>
+<li>The session factory then creates one or more sessions</li>
+</ul></li>
+<li>Hibernate also offers an easier way using Java annotations (yeay!)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Hibernate Mappings with Annotations</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;FACULTY&quot;
+public class Faculty
+{
+    private Long fid;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getFid() { return fid; }
+    public void setFid(Long fid) { this.fid = fid; }
+
+    // Automatically maps to column called &quot;fname&quot;
+    private String fname;
+    public String getFname () { return fname; }
+    public void setFname (String fname) { 
+        this.fname = fname; 
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Hibernate Mappings with Annotations</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>    // Automatically maps to column called &quot;specialty&quot;
+    private String specialty;
+    public String getSpecialty () { return specialty; }
+    public void setSpecialty (String specialty) { 
+        this.specialty = specialty; 
+    }
+
+    // Maps to FK on Student(advisor) =&gt; Faculty(fid)
+    private Set&lt;Student&gt; advisees = new HashSet&lt;Student&gt; ();
+
+    @OneToMany(mappedBy=&quot;advisor&quot;)
+    public Set&lt;Student&gt; getAdvisees() { 
+        return advisees;
+    }
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Hibernate Mappings with Annotations</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;STUDENTS&quot;
+@Table(name=&quot;STUDENTS&quot;)
+public class Student
+{
+    private Long sid;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getSid() { return sid; }
+    public void setSid(Long sid) { this.sid = sid; }
+
+    // Automatically maps to column called &quot;sname&quot;
+    private String sname;
+    public String getSname () { return sname; }
+    public void setSname (String sname) { 
+        this.sname = sname; 
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Hibernate Mappings with Annotations</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>    // Automatically maps to column called &quot;gpa&quot;
+    private Float gpa;
+    public Float getGpa () { return gpa; }
+    public void setGpa (Float gpa) { 
+        this.gpa = gpa; 
+    }
+
+    private Faculty advisor;
+    @ManyToOne
+    public Faculty getAdvisor () { return advisor; }
+    public void setAdvisor (Faculty advisor) { 
+        this.advisor = advisor; 
+    }
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Hibernate Mappings with Annotations</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>Faculty f = ...;
+for (Student advisee: f.getAdvisees()) {
+    // Send reminder to advisee
+}
+</code></pre>
+
+<p><br></p>
+
+<pre><code>Faculty f = ...;
+Student s = ...;
+s.setAdvisor (f);
+session.save (s);
+session.getTransaction().commit();
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Hibernate and Subclasses</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Hibernate supports all three ways of defining tables from subclasses</li>
+<li>It calls the methods
+
+<ol>
+<li>Table Per Subclass</li>
+<li>Table Per Concrete Class</li>
+<li>Table Per Hierarchy</li>
+</ol></li>
+<li>We&#39;ll make a class called Person that generalizes both Student and Faculty</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Subclass</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Use <code>@Inheritance(strategy=InheritanceType.JOINED)</code> on the parent class <strong>only</strong></li>
+<li>Specify the column to use for joining a table with its parent on the subclasses
+with <code>@PrimaryKeyJoinColumn(name=&quot;ID&quot;)</code></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Subclass</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;PERSON&quot;
+@Inheritance(strategy=InheritanceType.JOINED)  
+public class Person
+{
+    private Long id;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getId() { return id; }
+    public void setId(Long fid) { this.id = id; }
+
+    // Automatically maps to column called &quot;name&quot;
+    private String name;
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Subclass</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;FACULTY&quot;
+@PrimaryKeyJoinColumn(name=&quot;ID&quot;)  
+public class Faculty extends Person
+{
+    // Inherited methods:
+    // public Long getId(); 
+    // public void setId(Long id);
+    // public String getName(); 
+    // ...
+
+    // Automatically maps to column called &quot;specialty&quot;
+    private String specialty;
+    public String getSpecialty () { return specialty; }
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Subclass</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;STUDENT&quot;
+@PrimaryKeyJoinColumn(name=&quot;ID&quot;)  
+public class Student extends Person
+{
+    // Inherited methods:
+    // public Long getId(); 
+    // public void setId(Long id);
+    // public String getName(); 
+    // ...
+
+    // Automatically maps to column called &quot;gpa&quot;
+    private Float gpa;
+    public Float getGpa () { return gpa; }
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Concrete Class</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Use <code>@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)</code> on the parent class <strong>only</strong></li>
+<li>Use <code>@AttributeOverrides</code> to specify column names on <strong>subtables</strong> (optional)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Concrete Class</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;PERSON&quot;
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)  
+public class Person
+{
+    private Long id;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    // Automatically maps to column called &quot;name&quot;
+    private String name;
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Concrete Class</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;FACULTY&quot;
+@AttributeOverrides({  
+    @AttributeOverride(name=&quot;id&quot;, column=@Column(name=&quot;id&quot;)),  
+    @AttributeOverride(name=&quot;name&quot;, column=@Column(name=&quot;name&quot;))  
+})  
+public class Faculty extends Person
+{
+    // Inherited methods:
+    // public Long getId(); 
+    // public void setId(Long id);
+    // public String getName(); 
+    // ...
+
+    // Automatically maps to column called &quot;specialty&quot;
+    private String specialty;
+    public String getSpecialty () { return specialty; }
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Concrete Class</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;STUDENT&quot;
+@AttributeOverrides({  
+    @AttributeOverride(name=&quot;id&quot;, column=@Column(name=&quot;id&quot;)),  
+    @AttributeOverride(name=&quot;name&quot;, column=@Column(name=&quot;name&quot;))  
+})  
+public class Student extends Person
+{
+    // Inherited methods:
+    // public Long getId(); 
+    // public void setId(Long id);
+    // public String getName(); 
+    // ...
+
+    // Automatically maps to column called &quot;gpa&quot;
+    private Float gpa;
+    public Float getGpa () { return gpa; }
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Hierarchy</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Use <code>@Inheritance(strategy=InheritanceType.SINGLE_TABLE)</code> on the parent class <strong>only</strong></li>
+<li>Use <code>@DiscriminatorColumn</code> to specify the column that holds the type of the row, on the parent class <strong>only</strong></li>
+<li>Use <code>@DiscriminatorValue</code> on each class to specify the value of the discriminating column for objects of that class</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Hierarchy</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;PERSON&quot;
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)  
+@DiscriminatorColumn(name=&quot;type&quot;,discriminatorType=DiscriminatorType.STRING)  
+@DiscriminatorValue(value=&quot;person&quot;)  
+public class Person
+{
+    private Long id;
+
+    // Marks the field that corresponds to a key
+    @Id @GeneratedValue  
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    // Automatically maps to column called &quot;name&quot;
+    private String name;
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Hierarchy</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;FACULTY&quot;
+@DiscriminatorValue(value=&quot;faculty&quot;)  
+public class Faculty extends Person
+{
+    // Inherited methods:
+    // public Long getId(); 
+    // public void setId(Long id);
+    // public String getName(); 
+    // ...
+
+    // Automatically maps to column called &quot;specialty&quot;
+    private String specialty;
+    public String getSpecialty () { return specialty; }
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Hibernate Table Per Concrete Class</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>@Entity        // Maps to table called &quot;STUDENT&quot;
+@DiscriminatorValue(value=&quot;student&quot;)  
+public class Student extends Person
+{
+    // Inherited methods:
+    // public Long getId(); 
+    // public void setId(Long id);
+    // public String getName(); 
+    // ...
+
+    // Automatically maps to column called &quot;gpa&quot;
+    private Float gpa;
+    public Float getGpa () { return gpa; }
+
+    ...
+}
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Hibernate Takeaways</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Hibernate makes it easier for programmers to model database schemas</li>
+<li>Annotations map OO concepts into tables</li>
+<li>But programmers still have to know what they&#39;re doing!</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>This is only useful for a first-cut at the database schema</li>
+<li>We will talk later about indexes, etc.</li>
+<li>Good DBAs will want to be explicit on the creation of the actual database tables</li>
+<li>The right choices depend on factors that Hibernate doesn&#39;t even know about, like how large the tables are</li>
+<li>So even Hibernate tells you not to rely on the automatic generation of schemas!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Hibernate Takeaways</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We will now turn our attention to designing good database schemas (by hand)</li>
+<li>You may find it useful to rely on your programming skills and think in terms of classes first</li>
+<li>Then you can translate your design to tables</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Unified Modeling Language'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='UML Classes'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='UML Associations'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Arrowheads in UML Associations'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Cardinality in UML Associations'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Cardinality in UML Associations'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='UML Self-Associations'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Association Classes in UML'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Subclasses in UML'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Subclasses in UML'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Aggregation and Composition in UML'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Association, Aggregation, and Composition in UML'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='UML Association, Aggregation, Composition Example'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Association, Aggregation, and Composition in UML'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='UML Association, Aggregation, Composition Example'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Converting UML Diagrams to Relations'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Converting UML Diagrams to Relations'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Converting UML Diagrams to Relations'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Converting UML Diagrams to Relations'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Handling Subclasses'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Handling Subclasses'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Handling Subclasses'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Handling Subclasses'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Handling Subclasses'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Handling Aggregations and Compositions'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Handling Aggregations and Compositions'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='Handling Weak Entities'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Handling Weak Entities'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Hibernate'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Hibernate Mapping'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Hibernate Mappings with Annotations'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Hibernate Mappings with Annotations'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Hibernate Mappings with Annotations'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Hibernate Mappings with Annotations'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Hibernate Mappings with Annotations'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Hibernate and Subclasses'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Hibernate Table Per Subclass'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Hibernate Table Per Subclass'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Hibernate Table Per Subclass'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Hibernate Table Per Subclass'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Hibernate Table Per Concrete Class'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Hibernate Table Per Concrete Class'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='Hibernate Table Per Concrete Class'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Hibernate Table Per Concrete Class'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Hibernate Table Per Hierarchy'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Hibernate Table Per Hierarchy'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Hibernate Table Per Hierarchy'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Hibernate Table Per Concrete Class'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Hibernate Takeaways'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Hibernate Takeaways'>
+         51
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
