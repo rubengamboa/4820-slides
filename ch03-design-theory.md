@@ -3,7 +3,7 @@ subtitle:     Design Theory for Relational Databases
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -154,7 +154,7 @@ Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
   * $B \rightarrow C, D, E$
   * $C \rightarrow B, D, E$
 
-> * $\{A, B, C\}$ is a pseudo-key, because $A, B, C \rightarrow D, E$
+> * $\{A, B, C\}$ is a superkey, because $A, B, C \rightarrow D, E$
 * But it is not a key, because $A, B \rightarrow C, D, E$ and $\{A, B\} \subsetneq \{A, B, C\}$
 
 > * $\{A, B\}$ is a key, because
@@ -275,7 +275,7 @@ Wayne's World       | 1992   |     95 | comedy | Paramount  | Mike Meyers
 
 ## Closure of a Set of Attributes
 
-INPUT: A set $A$ of attributes of a relation $R$, and a set $F$ of FDs 
+INPUT: A set $A$ of attributes of a relation $R$, and a set $S$ of FDs 
 
 OUTPUT: $A^+$
 
@@ -394,7 +394,7 @@ Step | $X$             | FD
   <br><br>
 * Consider some FD $C_1, C_2, \dots, C_k \rightarrow D$ in $S$
 * If one of the $C_i$ is not in $X$, then we're done
-* Otherwise, the algorithm would have added $D$ to $X$ because of this FD
+* Otherwise, the algorithm would have added $D$ so $X$ because of this FD
 * So we conclude that this case cannot happen
 * I.e., the instance satisfies all of the FDs in $S$
 
@@ -409,7 +409,7 @@ Step | $X$             | FD
   <br><br>
 * But this is easy
 * All the $A_i$ are in $X$, so the tuples $t$ and $s$ agree on those values
-* But we know that $B$ is not in $X$, to $t$ and $s$ disagree on $B$
+* But we know that $B$ is not in $X$, so $t$ and $s$ disagree on $B$
 * That means that this instance does not satisfy the FD $A_1, A_2, \dots, A_n \rightarrow B$
 
 ---
@@ -753,7 +753,7 @@ OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of whi
 4. Let $S_1$ be the projection of the FDs $S$ for $R_1$
 5. Let $S_2$ be the projection of the FDs $S$ for $R_2$
 6. Recursively decompose $R_1$ with $S_1$ into a set of BCNF relations
-7. Recursively decompose $R_1$ with $S_1$ into a set of BCNF relations
+7. Recursively decompose $R_2$ with $S_2$ into a set of BCNF relations
 8. Return the union of the decompositions of $R_1$ and $R_2$
 
 ---
@@ -886,7 +886,7 @@ OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of whi
   * $R(B, C)$
 
 > * Now suppose $(a, b, c) \in R$ and $(d, b, e) \in R$
-* This means that $(a, b)$ and $(d, b)$ are in $R_1$, and $(b, c)$ and $(b, e)$ are in R_2$
+* This means that $(a, b)$ and $(d, b)$ are in $R_1$, and $(b, c)$ and $(b, e)$ are in $R_2$
 * But then, this also means that all of these are in $R_1 \bowtie R_2$:
   * $(a, b, c)$
   * $(d, b, e)$
@@ -1014,7 +1014,7 @@ $t_3$       | $a_3$ | $b$   | $c$   | $d$
 
 ## The Chase Test for Lossless Joins
 
-* Next, we use the FDs to "chase" the symbols in the tableauxa
+* Next, we use the FDs to "chase" the symbols in the tableaux
 * The goal is to to see which symbols must be the same, e.g., $b_1 = b_2 = b$
   <br><br>
 * So suppose that the FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
@@ -1116,7 +1116,7 @@ $t_2$       | $a$   | $b$   | $c$   | $d_2$
 
 * And now we're done
 * Notice that $t_1$ is exactly $(a,b,c,d)$
-* We started with a tuple in $R_1 \bowtie R_2 \bowtie R_3$ and shown that it must also be in $R$
+* We started with a tuple in $R_1 \bowtie R_2 \bowtie R_3$ and showed that it must also be in $R$
 * So $R_1 \bowtie R_2 \bowtie R_3 \subset R$
 * And therefore $R_1 \bowtie R_2 \bowtie R_3 = R$
 
@@ -1461,8 +1461,8 @@ Preserves MVDs               | No  | No   | No
 * We also discussed the **chase algorithm** for proving lossless decompositions
   <br><br>
 * In fact the chase algorithm is very useful in many other contexts
-* We can restate the closure algorithm as a chase starting from a tableux
-  1. The tableux starts with two rows that agree on $X$ and on nothing else
+* We can restate the closure algorithm as a chase starting from a tableaux
+  1. The tableaux starts with two rows that agree on $X$ and on nothing else
   2. After the chase, $A \in X^+$ if and only if the rows agree on attribute $A$
 
 
@@ -1492,7 +1492,7 @@ Preserves MVDs               | No  | No   | No
   * $t$
   * $u$, which agrees with $t$ on $X$ and nothing else
 * Repeatedly apply the FDs and MVDs to the tableaux
-* If we ever find a tuple that $v$ that agrees with $t$ and $u$ on $X$, with $t$ on $Y$,
+* If we ever find a tuple $v$ that agrees with $t$ and $u$ on $X$, with $t$ on $Y$,
   and with $u$ on $\mathcal{A}-Y$, then the MVD $X \twoheadrightarrow Y$ is implied
 * If we terminate without finding such a tuple, then $X \twoheadrightarrow Y$ is not implied
 
@@ -1514,8 +1514,9 @@ $a$ | $b_1$ | $c$   | $d_1$
 $a$ | $b$   | $c_2$ | $d$
 
 * Keep doing the chase, and look for the tuple $(a,b,c,d)$
-* Notice how we split the unsubscripted variables $b$, $c$, $d$ among the rows to make
-  it easier to see when the new tuple shows up
+* Notice how we have unsubscripted variables for $a$ (lhs, shared) and just $c$ (rhs) on the first tuple,
+and $a$ (lhs) and $b$ and $d$ (not in MVD) in second tuple, so it's easier to check when a complete
+unsubscripted tuple shows up.
 
 ---
 

@@ -35,7 +35,7 @@
   <hgroup class="auto-fadein">
     <h1>COSC 4820 Database Systems</h1>
     <h2>Design Theory for Relational Databases</h2>
-    <p>Ruben Gamboa<br/>Associate Professor</p>
+    <p>Ruben Gamboa<br/>Professor</p>
   </hgroup>
   <article></article>  
 </slide>
@@ -346,7 +346,7 @@ A & \rightarrow & C \\
 </ul>
 
 <ul class = "build incremental">
-<li>\(\{A, B, C\}\) is a pseudo-key, because \(A, B, C \rightarrow D, E\)</li>
+<li>\(\{A, B, C\}\) is a superkey, because \(A, B, C \rightarrow D, E\)</li>
 <li><p>But it is not a key, because \(A, B \rightarrow C, D, E\) and \(\{A, B\} \subsetneq \{A, B, C\}\)</p></li>
 <li><p>\(\{A, B\}\) is a key, because</p>
 
@@ -558,7 +558,7 @@ are functionally determined by \(\{A_1, A_2, \dots, A_n\}\)</p></li>
     <h2>Closure of a Set of Attributes</h2>
   </hgroup>
   <article data-timings="">
-    <p>INPUT: A set \(A\) of attributes of a relation \(R\), and a set \(F\) of FDs </p>
+    <p>INPUT: A set \(A\) of attributes of a relation \(R\), and a set \(S\) of FDs </p>
 
 <p>OUTPUT: \(A^+\)</p>
 
@@ -775,7 +775,7 @@ Note that this algorithm terminates</p>
 <br><br></li>
 <li>Consider some FD \(C_1, C_2, \dots, C_k \rightarrow D\) in \(S\)</li>
 <li>If one of the \(C_i\) is not in \(X\), then we&#39;re done</li>
-<li>Otherwise, the algorithm would have added \(D\) to \(X\) because of this FD</li>
+<li>Otherwise, the algorithm would have added \(D\) so \(X\) because of this FD</li>
 <li>So we conclude that this case cannot happen</li>
 <li>I.e., the instance satisfies all of the FDs in \(S\)</li>
 </ul>
@@ -800,7 +800,7 @@ Note that this algorithm terminates</p>
 <br><br></li>
 <li>But this is easy</li>
 <li>All the \(A_i\) are in \(X\), so the tuples \(t\) and \(s\) agree on those values</li>
-<li>But we know that \(B\) is not in \(X\), to \(t\) and \(s\) disagree on \(B\)</li>
+<li>But we know that \(B\) is not in \(X\), so \(t\) and \(s\) disagree on \(B\)</li>
 <li>That means that this instance does not satisfy the FD \(A_1, A_2, \dots, A_n \rightarrow B\)</li>
 </ul>
 
@@ -1603,7 +1603,7 @@ i.e., one with a small number of relations</li>
 <li>Let \(S_1\) be the projection of the FDs \(S\) for \(R_1\)</li>
 <li>Let \(S_2\) be the projection of the FDs \(S\) for \(R_2\)</li>
 <li>Recursively decompose \(R_1\) with \(S_1\) into a set of BCNF relations</li>
-<li>Recursively decompose \(R_1\) with \(S_1\) into a set of BCNF relations</li>
+<li>Recursively decompose \(R_2\) with \(S_2\) into a set of BCNF relations</li>
 <li>Return the union of the decompositions of \(R_1\) and \(R_2\)</li>
 </ol>
 
@@ -1829,7 +1829,7 @@ information about \(B\)</li>
 
 <ul class = "build incremental">
 <li>Now suppose \((a, b, c) \in R\) and \((d, b, e) \in R\)</li>
-<li>This means that \((a, b)\) and \((d, b)\) are in \(R_1\), and \((b, c)\) and \((b, e)\) are in R_2$</li>
+<li>This means that \((a, b)\) and \((d, b)\) are in \(R_1\), and \((b, c)\) and \((b, e)\) are in \(R_2\)</li>
 <li>But then, this also means that all of these are in \(R_1 \bowtie R_2\):
 
 <ul>
@@ -2090,7 +2090,7 @@ corresponding tuples in the \(R_i\)</li>
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Next, we use the FDs to &quot;chase&quot; the symbols in the tableauxa</li>
+<li>Next, we use the FDs to &quot;chase&quot; the symbols in the tableaux</li>
 <li>The goal is to to see which symbols must be the same, e.g., \(b_1 = b_2 = b\)
 <br><br></li>
 <li>So suppose that the FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
@@ -2388,7 +2388,7 @@ corresponding tuples in the \(R_i\)</li>
 <ul>
 <li>And now we&#39;re done</li>
 <li>Notice that \(t_1\) is exactly \((a,b,c,d)\)</li>
-<li>We started with a tuple in \(R_1 \bowtie R_2 \bowtie R_3\) and shown that it must also be in \(R\)</li>
+<li>We started with a tuple in \(R_1 \bowtie R_2 \bowtie R_3\) and showed that it must also be in \(R\)</li>
 <li>So \(R_1 \bowtie R_2 \bowtie R_3 \subset R\)</li>
 <li>And therefore \(R_1 \bowtie R_2 \bowtie R_3 = R\)</li>
 </ul>
@@ -3187,10 +3187,10 @@ street and city/title/year (which is bogus)</li>
 <li>We also discussed the <strong>chase algorithm</strong> for proving lossless decompositions
 <br><br></li>
 <li>In fact the chase algorithm is very useful in many other contexts</li>
-<li>We can restate the closure algorithm as a chase starting from a tableux
+<li>We can restate the closure algorithm as a chase starting from a tableaux
 
 <ol>
-<li>The tableux starts with two rows that agree on \(X\) and on nothing else</li>
+<li>The tableaux starts with two rows that agree on \(X\) and on nothing else</li>
 <li>After the chase, \(A \in X^+\) if and only if the rows agree on attribute \(A\)</li>
 </ol></li>
 </ul>
@@ -3237,7 +3237,7 @@ but sometimes the resulting tuples will not be new
 <li>\(u\), which agrees with \(t\) on \(X\) and nothing else</li>
 </ul></li>
 <li>Repeatedly apply the FDs and MVDs to the tableaux</li>
-<li>If we ever find a tuple that \(v\) that agrees with \(t\) and \(u\) on \(X\), with \(t\) on \(Y\),
+<li>If we ever find a tuple \(v\) that agrees with \(t\) and \(u\) on \(X\), with \(t\) on \(Y\),
 and with \(u\) on \(\mathcal{A}-Y\), then the MVD \(X \twoheadrightarrow Y\) is implied</li>
 <li>If we terminate without finding such a tuple, then \(X \twoheadrightarrow Y\) is not implied</li>
 </ul>
@@ -3287,8 +3287,9 @@ and with \(u\) on \(\mathcal{A}-Y\), then the MVD \(X \twoheadrightarrow Y\) is 
 
 <ul>
 <li>Keep doing the chase, and look for the tuple \((a,b,c,d)\)</li>
-<li>Notice how we split the unsubscripted variables \(b\), \(c\), \(d\) among the rows to make
-it easier to see when the new tuple shows up</li>
+<li>Notice how we have unsubscripted variables for \(a\) (lhs, shared) and just \(c\) (rhs) on the first tuple,
+and \(a\) (lhs) and \(b\) and \(d\) (not in MVD) in second tuple, so it&#39;s easier to check when a complete
+unsubscripted tuple shows up.</li>
 </ul>
 
   </article>
@@ -3428,7 +3429,7 @@ a tableaux as before</li>
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title=''>
+        data-slide=1 title='NA'>
          1
       </a>
     </li>
