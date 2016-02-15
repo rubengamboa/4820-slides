@@ -35,7 +35,7 @@
   <hgroup class="auto-fadein">
     <h1>COSC 4820 Database Systems</h1>
     <h2>High-Level Database Models</h2>
-    <p>Ruben Gamboa<br/>Associate Professor</p>
+    <p>Ruben Gamboa<br/>Professor</p>
   </hgroup>
   <article></article>  
 </slide>
@@ -331,7 +331,7 @@ we say that \(R\) is <strong>many-to-one</strong> from \(F\) to \(E\)</li>
 <li>Occasionally, we will want to model a relationship among three (or more) entity sets
 
 <ul>
-<li>Law firms organize their records (and billing) under <strong>Attorney-Client-Matter</strong>a</li>
+<li>Law firms organize their records (and billing) under <strong>Attorney-Client-Matter</strong>s</li>
 <li>A studio may hire an actor to appear in a movie, resulting in <strong>Studio-MovieStar-Movie</strong></li>
 </ul></li>
 </ul>
@@ -1831,614 +1831,6 @@ prefer the &quot;one table per entity set&quot; approach</li>
 
 <slide class="" id="slide-74" style="background:;">
   <hgroup>
-    <h1>Unified Modeling Language</h1>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-75" style="background:;">
-  <hgroup>
-    <h2>Unified Modeling Language</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li><strong>Unified Modeling Language (UML)</strong> is a graphical language designed to describe object-oriented designs</li>
-<li>Since there is a close correspondence between classes/entity sets and objects/entities, it&#39;s natural to
-use UML to describe database designs as well</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-76" style="background:;">
-  <hgroup>
-    <h2>UML Classes</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>A class consists of
-
-<ol>
-<li>a name</li>
-<li>one or more attributes (with keys identified by <strong>PK</strong>)</li>
-<li>methods (but not for entity sets)</li>
-</ol></li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-classes.png" alt="UML Classes" title="UML Classes" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-77" style="background:;">
-  <hgroup>
-    <h2>UML Associations</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>A associations is an <strong>edge</strong> linking two classes</li>
-<li>This is a little different than E/R Diagrams, where such an edge would be a syntax error</li>
-<li>The edges can have names</li>
-<li>They can also specify cardinalities for the endpoints</li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-associations.png" alt="UML Associations" title="UML Associations" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-78" style="background:;">
-  <hgroup>
-    <h2>Arrowheads in UML Associations</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li><strong>Important:</strong> UML associations can have arrowheads, but they <strong>do not mean cardinality</strong></li>
-<li>Arrowheads in UML denote <strong>navigation</strong>, i.e., you can get from an instance of one class to the related instances in the other</li>
-<li>Navigability is not a notion in relational databases</li>
-<li>So we won&#39;t be using them</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-79" style="background:;">
-  <hgroup>
-    <h2>Cardinality in UML Associations</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Cardinalities are listed at the endpoints, and read like this:
-
-<ol>
-<li>Suppose we have a relationship between A and B</li>
-<li>The cardinality on end B is 1..1</li>
-<li>We read &quot;Each A has one B&quot;</li>
-</ol></li>
-<li>E.g., below, you should read
-
-<ul>
-<li>Each Movie has <strong>one</strong> Studio</li>
-<li>Each Studio has <strong>one or more</strong> Movies</li>
-<li>Each President has <strong>one</strong> Studio</li>
-<li>Each Studio has <strong>zero or one</strong> President</li>
-</ul></li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-associations-2.png" alt="UML Associations" title="UML Associations" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-80" style="background:;">
-  <hgroup>
-    <h2>Cardinality in UML Associations</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Spot the typo!</li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-associations.png" alt="UML Associations" title="UML Associations" class="img-responsive">
-</p>
-
-<ul>
-<li>Be sure to get this right!!!</li>
-<li>(I actually like the arrows better...)</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-81" style="background:;">
-  <hgroup>
-    <h2>UML Self-Associations</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Nothing much to see here</li>
-<li>Same concept, slightly different notation</li>
-<li>Notice the multiplicities
-
-<ul>
-<li>The original can have <strong>zero or more</strong> sequels</li>
-<li>A sequel can have <strong>zero or one</strong> originals</li>
-</ul></li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-self-associations.png" alt="UML Self Associations" title="UML Self Associations" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-82" style="background:;">
-  <hgroup>
-    <h2>Association Classes in UML</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Relationships can have attributes!</li>
-<li>This is true in any (useful) modeling language
-<br><br></li>
-<li>But associations in UML are just lines between classes</li>
-<li>So UML developed the idea of an <strong>association class</strong></li>
-<li>This is an auxiliary class that is attached to a relationship</li>
-<li>The association class is attached to the middle of the relationship edge (with a dashed line, according to the standard)</li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-association-class.png" alt="UML Association Classes" title="UML Association Classes" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-83" style="background:;">
-  <hgroup>
-    <h2>Subclasses in UML</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>UML was built to describe inheritance hierarchies!</li>
-<li>UML supports all four types of inheritance:
-
-<ol>
-<li><strong>Coverage:</strong> Incomplete vs. Complete</li>
-<li><strong>Exclusivity:</strong> Disjoint vs. Overlapping
-<br><br></li>
-</ol></li>
-<li>The default has changed from
-
-<ul>
-<li>Unspecified</li>
-<li>incomplete &amp; disjoint (UML 2.0 to 2.4.1)</li>
-<li>incomplete &amp; overlapping (as of UML 2.5)</li>
-</ul></li>
-<li>You can actually specify what you mean in the diagram by labeling an inheritance link,
-e.g., as <strong>{complete, overlapping}</strong></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-84" style="background:;">
-  <hgroup>
-    <h2>Subclasses in UML</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
-</p>
-
-<ul>
-<li>Note: The book assumes <strong>complete &amp; disjoint</strong>, but this is no longer the default</li>
-<li>It pays to be explicit</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-85" style="background:;">
-  <hgroup>
-    <h2>Aggregation and Composition in UML</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>UML has a special notation for two types of relationships:
-
-<ul>
-<li><strong>Aggregation</strong> from \(A\) to \(B\) means that \(A\) <em>contains</em> zero or more $B$s, e.g., a course section contains one or more students</li>
-<li><strong>Composition</strong> from \(A\) to \(B\) means that \(A\) <em>is made up of</em> zero or more $B$s, e.g., a book is made up of one or more chapters
-<br><br></li>
-</ul></li>
-<li>Aggregation is represented by an open diamond on the <strong>owner</strong> class</li>
-<li>Composition is represented by a filled diamond on the <strong>owner</strong> class
-<br><br></li>
-<li>Note: aggregation and composition are <strong>special cases</strong> of plain associations between classes</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-86" style="background:;">
-  <hgroup>
-    <h2>Association, Aggregation, and Composition in UML</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Here are the subtle differences:
-
-<ul>
-<li>An association from \(A\) to \(B\) means that there is some relationship between them, but each entity is independent</li>
-<li>An aggregation from \(A\) to \(B\) means that each \(B\) entity is owned by some \(A\) entity </li>
-<li>A composition from \(A\) to \(B\) means that each \(B\) entity is owned by some \(A\) entity, and that a \(B\) entity cannot live on its own
-(i.e., without an \(A\) parent)
-<br><br></li>
-</ul></li>
-<li>Pragmatics:
-
-<ul>
-<li>If there is no notion of &quot;parent&quot;, then use a plain association</li>
-<li>If you delete the parent \(A\), does that mean the related $B$s should also be deleted?</li>
-<li>If so, use composition</li>
-<li>If not, use aggregation (or association)</li>
-</ul></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-87" style="background:;">
-  <hgroup>
-    <h2>UML Association, Aggregation, Composition Example</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-linkedin.png" alt="UML Aggregation Composition Example" title="UML Aggregation Composition Example" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-88" style="background:;">
-  <hgroup>
-    <h2>Association, Aggregation, and Composition in UML</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>There is also a difference in cardinalities
-
-<ul>
-<li>For association, there is no restriction (unless you write one on the endpoint)</li>
-<li>For aggregation, it&#39;s zero or one on the parent</li>
-<li>For composition, it&#39;s exactly one on the parent
-<br><br></li>
-</ul></li>
-<li>This is the distinction that the book focuses on</li>
-<li>It has a direct translation to a database schema</li>
-<li>But if you use aggregation and composition, make sure that you are using them to
-model the world correctly!</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-89" style="background:;">
-  <hgroup>
-    <h2>UML Association, Aggregation, Composition Example</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-aggregation-composition.png" alt="UML Aggregation Composition Example" title="UML Aggregation Composition Example" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-90" style="background:;">
-  <hgroup>
-    <h1>Converting UML Diagrams to Relations</h1>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-91" style="background:;">
-  <hgroup>
-    <h2>Converting UML Diagrams to Relations</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>The basic strategy is 
-
-<ul>
-<li>turn each class into a relation with the same name and attributes</li>
-<li>turn each association into an entity set with attributes corresponding to the primary keys of the connected classes,
-as well as any attributes defined in an association class
-<br><br></li>
-</ul></li>
-<li>If this seems familiar, it&#39;s because it should</li>
-<li>It&#39;s the exact same strategy as in converting E/R Diagrams to relations!</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-92" style="background:;">
-  <hgroup>
-    <h2>Converting UML Diagrams to Relations</h2>
-  </hgroup>
-  <article data-timings="">
-    
-<div style='float:left;width:48%;'>
-  <p class="centered">
-    <img src="assets/img/uml-associations-fixed.png" alt="UML Associations" title="UML Associations" class="img-responsive">
-</p>
-
-</div>
-<div style='float:right;width:48%;'>
-  <pre><code>Movies(_title_, _year_, length, genre)
-Stars(_name_, address)
-Studios(_name_, address)
-StarsIn(movieTitle, movieYear, starName)
-Owns(movieTitle, movieYear, movieName)
-</code></pre>
-
-<p>We need the FD movieName \(\rightarrow\) movieTitle, movieYear</p>
-
-</div>
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-93" style="background:;">
-  <hgroup>
-    <h2>Converting UML Diagrams to Relations</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-associations-fixed.png" alt="UML Associations" title="UML Associations" class="img-responsive">
-</p>
-
-<pre><code>Movies(_title_, _year_, length, genre, studioName)
-Stars(_name_, address)
-Studios(_name_, address)
-StarsIn(title, year, name)
-</code></pre>
-
-<p>Of course, we can avoid adding a relationship table for the many-to-one relationship</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-94" style="background:;">
-  <hgroup>
-    <h2>Handling Subclasses</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>The approach to subclasses is exactly the same as with E/R diagrams</li>
-<li>The OO flavor of UML favors the single-class approach
-<br><br></li>
-<li>But since we have explicit ways of dealing with coverage and exclusivity, we can 
-tailor our approach:
-
-<ol>
-<li>If all classes are disjoint, then the single-class approach is not as crazy as it sounds.
-Simply, the attributes of the parent are pushed into each descendant table.
-It&#39;s still crazy, in that it&#39;s hard to find the data for a single row if you don&#39;t know
-where it is.</li>
-<li>If the hierarchy is both complete and disjoint, then the only classes that are needed
-are at the leaves.</li>
-<li>Otherwise, use the traditional E/R approach or the NULL-values approach</li>
-</ol></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-95" style="background:;">
-  <hgroup>
-    <h2>Handling Subclasses</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>The approach to subclasses is exactly the same as with E/R diagrams</li>
-<li>The OO flavor of UML favors the single-class approach
-<br><br></li>
-<li>But since we have explicit ways of dealing with coverage and exclusivity, we can 
-tailor our approach:
-
-<ol>
-<li>If all classes are disjoint, then the single-class approach is not as crazy as it sounds.
-Simply, the attributes of the parent are pushed into each descendant table.
-It&#39;s still crazy, in that it&#39;s hard to find the data for a single row if you don&#39;t know
-where it is.</li>
-<li>If the hierarchy is both complete and disjoint, then the only classes that are needed
-are at the leaves.</li>
-<li>Otherwise, use the traditional E/R approach or the NULL-values approach</li>
-</ol></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-96" style="background:;">
-  <hgroup>
-    <h2>Handling Subclasses</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
-</p>
-
-<pre><code>Movies(_title_, _year_, length, genre)
-MurderMysteries(_title_, _year_, length, genre, weapon)
-Cartoons(_title_, _year_, length, genre)
-CartoonMurderMysteries(_title_, _year_, length, genre, weapon)
-</code></pre>
-
-<p>Using the single-class approach</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-97" style="background:;">
-  <hgroup>
-    <h2>Handling Subclasses</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-inheritance.png" alt="UML Inheritance" title="UML Inheritance" class="img-responsive">
-</p>
-
-<pre><code>Movies(_title_, _year_, length, genre)
-MurderMysteries(_title_, _year_, weapon)
-Cartoons(_title_, _year_)
-CartoonMurderMysteries(_title_, _year_, weapon)
-</code></pre>
-
-<p>Using the E/R approach</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-98" style="background:;">
-  <hgroup>
-    <h2>Handling Aggregations and Compositions</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>Recall that cardinality view that
-
-<ul>
-<li><strong>Aggregation</strong> really means at most one parent</li>
-<li><strong>Composition</strong> really means exactly one parent
-<br><br></li>
-</ul></li>
-<li>Then aggregations and compositions are translated using nothing more than the cardinality-based rules</li>
-<li>In particular, since both denote a many-to-one relationship, we never create the explicit relationship table</li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-99" style="background:;">
-  <hgroup>
-    <h2>Handling Aggregations and Compositions</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>Studios(_name_, address)
-Movies(_title_, _year_, length, genre, studioName)
-MovieExecs(_cert#_, name, address, networth)
-Presidents(_cert#_, studioName)
-</code></pre>
-
-<div style='float:left;width:48%;'>
-  <p class="centered">
-    <img src="assets/img/uml-aggregation-composition.png" alt="UML Aggregation Composition Example" title="UML Aggregation Composition Example" class="img-responsive">
-</p>
-
-</div>
-<div style='float:right;width:48%;'>
-  <ul>
-<li>Notice that the empty diamond is just treated as a 0..1 annotation
-<br><br></li>
-<li>We also have the constraint that studioName in Presidents cannot be NULL</li>
-<li>That constraint handles the &quot;filled&quot; diamond</li>
-</ul>
-
-</div>
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-100" style="background:;">
-  <hgroup>
-    <h2>Handling Weak Entities</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>There is really <strong>no concept</strong> of weak entities in UML</li>
-<li>Note: Please do not confuse this with the notion of <strong>weak references</strong> in OOP
-<br><br></li>
-<li>The related concept in UML is actually <strong>composition</strong>
-
-<ul>
-<li>If class \(A\) is the owner of class \(B\) under composition, then each
-instance of \(B\) is scoped inside an instance of \(A\) and can&#39;t live outside \(A\)</li>
-<li>That just about captures &quot;weak entity&quot; by itself
-<br><br></li>
-</ul></li>
-<li>We can emphasize this fact by using a special &quot;PK&quot; notation on the weak class</li>
-<li>If we do so, we drop the part of the key that comes from the relationship</li>
-</ul>
-
-<p class="centered">
-    <img src="assets/img/uml-weak-entity.png" alt="UML Weak Entities" title="UML Weak Entities" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-101" style="background:;">
-  <hgroup>
-    <h2>Handling Weak Entities</h2>
-  </hgroup>
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/uml-weak-entity.png" alt="UML Weak Entities" title="UML Weak Entities" class="img-responsive">
-</p>
-
-<p>The translation to a schema is just as before</p>
-
-<pre><code>Studios(_name_, address)
-Crews(_number_, _studioName_, crewChief)
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-102" style="background:;">
-  <hgroup>
     <h1>Object Definition Language</h1>
   </hgroup>
   <article data-timings="">
@@ -2447,7 +1839,7 @@ Crews(_number_, _studioName_, crewChief)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-103" style="background:;">
+<slide class="" id="slide-75" style="background:;">
   <hgroup>
     <h2>Object Definition Language</h2>
   </hgroup>
@@ -2463,7 +1855,7 @@ object-oriented databases</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-104" style="background:;">
+<slide class="" id="slide-76" style="background:;">
   <hgroup>
     <h2>Object Definition Language</h2>
   </hgroup>
@@ -2490,7 +1882,7 @@ class Star {
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-105" style="background:;">
+<slide class="" id="slide-77" style="background:;">
   <hgroup>
     <h2>Object Definition Language</h2>
   </hgroup>
@@ -2514,7 +1906,7 @@ class Studio {
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-106" style="background:;">
+<slide class="" id="slide-78" style="background:;">
   <hgroup>
     <h2>Converting ODL to Relations</h2>
   </hgroup>
@@ -2530,7 +1922,7 @@ to normalize the resulting tables</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-107" style="background:;">
+<slide class="" id="slide-79" style="background:;">
   <hgroup>
     <h2>Relevance of ODL</h2>
   </hgroup>
@@ -2553,7 +1945,7 @@ use little languages similar to ODL</li>
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title=''>
+        data-slide=1 title='NA'>
          1
       </a>
     </li>
@@ -2991,206 +2383,38 @@ use little languages similar to ODL</li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=74 title='Unified Modeling Language'>
+        data-slide=74 title='Object Definition Language'>
          74
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=75 title='Unified Modeling Language'>
+        data-slide=75 title='Object Definition Language'>
          75
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=76 title='UML Classes'>
+        data-slide=76 title='Object Definition Language'>
          76
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='UML Associations'>
+        data-slide=77 title='Object Definition Language'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='Arrowheads in UML Associations'>
+        data-slide=78 title='Converting ODL to Relations'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='Cardinality in UML Associations'>
+        data-slide=79 title='Relevance of ODL'>
          79
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=80 title='Cardinality in UML Associations'>
-         80
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=81 title='UML Self-Associations'>
-         81
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=82 title='Association Classes in UML'>
-         82
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=83 title='Subclasses in UML'>
-         83
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=84 title='Subclasses in UML'>
-         84
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=85 title='Aggregation and Composition in UML'>
-         85
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=86 title='Association, Aggregation, and Composition in UML'>
-         86
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=87 title='UML Association, Aggregation, Composition Example'>
-         87
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=88 title='Association, Aggregation, and Composition in UML'>
-         88
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=89 title='UML Association, Aggregation, Composition Example'>
-         89
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=90 title='Converting UML Diagrams to Relations'>
-         90
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=91 title='Converting UML Diagrams to Relations'>
-         91
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=92 title='Converting UML Diagrams to Relations'>
-         92
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=93 title='Converting UML Diagrams to Relations'>
-         93
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=94 title='Handling Subclasses'>
-         94
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=95 title='Handling Subclasses'>
-         95
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=96 title='Handling Subclasses'>
-         96
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=97 title='Handling Subclasses'>
-         97
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=98 title='Handling Aggregations and Compositions'>
-         98
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=99 title='Handling Aggregations and Compositions'>
-         99
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=100 title='Handling Weak Entities'>
-         100
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=101 title='Handling Weak Entities'>
-         101
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=102 title='Object Definition Language'>
-         102
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=103 title='Object Definition Language'>
-         103
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=104 title='Object Definition Language'>
-         104
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=105 title='Object Definition Language'>
-         105
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=106 title='Converting ODL to Relations'>
-         106
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=107 title='Relevance of ODL'>
-         107
       </a>
     </li>
   </ul>

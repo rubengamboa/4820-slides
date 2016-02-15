@@ -1373,6 +1373,14 @@ Carrie Fisher | 5 Locust Ln.    | Malibu        | Return of the Jedi  | 1983
   2. agrees with $t$ on $Y$
   3. agrees with $u$ on $\mathcal{A}-(X \cup Y)$
 
+X        | Y          | Z          
+---------|------------|-------------
+x        | y1         | z1
+x        | y2         | z2
+&nbsp;   |            |
+x        | y1         | z2
+x        | y2         | z1
+
 ---
 
 ## Rules for Multivalued Dependencies
