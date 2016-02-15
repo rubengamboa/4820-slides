@@ -1007,14 +1007,14 @@ $t_3$       | $a_3$ | $b$   | $c$   | $d$
 
 <br>
 
-* This is called a **tableaux**, not a table (for obvious reasons)
+* This is called a **tableau**, not a table (for obvious reasons)
 * Our goal is to show that one of the $t_i$ is actually $(a,b,c,d)$
 
 ---
 
 ## The Chase Test for Lossless Joins
 
-* Next, we use the FDs to "chase" the symbols in the tableaux
+* Next, we use the FDs to "chase" the symbols in the tableau
 * The goal is to to see which symbols must be the same, e.g., $b_1 = b_2 = b$
   <br><br>
 * So suppose that the FDs are $A \rightarrow B$, $B \rightarrow C$ and $C, D \rightarrow A$
@@ -1373,14 +1373,6 @@ Carrie Fisher | 5 Locust Ln.    | Malibu        | Return of the Jedi  | 1983
   2. agrees with $t$ on $Y$
   3. agrees with $u$ on $\mathcal{A}-(X \cup Y)$
 
-X        | Y          | Z          
----------|------------|-------------
-x        | y1         | z1
-x        | y2         | z2
-&nbsp;   |            |
-x        | y1         | z2
-x        | y2         | z1
-
 ---
 
 ## Rules for Multivalued Dependencies
@@ -1469,8 +1461,8 @@ Preserves MVDs               | No  | No   | No
 * We also discussed the **chase algorithm** for proving lossless decompositions
   <br><br>
 * In fact the chase algorithm is very useful in many other contexts
-* We can restate the closure algorithm as a chase starting from a tableaux
-  1. The tableaux starts with two rows that agree on $X$ and on nothing else
+* We can restate the closure algorithm as a chase starting from a tableau
+  1. The tableau starts with two rows that agree on $X$ and on nothing else
   2. After the chase, $A \in X^+$ if and only if the rows agree on attribute $A$
 
 
@@ -1496,10 +1488,10 @@ Preserves MVDs               | No  | No   | No
 * Suppose we have some FDs and some MVDs
 * We want to decide if the MVD $X \twoheadrightarrow Y$ is implied by these FDs and MVDs
   <br><br>
-* Start a tableaux with two tuples
+* Start a tableau with two tuples
   * $t$
   * $u$, which agrees with $t$ on $X$ and nothing else
-* Repeatedly apply the FDs and MVDs to the tableaux
+* Repeatedly apply the FDs and MVDs to the tableau
 * If we ever find a tuple $v$ that agrees with $t$ and $u$ on $X$, with $t$ on $Y$,
   and with $u$ on $\mathcal{A}-Y$, then the MVD $X \twoheadrightarrow Y$ is implied
 * If we terminate without finding such a tuple, then $X \twoheadrightarrow Y$ is not implied
@@ -1514,7 +1506,7 @@ Preserves MVDs               | No  | No   | No
 * Does $A \twoheadrightarrow C$ hold?
   <br><br>
 
-* Consider this tableaux
+* Consider this tableau
 
 $A$ | $B$   | $C$   | $D$ 
 ----|-------|-------|--------
@@ -1560,10 +1552,10 @@ $a$ | $b$   | $c$   | $d$    | $B \twoheadrightarrow C$
 * How do we know which dependencies hold on $R_1$?
 
 > * For a given possible MVD (and there are exponentially many), you can construct a
-  a tableaux as before
+  a tableau as before
 * Then run the chase algorithm and see if you find a **row** that supports the MVD
 
 > * The FDs follow the same process
-* Set up a tableaux as in the lossless join process
-* Chase the tableaux, and make sure the final tableaux has the same values in the given 
+* Set up a tableau as in the lossless join process
+* Chase the tableau, and make sure the final tableau has the same values in the given 
   **columns**
