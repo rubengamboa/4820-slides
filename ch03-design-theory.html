@@ -2076,7 +2076,7 @@ corresponding tuples in the \(R_i\)</li>
 <p><br></p>
 
 <ul>
-<li>This is called a <strong>tableaux</strong>, not a table (for obvious reasons)</li>
+<li>This is called a <strong>tableau</strong>, not a table (for obvious reasons)</li>
 <li>Our goal is to show that one of the \(t_i\) is actually \((a,b,c,d)\)</li>
 </ul>
 
@@ -2090,7 +2090,7 @@ corresponding tuples in the \(R_i\)</li>
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Next, we use the FDs to &quot;chase&quot; the symbols in the tableaux</li>
+<li>Next, we use the FDs to &quot;chase&quot; the symbols in the tableau</li>
 <li>The goal is to to see which symbols must be the same, e.g., \(b_1 = b_2 = b\)
 <br><br></li>
 <li>So suppose that the FDs are \(A \rightarrow B\), \(B \rightarrow C\) and \(C, D \rightarrow A\)
@@ -3005,40 +3005,6 @@ another tuple \(v\) that
 </ol></li>
 </ul>
 
-<table><thead>
-<tr>
-<th>X</th>
-<th>Y</th>
-<th>Z</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>x</td>
-<td>y1</td>
-<td>z1</td>
-</tr>
-<tr>
-<td>x</td>
-<td>y2</td>
-<td>z2</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>x</td>
-<td>y1</td>
-<td>z2</td>
-</tr>
-<tr>
-<td>x</td>
-<td>y2</td>
-<td>z1</td>
-</tr>
-</tbody></table>
-
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -3221,10 +3187,10 @@ street and city/title/year (which is bogus)</li>
 <li>We also discussed the <strong>chase algorithm</strong> for proving lossless decompositions
 <br><br></li>
 <li>In fact the chase algorithm is very useful in many other contexts</li>
-<li>We can restate the closure algorithm as a chase starting from a tableaux
+<li>We can restate the closure algorithm as a chase starting from a tableau
 
 <ol>
-<li>The tableaux starts with two rows that agree on \(X\) and on nothing else</li>
+<li>The tableau starts with two rows that agree on \(X\) and on nothing else</li>
 <li>After the chase, \(A \in X^+\) if and only if the rows agree on attribute \(A\)</li>
 </ol></li>
 </ul>
@@ -3264,13 +3230,13 @@ but sometimes the resulting tuples will not be new
 <li>Suppose we have some FDs and some MVDs</li>
 <li>We want to decide if the MVD \(X \twoheadrightarrow Y\) is implied by these FDs and MVDs
 <br><br></li>
-<li>Start a tableaux with two tuples
+<li>Start a tableau with two tuples
 
 <ul>
 <li>\(t\)</li>
 <li>\(u\), which agrees with \(t\) on \(X\) and nothing else</li>
 </ul></li>
-<li>Repeatedly apply the FDs and MVDs to the tableaux</li>
+<li>Repeatedly apply the FDs and MVDs to the tableau</li>
 <li>If we ever find a tuple \(v\) that agrees with \(t\) and \(u\) on \(X\), with \(t\) on \(Y\),
 and with \(u\) on \(\mathcal{A}-Y\), then the MVD \(X \twoheadrightarrow Y\) is implied</li>
 <li>If we terminate without finding such a tuple, then \(X \twoheadrightarrow Y\) is not implied</li>
@@ -3294,7 +3260,7 @@ and with \(u\) on \(\mathcal{A}-Y\), then the MVD \(X \twoheadrightarrow Y\) is 
 </ul></li>
 <li><p>Does \(A \twoheadrightarrow C\) hold?
 <br><br></p></li>
-<li><p>Consider this tableaux</p></li>
+<li><p>Consider this tableau</p></li>
 </ul>
 
 <table><thead>
@@ -3445,11 +3411,11 @@ unsubscripted tuple shows up.</li>
 
 <ul class = "build incremental">
 <li>For a given possible MVD (and there are exponentially many), you can construct a
-a tableaux as before</li>
+a tableau as before</li>
 <li><p>Then run the chase algorithm and see if you find a <strong>row</strong> that supports the MVD</p></li>
 <li><p>The FDs follow the same process</p></li>
-<li><p>Set up a tableaux as in the lossless join process</p></li>
-<li><p>Chase the tableaux, and make sure the final tableaux has the same values in the given 
+<li><p>Set up a tableau as in the lossless join process</p></li>
+<li><p>Chase the tableau, and make sure the final tableau has the same values in the given 
 <strong>columns</strong></p></li>
 </ul>
 
