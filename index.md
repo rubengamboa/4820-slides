@@ -32,7 +32,7 @@ widgets:      [mathjax, bootstrap]
 * [The Relational Model of Data](ch02-relational-model.html)
 * [High-Level Database Models: Object-Oriented Model](ch04a-object-oriented-model.html)
 * [Design Theory for Relational Databases](ch03-design-theory.html)
-* [High-Level Database Models](ch04-high-level-models.html)
+* [High-Level Database Models: E/R Model and ODL](ch04-high-level-models.html)
 * Exam #1
 
 <!--
