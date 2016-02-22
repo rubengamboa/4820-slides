@@ -1532,6 +1532,66 @@ will also appear in \(E\)
 
 <slide class="" id="slide-60" style="background:;">
   <hgroup>
+    <h2>Remember this Example?</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-1.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+<p>This was redundant, so we decomposed it into <em>Companies</em> and <em>MarketData</em></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-2.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+<p>Now it&#39;s decomposed, but there is a <em>Ticker</em> attribute and a relationship with <em>Companies</em> at the same time</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-2b.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+<p>There is no attribute/relationship redundancy, but the key in <em>MarketData</em> is clearly wrong!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Example: Historical Market Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/market-data-2c.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+<p>Now it&#39;s fixed! This is &quot;naturally occurring&quot; <strong>weak entity</strong>.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
     <h1>Converting E/R Diagrams to Relations</h1>
   </hgroup>
   <article data-timings="">
@@ -1540,7 +1600,7 @@ will also appear in \(E\)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-61" style="background:;">
+<slide class="" id="slide-65" style="background:;">
   <hgroup>
     <h2>Converting E/R Diagrams to Relations</h2>
   </hgroup>
@@ -1563,7 +1623,7 @@ as well as any attributes defined for the relationship itself</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-62" style="background:;">
+<slide class="" id="slide-66" style="background:;">
   <hgroup>
     <h2>Converting E/R Diagrams to Relations</h2>
   </hgroup>
@@ -1581,7 +1641,7 @@ StarsIn(_title_, _year_, _name_)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-63" style="background:;">
+<slide class="" id="slide-67" style="background:;">
   <hgroup>
     <h2>Converting E/R Diagrams to Relations</h2>
   </hgroup>
@@ -1605,7 +1665,7 @@ Owns(_title_, _year_, _name_)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-64" style="background:;">
+<slide class="" id="slide-68" style="background:;">
   <hgroup>
     <h2>Converting E/R Diagrams to Relations</h2>
   </hgroup>
@@ -1624,7 +1684,7 @@ Studios(_name_, address)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-65" style="background:;">
+<slide class="" id="slide-69" style="background:;">
   <hgroup>
     <h2>Handling Weak Entity Sets</h2>
   </hgroup>
@@ -1648,7 +1708,7 @@ the part contributed by the supporting relation
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-66" style="background:;">
+<slide class="" id="slide-70" style="background:;">
   <hgroup>
     <h2>Handling Weak Entity Sets</h2>
   </hgroup>
@@ -1672,7 +1732,7 @@ Crews(_number_, _studioName_, crewChief)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-67" style="background:;">
+<slide class="" id="slide-71" style="background:;">
   <hgroup>
     <h2>Handling Subclasses (or Subentity Sets)</h2>
   </hgroup>
@@ -1695,7 +1755,7 @@ Crews(_number_, _studioName_, crewChief)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-68" style="background:;">
+<slide class="" id="slide-72" style="background:;">
   <hgroup>
     <h2>Subclasses: The E/R Viewpoint</h2>
   </hgroup>
@@ -1714,7 +1774,7 @@ in a relationship, the entire key is used to identify an entity</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-69" style="background:;">
+<slide class="" id="slide-73" style="background:;">
   <hgroup>
     <h2>Subclasses: The E/R Viewpoint</h2>
   </hgroup>
@@ -1739,7 +1799,7 @@ MurderMysteries(_title_, _year_, weapon)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-70" style="background:;">
+<slide class="" id="slide-74" style="background:;">
   <hgroup>
     <h2>Subclasses: The Single Class Approach</h2>
   </hgroup>
@@ -1764,7 +1824,7 @@ MurderMysteries(_title_, _year_, weapon)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-71" style="background:;">
+<slide class="" id="slide-75" style="background:;">
   <hgroup>
     <h2>Subclasses: Using NULL Values</h2>
   </hgroup>
@@ -1782,7 +1842,7 @@ is of type \(A_1\), \(A_2\), or \(A_3\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-72" style="background:;">
+<slide class="" id="slide-76" style="background:;">
   <hgroup>
     <h2>Subclasses: Using NULL Values</h2>
   </hgroup>
@@ -1800,7 +1860,7 @@ is of type \(A_1\), \(A_2\), or \(A_3\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-73" style="background:;">
+<slide class="" id="slide-77" style="background:;">
   <hgroup>
     <h2>Handling Subclasses (or Subentity Sets)</h2>
   </hgroup>
@@ -1829,7 +1889,7 @@ prefer the &quot;one table per entity set&quot; approach</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-74" style="background:;">
+<slide class="" id="slide-78" style="background:;">
   <hgroup>
     <h1>Object Definition Language</h1>
   </hgroup>
@@ -1839,7 +1899,7 @@ prefer the &quot;one table per entity set&quot; approach</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-75" style="background:;">
+<slide class="" id="slide-79" style="background:;">
   <hgroup>
     <h2>Object Definition Language</h2>
   </hgroup>
@@ -1855,7 +1915,7 @@ object-oriented databases</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-76" style="background:;">
+<slide class="" id="slide-80" style="background:;">
   <hgroup>
     <h2>Object Definition Language</h2>
   </hgroup>
@@ -1882,7 +1942,7 @@ class Star {
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-77" style="background:;">
+<slide class="" id="slide-81" style="background:;">
   <hgroup>
     <h2>Object Definition Language</h2>
   </hgroup>
@@ -1906,7 +1966,7 @@ class Studio {
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-78" style="background:;">
+<slide class="" id="slide-82" style="background:;">
   <hgroup>
     <h2>Converting ODL to Relations</h2>
   </hgroup>
@@ -1922,7 +1982,7 @@ to normalize the resulting tables</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-79" style="background:;">
+<slide class="" id="slide-83" style="background:;">
   <hgroup>
     <h2>Relevance of ODL</h2>
   </hgroup>
@@ -2299,25 +2359,25 @@ use little languages similar to ODL</li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=60 title='Converting E/R Diagrams to Relations'>
+        data-slide=60 title='Remember this Example?'>
          60
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=61 title='Converting E/R Diagrams to Relations'>
+        data-slide=61 title='Example: Historical Market Data'>
          61
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=62 title='Converting E/R Diagrams to Relations'>
+        data-slide=62 title='Example: Historical Market Data'>
          62
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=63 title='Converting E/R Diagrams to Relations'>
+        data-slide=63 title='Example: Historical Market Data'>
          63
       </a>
     </li>
@@ -2329,92 +2389,116 @@ use little languages similar to ODL</li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=65 title='Handling Weak Entity Sets'>
+        data-slide=65 title='Converting E/R Diagrams to Relations'>
          65
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=66 title='Handling Weak Entity Sets'>
+        data-slide=66 title='Converting E/R Diagrams to Relations'>
          66
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=67 title='Handling Subclasses (or Subentity Sets)'>
+        data-slide=67 title='Converting E/R Diagrams to Relations'>
          67
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=68 title='Subclasses: The E/R Viewpoint'>
+        data-slide=68 title='Converting E/R Diagrams to Relations'>
          68
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=69 title='Subclasses: The E/R Viewpoint'>
+        data-slide=69 title='Handling Weak Entity Sets'>
          69
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=70 title='Subclasses: The Single Class Approach'>
+        data-slide=70 title='Handling Weak Entity Sets'>
          70
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=71 title='Subclasses: Using NULL Values'>
+        data-slide=71 title='Handling Subclasses (or Subentity Sets)'>
          71
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=72 title='Subclasses: Using NULL Values'>
+        data-slide=72 title='Subclasses: The E/R Viewpoint'>
          72
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=73 title='Handling Subclasses (or Subentity Sets)'>
+        data-slide=73 title='Subclasses: The E/R Viewpoint'>
          73
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=74 title='Object Definition Language'>
+        data-slide=74 title='Subclasses: The Single Class Approach'>
          74
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=75 title='Object Definition Language'>
+        data-slide=75 title='Subclasses: Using NULL Values'>
          75
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=76 title='Object Definition Language'>
+        data-slide=76 title='Subclasses: Using NULL Values'>
          76
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='Object Definition Language'>
+        data-slide=77 title='Handling Subclasses (or Subentity Sets)'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='Converting ODL to Relations'>
+        data-slide=78 title='Object Definition Language'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='Relevance of ODL'>
+        data-slide=79 title='Object Definition Language'>
          79
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=80 title='Object Definition Language'>
+         80
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=81 title='Object Definition Language'>
+         81
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=82 title='Converting ODL to Relations'>
+         82
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=83 title='Relevance of ODL'>
+         83
       </a>
     </li>
   </ul>

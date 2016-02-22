@@ -774,6 +774,46 @@ UTAus         | a73e9fxe$3    | Hank Rearden
 
 ---
 
+## Remember this Example?
+
+<p class="centered">
+    <img src="assets/img/market-data-1.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+This was redundant, so we decomposed it into *Companies* and *MarketData*
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-2.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+Now it's decomposed, but there is a *Ticker* attribute and a relationship with *Companies* at the same time
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-2b.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+There is no attribute/relationship redundancy, but the key in *MarketData* is clearly wrong!
+
+---
+
+## Example: Historical Market Data
+
+<p class="centered">
+    <img src="assets/img/market-data-2c.png" alt="Market Data ERD" title="Market Data ERD" class="img-responsive">
+</p>
+
+Now it's fixed! This is "naturally occurring" **weak entity**.
+
+---
+
 # Converting E/R Diagrams to Relations
 
 ---
