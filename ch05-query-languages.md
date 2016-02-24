@@ -3,7 +3,7 @@ subtitle:     Algebraic and Logical Query Languages
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -633,13 +633,13 @@ female(catherine).
 female(elizabeth).
 female(sophia).
 
-parent(charles1, james1).
-parent(elizabeth, james1).
-parent(charles2, charles1).
-parent(catherine, charles1).
-parent(james2, charles1).
-parent(sophia, elizabeth).
-parent(george1, sophia).
+parent(james1, charles1).
+parent(james1, elizabeth).
+parent(charles1, charles2).
+parent(charles1, catherine).
+parent(charles1, james2).
+parent(elizabeth, sophia).
+parent(sophia, george1).
 ```
 
 ---
@@ -647,9 +647,9 @@ parent(george1, sophia).
 ## Prolog Rules
 
 ```
-mother(X,Y) :- parent(X,Y), female(Y).
+mother(X,Y) :- parent(X,Y), female(X).
 
-father(X,Y) :- parent(X,Y), male(Y).
+father(X,Y) :- parent(X,Y), male(X).
 
 grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
 ```
@@ -663,9 +663,9 @@ grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
 
 ?female(charles1).
 
-?grandparent(X, elizabeth).
+?grandparent(elizabeth, Y).
 
-?grandparent(charles2, Y).
+?grandparent(X, charles2).
 ```
 
 ---
@@ -749,13 +749,13 @@ LongMovies(T,Y) :- Movies(T,Y,L,_,_,_), L >= 100.
 * Consider the following rule
 
   ```
-  orphan(X) :- NOT parent(X, Y).
+  orphan(Y) :- NOT parent(X, Y).
   
   ```
 
 * In particular, suppose X is ruben and Y is buffy
 * `parent(ruben, buffy)` is false
-* Does that mean I'm an orphan?
+* Does that mean buffy is an orphan?
 
 ---
 
@@ -822,7 +822,7 @@ ancestor(X, Y) :- parent(X, Y).
 ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
 
 bbf(X) :- royal(X), french(X).
-bbf(X) :- mother(X, Y), bbf(Y), father(X, Z), bbf(Z).
+bbf(X) :- mother(Y, X), bbf(Y), father(Z, X), bbf(Z).
 ```
 
 * Neither of these can be done with relational algebra!
@@ -855,15 +855,15 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
 * Datalog (with data structures) can also be extended to support aggregation
 
 ```
-parent(charles1, james1).
-parent(elizabeth, james1).
-parent(charles2, charles1).
-parent(catherine, charles1).
-parent(james2, charles1).
-parent(sophia, elizabeth).
-parent(george1, sophia).
+parent(james1, charles1).
+parent(james1, elizabeth).
+parent(charles1, charles2).
+parent(charles1, catherine).
+parent(charles1, james2).
+parent(elizabeth, sophia).
+parent(sophia, george1).
 
-children(X, <Y>) :- parent(Y, X).
+children(X, <Y>) :- parent(X, Y).
 
 ?children(james1, [charles1, elizabeth]).
 ?children(charles1, [charles2, catherine, james2]).
@@ -946,7 +946,7 @@ $$\sigma_{\text{rating=10}}(\text{Sailors})$$
     <img src="assets/img/qbe-join.png" title="QBE Join" alt="QBE Join">
 </div>
 
-$$\pi_{\text{sname}}((\text{Sailors} \bowtie \text{Reserves}) \bowtie_{\text{Reserves.bid=R2.bid}}(\rho_{\text{R2}}(\text{Reserves}))$$
+$$\pi_{\text{sname}}((\text{Sailors} \bowtie \text{Reserves}) \bowtie_{\text{Reserves.bid=R2.bid}}(\rho_{\text{R2}}(\sigma_{\text{sid}=22}(\text{Reserves}))))$$
 
 
 * Notice how both joins and selections follow the same principles as Datalog

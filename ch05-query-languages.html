@@ -35,7 +35,7 @@
   <hgroup class="auto-fadein">
     <h1>COSC 4820 Database Systems</h1>
     <h2>Algebraic and Logical Query Languages</h2>
-    <p>Ruben Gamboa<br/>Associate Professor</p>
+    <p>Ruben Gamboa<br/>Professor</p>
   </hgroup>
   <article></article>  
 </slide>
@@ -1566,13 +1566,13 @@ female(catherine).
 female(elizabeth).
 female(sophia).
 
-parent(charles1, james1).
-parent(elizabeth, james1).
-parent(charles2, charles1).
-parent(catherine, charles1).
-parent(james2, charles1).
-parent(sophia, elizabeth).
-parent(george1, sophia).
+parent(james1, charles1).
+parent(james1, elizabeth).
+parent(charles1, charles2).
+parent(charles1, catherine).
+parent(charles1, james2).
+parent(elizabeth, sophia).
+parent(sophia, george1).
 </code></pre>
 
   </article>
@@ -1584,9 +1584,9 @@ parent(george1, sophia).
     <h2>Prolog Rules</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code>mother(X,Y) :- parent(X,Y), female(Y).
+    <pre><code>mother(X,Y) :- parent(X,Y), female(X).
 
-father(X,Y) :- parent(X,Y), male(Y).
+father(X,Y) :- parent(X,Y), male(X).
 
 grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
 </code></pre>
@@ -1604,9 +1604,9 @@ grandparent(X,Y) :- parent(X, Z), parent(Z, Y).
 
 ?female(charles1).
 
-?grandparent(X, elizabeth).
+?grandparent(elizabeth, Y).
 
-?grandparent(charles2, Y).
+?grandparent(X, charles2).
 </code></pre>
 
   </article>
@@ -1735,12 +1735,12 @@ LongMovies(T,Y) :- Movies(T,Y,L,_,_,_), L &gt;= 100.
     <ul>
 <li><p>Consider the following rule</p>
 
-<pre><code>orphan(X) :- NOT parent(X, Y).
+<pre><code>orphan(Y) :- NOT parent(X, Y).
 
 </code></pre></li>
 <li><p>In particular, suppose X is ruben and Y is buffy</p></li>
 <li><p><code>parent(ruben, buffy)</code> is false</p></li>
-<li><p>Does that mean I&#39;m an orphan?</p></li>
+<li><p>Does that mean buffy is an orphan?</p></li>
 </ul>
 
   </article>
@@ -1840,7 +1840,7 @@ LongMovies(T,Y) :- Movies(T,Y,L,_,_,_), L &gt;= 100.
 ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
 
 bbf(X) :- royal(X), french(X).
-bbf(X) :- mother(X, Y), bbf(Y), father(X, Z), bbf(Z).
+bbf(X) :- mother(Y, X), bbf(Y), father(Z, X), bbf(Z).
 </code></pre>
 
 <ul>
@@ -1889,15 +1889,15 @@ zip([X | Xs], [Y | Ys], [pair(X, Y) | Zs]) :- zip(Xs, Ys, Zs).
 <li>Datalog (with data structures) can also be extended to support aggregation</li>
 </ul>
 
-<pre><code>parent(charles1, james1).
-parent(elizabeth, james1).
-parent(charles2, charles1).
-parent(catherine, charles1).
-parent(james2, charles1).
-parent(sophia, elizabeth).
-parent(george1, sophia).
+<pre><code>parent(james1, charles1).
+parent(james1, elizabeth).
+parent(charles1, charles2).
+parent(charles1, catherine).
+parent(charles1, james2).
+parent(elizabeth, sophia).
+parent(sophia, george1).
 
-children(X, &lt;Y&gt;) :- parent(Y, X).
+children(X, &lt;Y&gt;) :- parent(X, Y).
 
 ?children(james1, [charles1, elizabeth]).
 ?children(charles1, [charles2, catherine, james2]).
@@ -2058,7 +2058,7 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
     <img src="assets/img/qbe-join.png" title="QBE Join" alt="QBE Join">
 </div>
 
-<p>\[\pi_{\text{sname}}((\text{Sailors} \bowtie \text{Reserves}) \bowtie_{\text{Reserves.bid=R2.bid}}(\rho_{\text{R2}}(\text{Reserves}))\]</p>
+<p>\[\pi_{\text{sname}}((\text{Sailors} \bowtie \text{Reserves}) \bowtie_{\text{Reserves.bid=R2.bid}}(\rho_{\text{R2}}(\sigma_{\text{sid}=22}(\text{Reserves}))))\]</p>
 
 <ul>
 <li>Notice how both joins and selections follow the same principles as Datalog</li>
@@ -2074,7 +2074,7 @@ translated into generalizations of Datalog, e.g., the Logic Data Language (LDL)<
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title=''>
+        data-slide=1 title='NA'>
          1
       </a>
     </li>

@@ -40,8 +40,9 @@ widgets:      [mathjax, bootstrap]
 -->
 
 *** =right
-<!--
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
+
+<!--
 * [The Database Language SQL](ch06-sql.html)
 * [Constraints and Triggers](ch07-constraints-triggers.html)
 * [Views and Indexes](ch08-views-indexes.html)
