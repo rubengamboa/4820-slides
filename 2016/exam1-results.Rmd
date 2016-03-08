@@ -1,0 +1,101 @@
+title:        COSC 4820 Database Systems
+subtitle:     "Exam #1 Results"
+author:       Ruben Gamboa
+#logo:         uw-logo-small.png
+#biglogo:      uw-logo-large.png
+job:          Professor
+highlighter:  highlight.js
+hitheme:      tomorrow
+mode:         selfcontained
+framework:    io2012
+widgets:      [mathjax, bootstrap]
+
+---
+
+<style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+## Exam Questions
+
+Question   | Points | Topic
+-----------|--------|-----------------------------------
+q1a        |      5 | Executing Relational Algebra
+q1b        |      5 | Executing Relational Algebra
+q1c        |      5 | Executing Relational Algebra
+q1d        |      5 | Executing Relational Algebra
+q2a        |      5 | Writing Relational Algebra
+q2b        |      5 | Writing Relational Algebra
+q2c        |      5 | Writing Relational Algebra
+q2d        |      5 | Writing Relational Algebra
+q3         |     15 | Creating E/R Diagram
+q4         |     20 | Converting E/R Diagram to Tables
+q5a        |     10 | Closure Algorithm
+q5b        |      5 | Definition of Keys
+q5c        |     10 | BCNF Decomposition
+q5d (bonus)|      2 | Lossless Decomposition
+q5e (bonus)|      3 | Dependency Preserving Decomposition
+
+----
+
+## Grade Distribution
+
+```{r exam1.grades.2016, fig.width=10, fig.height=6, echo=FALSE, cache=FALSE}
+points <- c(5, 5, 5, 5, 5, 5, 5, 5, 15, 20, 10, 5, 10, 2, 3)
+g <- data.frame(q1a    = points[1]  - c( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0),
+                q1b    = points[2]  - c( 0,  0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0),
+                q1c    = points[3]  - c( 0,  0,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  4,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3),
+                q1d    = points[4]  - c( 0,  0,  0,  0,  0,  0,  2,  0,  2,  0,  0,  0,  1,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0),
+                q2a    = points[5]  - c( 1,  0,  0,  4,  2,  3,  0,  5,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0),
+                q2b    = points[6]  - c( 1,  3,  3,  3,  1,  3,  3,  5,  1,  1,  1,  3,  1,  2,  0,  1,  3,  0,  1,  1,  1,  3,  1,  1,  3,  1),
+                q2c    = points[7]  - c( 5,  2,  4,  4,  2,  4,  4,  5,  2,  5,  4,  4,  0,  3,  4,  4,  4,  0,  4,  1,  4,  4,  4,  0,  3,  1),
+                q2d    = points[8]  - c( 5,  5,  4,  4,  5,  4,  5,  5,  2,  5,  5,  4,  4,  4,  4,  2,  4,  5,  4,  4,  4,  4,  3,  4,  5,  4),
+                q3     = points[9]  - c( 7,  0,  2, 10, 10,  3, 10,  2,  3,  5, 10,  1,  5,  3,  5,  0,  4,  0,  1,  7,  2,  7,  0,  5,  0,  0),
+                q4     = points[10] - c(10, 10, 19, 15, 15, 11, 15, 11,  7, 13, 15, 13, 11, 12, 12, 20, 13,  2, 12, 10, 15,  5, 10,  0, 11,  5),
+                q5a    = points[11] - c( 0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  0,  0,  0),
+                q5b    = points[12] - c( 0,  1,  4,  1,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  1,  0,  1,  0,  0,  1,  1,  0,  1,  0),
+                q5c    = points[13] - c( 0,  0,  9,  9,  8,  8,  1,  9,  3,  0,  0,  0,  9,  0,  9,  0,  9,  0,  0,  0,  0,  9,  9,  0,  0,  0),
+                q5d    =              c( 2,  2,  0,  0,  2,  2,  0,  1,  1,  2,  2,  2,  2,  2,  2,  2,  0,  2,  2,  2,  2,  0,  0,  2,  2,  2),
+                q5e    =              c( 3,  3,  0,  1,  1,  1,  3,  1,  0,  1,  3,  1,  0,  3,  0,  3,  1,  3,  3,  3,  3,  1,  0,  3,  3,  1))
+                
+g$grades <- rowSums(g)
+summary(g$grades)
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Exam #1 Results')
+```
+
+---
+
+## Grade Distribution by Question
+
+```{r exam1.questions.2016, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+g2 <- data.frame(question = c(rep('q1a', length(g$q1a)),
+                              rep('q1b', length(g$q1b)),
+                              rep('q1c', length(g$q1c)),
+                              rep('q1d', length(g$q1d)),
+                              rep('q2a', length(g$q2a)),
+                              rep('q2b', length(g$q2b)),
+                              rep('q2c', length(g$q2c)),
+                              rep('q2d', length(g$q2d)),
+                              rep('q3',  length(g$q3)),
+                              rep('q4',  length(g$q4)),
+                              rep('q5a', length(g$q5a)),
+                              rep('q5b', length(g$q5b)),
+                              rep('q5c', length(g$q5c)),
+                              rep('q5d', length(g$q5d)),
+                              rep('q5e', length(g$q5e))),
+                 score = 100*c(g$q1a/points[1], g$q1b/points[2], g$q1c/points[3], g$q1d/points[4], 
+                               g$q2a/points[5], g$q2b/points[6], g$q2c/points[7], g$q2d/points[8], 
+                               g$q3/points[9], g$q4/points[10], 
+                               g$q5a/points[11], g$q5b/points[12], g$q5c/points[13], g$q5d/points[14], g$q5e/points[15]))
+plot(g2$question, g2$score)
+title('Individual Question Results')
+```

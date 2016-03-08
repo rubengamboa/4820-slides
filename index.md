@@ -33,11 +33,7 @@ widgets:      [mathjax, bootstrap]
 * [High-Level Database Models: Object-Oriented Model](ch04a-object-oriented-model.html)
 * [Design Theory for Relational Databases](ch03-design-theory.html)
 * [High-Level Database Models: E/R Model and ODL](ch04-high-level-models.html)
-* Exam #1
-
-<!--
-* [Exam 1 Results](exam1-results.html)
--->
+* [Exam 1 Results](2016/exam1-results.html)
 
 *** =right
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
