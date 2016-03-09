@@ -32,7 +32,7 @@ q1d        |      5 | Executing Relational Algebra
 q2a        |      5 | Writing Relational Algebra
 q2b        |      5 | Writing Relational Algebra
 q2c        |      5 | Writing Relational Algebra
-q2d        |      5 | Writing Relational Algebra
+q2d        |      5 | Writing Extended Relational Algebra
 q3         |     15 | Creating E/R Diagram
 q4         |     20 | Converting E/R Diagram to Tables
 q5a        |     10 | Closure Algorithm
@@ -99,3 +99,19 @@ g2 <- data.frame(question = c(rep('q1a', length(g$q1a)),
 plot(g2$question, g2$score)
 title('Individual Question Results')
 ```
+
+----
+
+## Grade Distribution (After Adjusting for q2d)
+
+```{r exam1.grades.2016b, fig.width=10, fig.height=6, echo=FALSE, cache=FALSE}
+g$grades <- g$grades + 5 # Because q2d should not have been on the exam
+summary(g$grades)
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Exam #1 Results')
+```
+
+

@@ -32,7 +32,7 @@ q1d        |      5 | Executing Relational Algebra
 q2a        |      5 | Writing Relational Algebra
 q2b        |      5 | Writing Relational Algebra
 q2c        |      5 | Writing Relational Algebra
-q2d        |      5 | Writing Relational Algebra
+q2d        |      5 | Writing Extended Relational Algebra
 q3         |     15 | Creating E/R Diagram
 q4         |     20 | Converting E/R Diagram to Tables
 q5a        |     10 | Closure Algorithm
@@ -58,3 +58,17 @@ q5e (bonus)|      3 | Dependency Preserving Decomposition
 ## Grade Distribution by Question
 
 ![plot of chunk exam1.questions.2016](assets/fig/exam1.questions.2016-1.png) 
+
+----
+
+## Grade Distribution (After Adjusting for q2d)
+
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   49.00   67.25   76.00   75.46   83.75  100.00
+```
+
+![plot of chunk exam1.grades.2016b](assets/fig/exam1.grades.2016b-1.png) 
+
+
