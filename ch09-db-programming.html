@@ -35,7 +35,7 @@
   <hgroup class="auto-fadein">
     <h1>COSC 4820 Database Systems</h1>
     <h2>SQL in a Server Environment</h2>
-    <p>Ruben Gamboa<br/>Associate Professor</p>
+    <p>Ruben Gamboa<br/>Professor</p>
   </hgroup>
   <article></article>  
 </slide>
@@ -177,7 +177,7 @@ and the application tier may have to <strong>integrate</strong> them</li>
   </hgroup>
   <article data-timings="">
     <ul>
-<li>This are services or classes that interact with the database</li>
+<li>These are services or classes that interact with the database</li>
 <li>It is also known as the <strong>persistence layer</strong></li>
 </ul>
 
@@ -249,7 +249,7 @@ and the application tier may have to <strong>integrate</strong> them</li>
   </hgroup>
   <article data-timings="">
     <ul>
-<li>You can create a schema with <code>CREATE SCHEMA ...</code> command
+<li>You can create a schema with <code>CREATE SCHEMA . . .</code> command
 
 <ul>
 <li><code>CREATE SCHEMA MovieInformation</code></li>
@@ -261,10 +261,10 @@ and the application tier may have to <strong>integrate</strong> them</li>
 <ul>
 <li><code>SET SCHEMA MovieInformation</code></li>
 <li><code>USE MovieInformation</code></li>
-<li class = '..
+<li class=''>. .
 <br><br></li>
 </ul></li>
-<li>After'>this, you can create tables, etc.</li>
+<li>After this, you can create tables, etc.</li>
 </ul>
 
   </article>
@@ -536,7 +536,7 @@ EXEC SQL END DECLARE SECTION;
   </hgroup>
   <article data-timings="">
     <pre><code>EXEC SQL BEGIN DECLARE SECTION;
-    ...
+    . . .
     char SQLSTATE[6];
 EXEC SQL END DECLARE SECTION;
 </code></pre>
@@ -625,8 +625,8 @@ EXEC SQL END DECLARE SECTION;
 
 <pre><code>EXEC SQL DECLARE cursor_name CURSOR FOR query;
 EXEC SQL OPEN cursor_name;
-EXEC SQL FETCH FROM cursor_name INTO :var1, :var2, ..., :varn;
-...
+EXEC SQL FETCH FROM cursor_name INTO :var1, :var2, . . ., :varn;
+. . .
 EXEC SQL CLOSE cursor_name;
 </code></pre></li>
 </ol>
@@ -950,7 +950,7 @@ END;
   </hgroup>
   <article data-timings="">
     <ul>
-<li>The syntax is <code>IF ... THEN ... ELSEIF ... THEN ... ELSE ... END IF</code></li>
+<li>The syntax is <code>IF . . . THEN . . . ELSEIF . . . THEN . . . ELSE . . . END IF</code></li>
 </ul>
 
 <pre><code>CREATE FUNCTION StarList(IN name VARCHAR(255)) RETURNS NUMBER
@@ -1252,7 +1252,7 @@ END;
 </code></pre>
 
 <ul>
-<li>The EXIT keyword says that control should follow after the BEGIN ... END block</li>
+<li>The EXIT keyword says that control should follow after the BEGIN . . . END block</li>
 <li>You can also specify
 
 <ul>
@@ -1528,14 +1528,14 @@ try {
   public void setConnectionUrl (String url) { this.dbUrl = url; }
   public void setDbUser (String user) { this.dbUser = user; }
   public void setDbPassword (String password) { this.dbPassword = password; }
-  ...
+  . . .
   public void connect() {
       Class.forName(dbDriver);
       Connection con;
       try {
            DriverManager.getConnection (dbUrl, dbUser, dbPassword);
       }
-      ...
+      . . .
   }
 }
 </code></pre></li>
@@ -1670,7 +1670,7 @@ rs.close ();
 <li><strong>previous():</strong> moves to the previous row</li>
 <li><strong>absolute(n):</strong> moves to the nth row</li>
 <li><strong>relative(n):</strong> moves forward (backward if n is negative) by n rows</li>
-<li><strong>first()} / \textbf{last():</strong> moves to the first / last row</li>
+<li><strong>first() / last():</strong> moves to the first / last row</li>
 </ul></li>
 </ul>
 
@@ -1762,7 +1762,7 @@ rs.close ();
 
 <pre><code>String title = rs.getString(1);
 if (title == null) {
-  ...
+  . . .
 }
 </code></pre></li>
 <li><p>But some types (e.g., int, float, double) do not have NULL equivalents</p></li>
@@ -1770,7 +1770,7 @@ if (title == null) {
 
 <pre><code>int year = rs.getInt(2);
 if (rs.wasNull()) {
-...
+. . .
 }
 </code></pre></li>
 </ul>
@@ -1916,16 +1916,16 @@ if (rs.wasNull()) {
     pstmt = con.prepareStatement(sql);
     rs = pstmt.executeQuery ();
     while (rs.next ()) {
-        // ... rs.getString(1) ...
+        // . . . rs.getString(1) . . .
     }
     // DO NOT close resources here!  
     // (See finally clause on next page)
 }
 catch (SQLException e) {
     // handle error, e.g., print message, terminate
-    // ... e.getErrorCode() ...
-    // ... e.getSQLState() ...
-    // ... e.getMessage() ...
+    // . . . e.getErrorCode() . . .
+    // . . . e.getSQLState() . . .
+    // . . . e.getMessage() . . .
 }
 </code></pre>
 
@@ -1944,7 +1944,7 @@ catch (SQLException e) {
             rs.close ();
         }
         catch (SQLException e2) {
-            // handle it....
+            // handle it. . .
         }
     }
     if (pstmt != null) {
@@ -1952,7 +1952,7 @@ catch (SQLException e) {
             pstmt.close ();
         }
         catch (SQLException e2) {
-            // handle it....
+            // handle it. . .
         }
     }
 </code></pre>
@@ -1969,7 +1969,7 @@ catch (SQLException e) {
     <pre><code>    if (con != null) {
         try { con.close (); }
         catch (SQLException e2) {
-            // handle it....
+            // handle it. . .
         }
     }
 }
@@ -2082,7 +2082,7 @@ catch(SQLException ex) {
         }
         catch (SQLException e2) {
             // handle it somehow
-            // e.g., log it or retry N times....
+            // e.g., log it or retry N times. . .
         }
     }
     if (pstmt != null) {
@@ -2142,14 +2142,14 @@ catch(SQLException ex) {
 <ul>
 <li>defines <strong>beans</strong> (run-time objects that perform some functionality)</li>
 <li><strong>wires</strong> beans together (sets up the run-time graph of cooperating objects)</li>
-<li class = '..</li>
+<li class=''>. . </li>
 </ul></li>
 </ul>
 
 <p><br></p>
 
 <ul>
-<li>You&#39;ve'>probably noticed it takes a lot of (repetitive) code to execute even a simple query!</li>
+<li>You&#39;ve probably noticed it takes a lot of (repetitive) code to execute even a simple query!</li>
 </ul>
 
   </article>
@@ -2355,7 +2355,7 @@ students.close();
 
 <ul>
 <li>Need only variable type</li>
-<li>Uses <strong>FETCH ... INTO</strong> to write to Java variables</li>
+<li>Uses <strong>FETCH . . . INTO</strong> to write to Java variables</li>
 </ul></li>
 </ul>
 
@@ -2453,140 +2453,17 @@ for (Student student : students) {
 <li>Hibernate also offers an easier way using Java annotations (yeay!)</li>
 </ul>
 
+<p><br></p>
+
+<ul>
+<li>We covered this a long time ago, in the context of the Object-Oriented Data Model</li>
+</ul>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-102" style="background:;">
-  <hgroup>
-    <h2>Hibernate Mappings with Annotations</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>@Entity        // Maps to table called &quot;FACULTY&quot;
-public class Faculty
-{
-    private Long fid;
-
-    // Marks the field that corresponds to a key
-    @Id @GeneratedValue  
-    public Long getFid() { return fid; }
-    public void setFid(Long fid) { this.fid = fid; }
-
-    // Automatically maps to column called &quot;fname&quot;
-    private String fname;
-    public String getFname () { return fname; }
-    public void setFname (String fname) { 
-        this.fname = fname; 
-    }
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-103" style="background:;">
-  <hgroup>
-    <h2>Hibernate Mappings with Annotations</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>    // Automatically maps to column called &quot;specialty&quot;
-    private String specialty;
-    public String getSpecialty () { return specialty; }
-    public void setSpecialty (String specialty) { 
-        this.specialty = specialty; 
-    }
-
-    // Maps to FK on Student(advisor) =&gt; Faculty(fid)
-    private Set&lt;Student&gt; advisees = new HashSet&lt;Student&gt; ();
-
-    @OneToMany(mappedBy=&quot;advisor&quot;)
-    public Set&lt;Student&gt; getAdvisees() { 
-        return advisees;
-    }
-}
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-104" style="background:;">
-  <hgroup>
-    <h2>Hibernate Mappings with Annotations</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>@Entity        // Maps to table called &quot;FACULTY&quot;
-@Table(name=&quot;STUDENTS&quot;)
-public class Student
-{
-    private Long sid;
-
-    // Marks the field that corresponds to a key
-    @Id @GeneratedValue  
-    public Long getSid() { return sid; }
-    public void setSid(Long sid) { this.sid = sid; }
-
-    // Automatically maps to column called &quot;sname&quot;
-    private String sname;
-    public String getSname () { return sname; }
-    public void setSname (String sname) { 
-        this.sname = sname; 
-    }
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-105" style="background:;">
-  <hgroup>
-    <h2>Hibernate Mappings with Annotations</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>    // Automatically maps to column called &quot;gpa&quot;
-    private Float gpa;
-    public Float getGpa () { return gpa; }
-    public void setGpa (Float gpa) { 
-        this.gpa = gpa; 
-    }
-
-    private Faculty advisor;
-    @ManyToOne
-    public Faculty getAdvisor () { return advisor; }
-    public void setAdvisor (Faculty advisor) { 
-        this.advisor = advisor; 
-    }
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-106" style="background:;">
-  <hgroup>
-    <h2>Hibernate Mappings with Annotations</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>Faculty f = ...;
-for (Student advisee: f.getAdvisees()) {
-    // Send reminder to advisee
-}
-</code></pre>
-
-<p><br></p>
-
-<pre><code>Faculty f = ...;
-Student s = ...;
-s.setAdvisor (f);
-session.save (s);
-session.getTransaction().commit();
-</code></pre>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-107" style="background:;">
   <hgroup>
     <h2>ORM Gotchas</h2>
   </hgroup>
@@ -2596,7 +2473,7 @@ session.getTransaction().commit();
 <li>Many OO programmers write their own wrapper classes around a database table
 
 <ul>
-<li>I.e., they write their own ORM ... even if they don&#39;t know what an ORM is</li>
+<li>I.e., they write their own ORM . . . even if they don&#39;t know what an ORM is</li>
 </ul></li>
 <li>The problem is that writing an efficient ORM is very difficult</li>
 <li>And sometimes, an efficient ORM leads to some subtle interactions</li>
@@ -2607,12 +2484,12 @@ session.getTransaction().commit();
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-108" style="background:;">
+<slide class="" id="slide-103" style="background:;">
   <hgroup>
     <h2>ORM Gotchas</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code>Faculty f = ...;
+    <pre><code>Faculty f = . . .;
 for (Student student : f.getAdvisees ()) {
     System.out.println (student.getSname());
 }
@@ -2640,7 +2517,7 @@ for (Student student : f.getAdvisees ()) {
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-109" style="background:;">
+<slide class="" id="slide-104" style="background:;">
   <hgroup>
     <h2>ORM Gotchas</h2>
   </hgroup>
@@ -2648,7 +2525,7 @@ for (Student student : f.getAdvisees ()) {
     <ul>
 <li>Writing a good ORM is extremely difficult</li>
 <li>A lot has to happen on the back end to make ORMs efficient</li>
-<li>Sun got it completely wrong in J2EE&#39;s EJB v. 1.0
+<li>Sun Microsystems (now part of Oracle) got it completely wrong in J2EE&#39;s EJB v. 1.0
 
 <ul>
 <li>EJB v. 2.0 fixed some of the problems, but was very complicated</li>
@@ -2667,7 +2544,7 @@ for (Student student : f.getAdvisees ()) {
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title=''>
+        data-slide=1 title='NA'>
          1
       </a>
     </li>
@@ -3273,50 +3150,20 @@ for (Student student : f.getAdvisees ()) {
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=102 title='Hibernate Mappings with Annotations'>
+        data-slide=102 title='ORM Gotchas'>
          102
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=103 title='Hibernate Mappings with Annotations'>
+        data-slide=103 title='ORM Gotchas'>
          103
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=104 title='Hibernate Mappings with Annotations'>
+        data-slide=104 title='ORM Gotchas'>
          104
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=105 title='Hibernate Mappings with Annotations'>
-         105
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=106 title='Hibernate Mappings with Annotations'>
-         106
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=107 title='ORM Gotchas'>
-         107
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=108 title='ORM Gotchas'>
-         108
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=109 title='ORM Gotchas'>
-         109
       </a>
     </li>
   </ul>

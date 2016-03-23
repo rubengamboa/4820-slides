@@ -3,7 +3,7 @@ subtitle:     SQL in a Server Environment
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -91,7 +91,7 @@ widgets:      [mathjax, bootstrap]
 
 ## The Database Tier
 
-* This are services or classes that interact with the database
+* These are services or classes that interact with the database
 * It is also known as the **persistence layer**
 
 <br>
@@ -131,14 +131,14 @@ widgets:      [mathjax, bootstrap]
 
 ## Schemas
 
-* You can create a schema with `CREATE SCHEMA ...` command
+* You can create a schema with `CREATE SCHEMA . . .` command
   * `CREATE SCHEMA MovieInformation`
 * A schema may also be associated with a particular user
   <br><br>
 * You can also select a particular schema to be the **current** schema
   * `SET SCHEMA MovieInformation`
   * `USE MovieInformation`
-  * ...
+  * . . .
   <br><br>
 * After this, you can create tables, etc.
 
@@ -310,7 +310,7 @@ EXEC SQL END DECLARE SECTION;
 
 ```
 EXEC SQL BEGIN DECLARE SECTION;
-    ...
+    . . .
     char SQLSTATE[6];
 EXEC SQL END DECLARE SECTION;
 ```
@@ -367,8 +367,8 @@ EXEC SQL END DECLARE SECTION;
    ```
    EXEC SQL DECLARE cursor_name CURSOR FOR query;
    EXEC SQL OPEN cursor_name;
-   EXEC SQL FETCH FROM cursor_name INTO :var1, :var2, ..., :varn;
-   ...
+   EXEC SQL FETCH FROM cursor_name INTO :var1, :var2, . . ., :varn;
+   . . .
    EXEC SQL CLOSE cursor_name;
    ```
 
@@ -613,7 +613,7 @@ END;
 
 ## Conditional Statements
 
-* The syntax is `IF ... THEN ... ELSEIF ... THEN ... ELSE ... END IF`
+* The syntax is `IF . . . THEN . . . ELSEIF . . . THEN . . . ELSE . . . END IF`
 
 ```
 CREATE FUNCTION StarList(IN name VARCHAR(255)) RETURNS NUMBER
@@ -848,7 +848,7 @@ DECLARE EXIT HANDLER FOR NoMoreRows, TooManyRows
     SET year = NULL;
 ```
 
-* The EXIT keyword says that control should follow after the BEGIN ... END block
+* The EXIT keyword says that control should follow after the BEGIN . . . END block
 * You can also specify
   * CONTINUE, which means go on to the next statement, as if nothing had happened
   * UNDO, which is just like EXIT but also enforces transaction semantics,
@@ -1017,14 +1017,14 @@ catch (SQLException e) {
       public void setConnectionUrl (String url) { this.dbUrl = url; }
       public void setDbUser (String user) { this.dbUser = user; }
       public void setDbPassword (String password) { this.dbPassword = password; }
-      ...
+      . . .
       public void connect() {
           Class.forName(dbDriver);
           Connection con;
           try {
                DriverManager.getConnection (dbUrl, dbUser, dbPassword);
           }
-          ...
+          . . .
       }
   }
   ```
@@ -1109,7 +1109,7 @@ rs.close ();
   * **previous():** moves to the previous row
   * **absolute(n):** moves to the nth row
   * **relative(n):** moves forward (backward if n is negative) by n rows
-  * **first()} / \textbf{last():** moves to the first / last row
+  * **first() / last():** moves to the first / last row
 
 <br>
 
@@ -1140,7 +1140,7 @@ TIMESTAMP    | java.sql.TimeStamp        | getTimestamp()
   ```
   String title = rs.getString(1);
   if (title == null) {
-      ...
+      . . .
   }
   ```
 
@@ -1149,7 +1149,7 @@ TIMESTAMP    | java.sql.TimeStamp        | getTimestamp()
   ```
 int year = rs.getInt(2);
 if (rs.wasNull()) {
-    ...
+    . . .
 }
   ```
 
@@ -1247,16 +1247,16 @@ try {
     pstmt = con.prepareStatement(sql);
     rs = pstmt.executeQuery ();
     while (rs.next ()) {
-        // ... rs.getString(1) ...
+        // . . . rs.getString(1) . . .
     }
     // DO NOT close resources here!  
     // (See finally clause on next page)
 }
 catch (SQLException e) {
     // handle error, e.g., print message, terminate
-    // ... e.getErrorCode() ...
-    // ... e.getSQLState() ...
-    // ... e.getMessage() ...
+    // . . . e.getErrorCode() . . .
+    // . . . e.getSQLState() . . .
+    // . . . e.getMessage() . . .
 }
 ```
 
@@ -1271,7 +1271,7 @@ finally {
             rs.close ();
         }
         catch (SQLException e2) {
-            // handle it....
+            // handle it. . .
         }
     }
     if (pstmt != null) {
@@ -1279,7 +1279,7 @@ finally {
             pstmt.close ();
         }
         catch (SQLException e2) {
-            // handle it....
+            // handle it. . .
         }
     }
 ```
@@ -1292,7 +1292,7 @@ finally {
     if (con != null) {
         try { con.close (); }
         catch (SQLException e2) {
-            // handle it....
+            // handle it. . .
         }
     }
 }
@@ -1378,7 +1378,7 @@ finally {
         }
         catch (SQLException e2) {
             // handle it somehow
-            // e.g., log it or retry N times....
+            // e.g., log it or retry N times. . .
         }
     }
     if (pstmt != null) {
@@ -1420,7 +1420,7 @@ finally {
 * It grew to a **dependency injection** framework that 
   * defines **beans** (run-time objects that perform some functionality)
   * **wires** beans together (sets up the run-time graph of cooperating objects)
-  * ...
+  * . . . 
 
 <br>
 
@@ -1565,7 +1565,7 @@ students.close();
   * Allows retrieval of columns by name
 * Positional iterators
   * Need only variable type
-  * Uses **FETCH ... INTO** to write to Java variables
+  * Uses **FETCH . . . INTO** to write to Java variables
 
 ---
 
@@ -1629,116 +1629,9 @@ for (Student student : students) {
   * The session factory then creates one or more sessions
 * Hibernate also offers an easier way using Java annotations (yeay!)
 
----
-
-## Hibernate Mappings with Annotations
-
-```
-@Entity        // Maps to table called "FACULTY"
-public class Faculty
-{
-    private Long fid;
-
-    // Marks the field that corresponds to a key
-    @Id @GeneratedValue  
-    public Long getFid() { return fid; }
-    public void setFid(Long fid) { this.fid = fid; }
-    
-    // Automatically maps to column called "fname"
-    private String fname;
-    public String getFname () { return fname; }
-    public void setFname (String fname) { 
-        this.fname = fname; 
-    }
-```
-
-
----
-
-## Hibernate Mappings with Annotations
-
-```
-    // Automatically maps to column called "specialty"
-    private String specialty;
-    public String getSpecialty () { return specialty; }
-    public void setSpecialty (String specialty) { 
-        this.specialty = specialty; 
-    }
-
-    // Maps to FK on Student(advisor) => Faculty(fid)
-    private Set<Student> advisees = new HashSet<Student> ();
-
-    @OneToMany(mappedBy="advisor")
-    public Set<Student> getAdvisees() { 
-        return advisees;
-    }
-}
-```
-
----
-
-## Hibernate Mappings with Annotations
-
-```
-@Entity        // Maps to table called "FACULTY"
-@Table(name="STUDENTS")
-public class Student
-{
-    private Long sid;
-
-    // Marks the field that corresponds to a key
-    @Id @GeneratedValue  
-    public Long getSid() { return sid; }
-    public void setSid(Long sid) { this.sid = sid; }
-    
-    // Automatically maps to column called "sname"
-    private String sname;
-    public String getSname () { return sname; }
-    public void setSname (String sname) { 
-        this.sname = sname; 
-    }
-```
-
----
-
-## Hibernate Mappings with Annotations
-
-```
-    // Automatically maps to column called "gpa"
-    private Float gpa;
-    public Float getGpa () { return gpa; }
-    public void setGpa (Float gpa) { 
-        this.gpa = gpa; 
-    }
-    
-    private Faculty advisor;
-    @ManyToOne
-    public Faculty getAdvisor () { return advisor; }
-    public void setAdvisor (Faculty advisor) { 
-        this.advisor = advisor; 
-    }
-```
-
----
-
-## Hibernate Mappings with Annotations
-
-```
-Faculty f = ...;
-for (Student advisee: f.getAdvisees()) {
-    // Send reminder to advisee
-}
-```
-
 <br>
 
-```
-Faculty f = ...;
-Student s = ...;
-s.setAdvisor (f);
-session.save (s);
-session.getTransaction().commit();
-```
+* We covered this a long time ago, in the context of the Object-Oriented Data Model
 
 ---
 
@@ -1746,7 +1639,7 @@ session.getTransaction().commit();
 
 * ORMs feel very natural to most programmers
 * Many OO programmers write their own wrapper classes around a database table
-  * I.e., they write their own ORM ... even if they don't know what an ORM is
+  * I.e., they write their own ORM . . . even if they don't know what an ORM is
 * The problem is that writing an efficient ORM is very difficult
 * And sometimes, an efficient ORM leads to some subtle interactions
 * Hibernate also offers an easier way using Java annotations
@@ -1756,7 +1649,7 @@ session.getTransaction().commit();
 ## ORM Gotchas
 
 ```
-Faculty f = ...;
+Faculty f = . . .;
 for (Student student : f.getAdvisees ()) {
     System.out.println (student.getSname());
 }
@@ -1778,7 +1671,7 @@ for (Student student : f.getAdvisees ()) {
 
 * Writing a good ORM is extremely difficult
 * A lot has to happen on the back end to make ORMs efficient
-* Sun got it completely wrong in J2EE's EJB v. 1.0
+* Sun Microsystems (now part of Oracle) got it completely wrong in J2EE's EJB v. 1.0
   * EJB v. 2.0 fixed some of the problems, but was very complicated
   * EJB v. 3.0 is essentially Hibernate
 * Don't ever try to build your own ORM unless you plan to spend a lot of time on it
