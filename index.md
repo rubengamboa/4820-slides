@@ -39,9 +39,13 @@ widgets:      [mathjax, bootstrap]
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
 * [The Database Language SQL](ch06-sql.html)
 * [SQL in a Server Environment](ch09-db-programming.html)
+* Exam 2
+
+<br>
+
+* [Constraints and Triggers](ch07-constraints-triggers.html)
 
 <!--
-* [Constraints and Triggers](ch07-constraints-triggers.html)
 * [Views and Indexes](ch08-views-indexes.html)
 * [Exam 2 Results](exam2-results.html)
 <hr>

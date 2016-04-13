@@ -3,7 +3,7 @@ subtitle:     Constraints and Triggers
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -314,8 +314,7 @@ CREATE TABLE MovieExec (
     name     VARCHAR(30),
     address  VARCHAR(200),
     cert#    INT PRIMARY KEY,
-    netWorth NUMERIC,
-    CHECK (netWorth >= 10000000)
+    netWorth NUMERIC CHECK (netWorth >= 10000000)
 )
 ```
 
@@ -343,7 +342,7 @@ CREATE TABLE Studios (
 
 ## Tuple CHECK Constraints
 
-* These constraints allow you to **specify a condition** that a tup.e must pass
+* These constraints allow you to **specify a condition** that a tuple must pass
 * They are checked whenever a tuple is inserted or modified
 
 ```
@@ -542,7 +541,7 @@ Some key points:
 * Instead of AFTER, a trigger can run BEFORE an update, deletion, insert
 * The action can have many statements inside a BEGIN ... END block
 * If you are using a row-level trigger
-  * OLD ROW AS and NEW ROW as give you access to each row
+  * OLD ROW AS and NEW ROW AS give you access to each row
   * OLD ROW cannot be used for insertions
   * NEW ROW cannot be used for deletions
 * If you are using a statement-level trigger

@@ -3,7 +3,7 @@ subtitle:     Views and Indexes
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -811,9 +811,9 @@ UPDATE MovieProd
 * Suppose we need to compute $S \bowtie S$, where $S$ is the Students table at UW
 * Since $|S| \approx 13000$, the naive method takes up $13000^2 =$ 1.69 &times; 10<sup>8</sup> steps
 * Each step is a disk access, so even if disk I/O is 1ms, that works out to 1.69 &times; 10<sup>5</sup> seconds
-* Which is 2816.6667 minutes
-* Which is 46.9444 hours
-* Which is 1.956 days
+* Which is 2816.6666667 minutes
+* Which is 46.9444444 hours
+* Which is 1.9560185 days
   <br><br>
   
 > * That's a little unfair
@@ -933,7 +933,7 @@ DROP INDEX MovieYearIdx
   <br><br>
 * One approach is to create all possible indexes! (Why not?)
   * If you have a table with 10 attributes, that's 1023 indexes
-  * If you have a table with 20 attributes, that's 1.0486 &times; 10<sup>6</sup> indexes
+  * If you have a table with 20 attributes, that's 1.048575 &times; 10<sup>6</sup> indexes
   <br><br>
 * OK, that may be too much
 * How about an index on each column?

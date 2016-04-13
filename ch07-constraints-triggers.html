@@ -35,7 +35,7 @@
   <hgroup class="auto-fadein">
     <h1>COSC 4820 Database Systems</h1>
     <h2>Constraints and Triggers</h2>
-    <p>Ruben Gamboa<br/>Associate Professor</p>
+    <p>Ruben Gamboa<br/>Professor</p>
   </hgroup>
   <article></article>  
 </slide>
@@ -495,8 +495,7 @@ in the <code>CREATE TABLE</code> or <code>ALTER TABLE</code> commands</li>
     name     VARCHAR(30),
     address  VARCHAR(200),
     cert#    INT PRIMARY KEY,
-    netWorth NUMERIC,
-    CHECK (netWorth &gt;= 10000000)
+    netWorth NUMERIC CHECK (netWorth &gt;= 10000000)
 )
 </code></pre>
 
@@ -540,7 +539,7 @@ in the <code>CREATE TABLE</code> or <code>ALTER TABLE</code> commands</li>
   </hgroup>
   <article data-timings="">
     <ul>
-<li>These constraints allow you to <strong>specify a condition</strong> that a tup.e must pass</li>
+<li>These constraints allow you to <strong>specify a condition</strong> that a tuple must pass</li>
 <li>They are checked whenever a tuple is inserted or modified</li>
 </ul>
 
@@ -857,7 +856,7 @@ WHEN (OldTuple.netWorth &gt; NewTuple.netWorth)
 <li>If you are using a row-level trigger
 
 <ul>
-<li>OLD ROW AS and NEW ROW as give you access to each row</li>
+<li>OLD ROW AS and NEW ROW AS give you access to each row</li>
 <li>OLD ROW cannot be used for insertions</li>
 <li>NEW ROW cannot be used for deletions</li>
 </ul></li>
@@ -953,7 +952,7 @@ UPDATE NewRows SET year = to_char(sysdate, &#39;YYYY&#39;)
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title=''>
+        data-slide=1 title='NA'>
          1
       </a>
     </li>
