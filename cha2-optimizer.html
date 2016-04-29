@@ -1305,6 +1305,388 @@ because we can&#39;t use index on MovieStars</li>
 
 <slide class="" id="slide-43" style="background:;">
   <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider this query (inspired by the course project):</li>
+</ul>
+
+<pre><code>SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li>What is the best way to execute it?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li>First, find all <strong>courses</strong> with subject=COSC</li>
+<li>Then, use that to find all the <strong>enrolled</strong> records for COSC courses</li>
+<li>Finally, look up the <strong>students</strong> enrolled in those courses</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>That&#39;s my buest guess, but let&#39;s ask the database to <strong>EXPLAIN</strong> its plan</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>students</td>
+<td>index</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>12</td>
+<td></td>
+<td>10473</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>enrolled</td>
+<td>ref</td>
+<td>PRIMARY,wnumber</td>
+<td>wnumber</td>
+<td>12</td>
+<td>students.wnumber</td>
+<td>2</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>courses</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>7</td>
+<td>enrolled.crn</td>
+<td>1</td>
+<td>Using where</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Note that the only tables we actually read is <strong>courses</strong> and <strong>enrolled</strong></li>
+<li>We only read the index for <strong>students</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li>Why aren&#39;t we following the &quot;obvious&quot; efficient plan?</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Problem: possible_keys for <strong>courses</strong> does not include <strong>subject</strong></li>
+<li>So our imagined &quot;optimal&quot; query plan is no good</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<pre><code>CREATE INDEX courses_subject_idx 
+ USING HASH 
+    ON courses (subject)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>courses</td>
+<td>ref</td>
+<td>PRIMARY,<br/>courses_subject_idx</td>
+<td>courses_subject_idx</td>
+<td>7</td>
+<td>const</td>
+<td>58</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>enrolled</td>
+<td>ref</td>
+<td>PRIMARY,wnumber</td>
+<td>PRIMARY</td>
+<td>7</td>
+<td>courses.crn</td>
+<td>9</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>students</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>12</td>
+<td>enrolled.wnumber</td>
+<td>1</td>
+<td>Using index</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li><strong>Enrolled</strong> has a PRIMARY index (on crn &amp; wnumber), and a SECONDARY index on wnumber</li>
+<li>But no indexes on crn</li>
+<li>Would that help?</li>
+</ul>
+
+<pre><code>CREATE INDEX enrolled_crn_idx 
+ USING HASH 
+    ON enrolled (crn)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>courses</td>
+<td>ref</td>
+<td>PRIMARY,<br/>courses_subject_idx</td>
+<td>courses_subject_idx</td>
+<td>7</td>
+<td>const</td>
+<td>58</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>enrolled</td>
+<td>ref</td>
+<td>PRIMARY,wnumber,<br/>enrolled_crn_idx</td>
+<td>enrolled_crn_idx</td>
+<td>7</td>
+<td>courses.crn</td>
+<td>6</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>students</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>12</td>
+<td>enrolled.wnumber</td>
+<td>1</td>
+<td>Using index</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>BTW, the only table actually read is <strong>courses</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Index</th>
+<th>Cost</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>S(w#), E(crn,<em>wnumber</em>)</td>
+<td>20,946</td>
+</tr>
+<tr>
+<td>C(subj), E(crn,<em>wnumber</em>), S(w#)</td>
+<td>522</td>
+</tr>
+<tr>
+<td>C(subj), E(crn), S(w#)</td>
+<td>348</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
     <h2>Summary</h2>
   </hgroup>
   <article data-timings="">
@@ -1319,7 +1701,7 @@ given database design (relations, indexes) on a workload (set of queries)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-44" style="background:;">
+<slide class="" id="slide-53" style="background:;">
   <hgroup>
     <h2>Summary</h2>
   </hgroup>
@@ -1607,14 +1989,68 @@ given database design (relations, indexes) on a workload (set of queries)</li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=43 title='Summary'>
+        data-slide=43 title='Extended Example'>
          43
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=44 title='Summary'>
+        data-slide=44 title='Extended Example'>
          44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Extended Example'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Extended Example'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Extended Example'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Extended Example'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Extended Example'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Extended Example'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Extended Example'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='Summary'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='Summary'>
+         53
       </a>
     </li>
   </ul>

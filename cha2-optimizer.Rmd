@@ -795,6 +795,184 @@ Clustered index on StarsIn              | 58
 
 ---
 
+## Extended Example
+
+* Consider this query (inspired by the course project):
+
+```
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+* What is the best way to execute it?
+
+---
+
+## Extended Example
+
+```
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+* First, find all **courses** with subject=COSC
+* Then, use that to find all the **enrolled** records for COSC courses
+* Finally, look up the **students** enrolled in those courses
+
+<br/>
+
+* That's my buest guess, but let's ask the database to **EXPLAIN** its plan
+
+---
+
+## Extended Example
+
+```
+EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+id | select_type | table    | type   | possible_keys   | key     | key_len | ref              | rows  | Extra      
+---|-------------|----------|--------|-----------------|---------|---------|------------------|-------|------------
+ 1 | SIMPLE      | students | index  | PRIMARY         | PRIMARY | 12      |                  | 10473 | Using index
+ 1 | SIMPLE      | enrolled | ref    | PRIMARY,wnumber | wnumber | 12      | students.wnumber |     2 | Using index
+ 1 | SIMPLE      | courses  | eq_ref | PRIMARY         | PRIMARY | 7       | enrolled.crn     |     1 | Using where
+
+* Note that the only tables we actually read is **courses** and **enrolled**
+* We only read the index for **students**
+
+---
+
+## Extended Example
+
+```
+EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+* Why aren't we following the "obvious" efficient plan?
+
+<br/>
+
+* Problem: possible_keys for **courses** does not include **subject**
+* So our imagined "optimal" query plan is no good
+
+---
+
+## Extended Example
+
+```
+EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+```
+CREATE INDEX courses_subject_idx 
+ USING HASH 
+    ON courses (subject)
+```
+
+---
+
+## Extended Example
+
+```
+EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+id | select_type | table    | type   | possible_keys               | key                 | key_len | ref                    | rows | Extra       
+---|-------------|----------|--------|-----------------------------|---------------------|---------|------------------------|----|-------------
+ 1 | SIMPLE      | courses  | ref    | PRIMARY,<br/>courses_subject_idx | courses_subject_idx | 7       | const                  | 58 | Using where 
+ 1 | SIMPLE      | enrolled | ref    | PRIMARY,wnumber             | PRIMARY             | 7       | courses.crn      |  9 | Using index 
+ 1 | SIMPLE      | students | eq_ref | PRIMARY                     | PRIMARY             | 12      | enrolled.wnumber |  1 | Using index 
+
+---
+
+## Extended Example
+
+```
+EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+* **Enrolled** has a PRIMARY index (on crn & wnumber), and a SECONDARY index on wnumber
+* But no indexes on crn
+* Would that help?
+
+```
+CREATE INDEX enrolled_crn_idx 
+ USING HASH 
+    ON enrolled (crn)
+```
+
+---
+
+## Extended Example
+
+```
+EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+id | select_type | table    | type   | possible_keys               | key                 | key_len | ref                    | rows | Extra       
+---|-------------|----------|--------|-----------------------------|---------------------|---------|------------------------|----|-------------
+ 1 | SIMPLE      | courses  | ref    | PRIMARY,<br/>courses_subject_idx | courses_subject_idx | 7       | const                  | 58 | Using where 
+ 1 | SIMPLE      | enrolled | ref    | PRIMARY,wnumber,<br/>enrolled_crn_idx | enrolled_crn_idx             | 7       | courses.crn      |  6 | Using index 
+ 1 | SIMPLE      | students | eq_ref | PRIMARY                     | PRIMARY             | 12      | enrolled.wnumber |  1 | Using index 
+
+* BTW, the only table actually read is **courses**
+
+---
+
+## Extended Example
+
+```
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = 'COSC'
+```
+
+Index                             | Cost
+----------------------------------|-----------
+S(w#), E(crn,_wnumber_)           | 20,946
+C(subj), E(crn,_wnumber_), S(w#)  | 522
+C(subj), E(crn), S(w#)            | 348
+
+---
+
 ## Summary
 
 * The are several alternative evaluation algorithms for each relational operator
