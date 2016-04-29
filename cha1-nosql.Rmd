@@ -3,7 +3,7 @@ subtitle:     Introduction to NoSQL
 author:       Ruben Gamboa
 #logo:         uw-logo-small.png
 #biglogo:      uw-logo-large.png
-job:          Associate Professor
+job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
 mode:         selfcontained
@@ -399,8 +399,8 @@ var mydoc = {
                name: { first: "Alan", last: "Turing" },
                birth: new Date('Jun 23, 1912'),
                death: new Date('Jun 07, 1954'),
-               contribs: [ "Turing machine", "Turing test", "Turingery" ],
-               views : NumberLong(1250000)
+               contribs: [ "Turing machine", "Turing test", "Turingery", "Victory in WWII" ],
+               views : NumberLong(4294967295)
             }
 ```
 
@@ -505,9 +505,9 @@ db.users.insert({
 
 ```
 db.users.udpate(
-    {  age: { $ge: 18 } },
-    { $set: { vote: true } },
-    {multi: true }
+    {   age: { $ge: 18 } },
+    {  $set: { vote: true } },
+    { multi: true }
 )
 ```
 
@@ -567,7 +567,7 @@ db.users.remove(
 ## Getting MEAN
 
 * The MEAN stack is a new/hot/trending/hyped web development platform
-* It is an alternative to LAMP for small sites, and maybe will be a serious competitor to Java/Struts or Java/Spring in the future
+* It is an alternative to LAMP for small sites, and is becoming the main competitor to Java/Struts or Java/Spring in the future
   * LAMP = **L**inux, **A**pache, **M**ysql, **P**hp
 
 <br>

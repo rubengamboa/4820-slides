@@ -39,15 +39,20 @@ widgets:      [mathjax, bootstrap]
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
 * [The Database Language SQL](ch06-sql.html)
 * [SQL in a Server Environment](ch09-db-programming.html)
-* Exam 2
+* [Exam 2 Results](2016/exam2-results.html)
 
-<br>
+<hr>
 
 * [Constraints and Triggers](ch07-constraints-triggers.html)
+* [Views and Indexes](ch08-views-indexes.html)
+* [Query Optimization](cha2-optimizer.html)
+* Final Exam
+
+<hr>
+
+* [Introduction to NoSQL](cha1-nosql.html)
 
 <!--
-* [Views and Indexes](ch08-views-indexes.html)
-* [Exam 2 Results](exam2-results.html)
 <hr>
 * [Advanced Topics in Relational Databases](ch10-adv-topics.html)
 <hr>

@@ -1,3 +1,5 @@
+---
+
 title:        COSC 4820 Database Systems
 subtitle:     Views and Indexes
 author:       Ruben Gamboa
@@ -422,7 +424,7 @@ CREATE VIEW ScifiMovies(title, year, length) AS
    WHERE genre = 'scifi'
 ```
 
-* Consider this deletion
+* Consider this update
 
 ```
 UPDATE ScifiMovies
@@ -495,7 +497,7 @@ FOR EACH ROW
 
 ## Materialized Views
 
-* So far, we've consider the **nested query** interpretation of views
+* So far, we've considered the **nested query** interpretation of views
 * This is the default, and it works remarkably well for the purposes we've seen so far
   <br><br>
 * But there's another reason why views may be useful
