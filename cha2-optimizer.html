@@ -383,7 +383,7 @@ is a <strong>conjunction</strong> (AND) of <strong>equalities</strong> on
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Find the most selective access path</li>
+<li>Find the <strong>most selective access path</strong></li>
 <li>Selective: retrieve fewest number of tuples up front (using an index)</li>
 <li>Apply any remaining conditions to the tuples returned</li>
 </ul>
@@ -798,8 +798,8 @@ make it the inner relation to exploit the index:</li>
 
 <ul>
 <li>1.2 to read from the hash index (on average)</li>
-<li>2.5 reservations per sailor on average (100,000/40,000)</li>
-<li>Cost to fetch reservations is 1 (for clustered) or 2.5 (unclustered)</li>
+<li>2.5 movies per star on average (100,000/40,000)</li>
+<li>Cost to fetch movies is 1 (for clustered) or 2.5 (unclustered)</li>
 </ul></li>
 <li>Total cost: 88,500 (clustered) or 148,500 (unclustered)</li>
 </ul>
@@ -849,7 +849,7 @@ possibly scanning each \(Z_i\) once per tuple in \(X_i\)</li>
 <li><p>Cost: Sort(R) + Sort(S) + #Pages(R) + #Pages(S)</p>
 
 <ul>
-<li>#Pages(R) + #Pages(S) is the likely (and best) cost of the merge operation</li>
+<li>#Pages(R) + #Pages(S) is the likely (and best possible) cost of the merge operation</li>
 <li>But the merge could cost as high as #Pages(R) * #Pages(S)</li>
 <li>This depends entirely on the characteristics of the data</li>
 <li>Worst case: There is only one distinct \(y\), so \(R \bowtie S \approx R \times S\)</li>
@@ -1294,7 +1294,7 @@ because we can&#39;t use index on MovieStars</li>
 <td>~300</td>
 </tr>
 <tr>
-<td>Clustered index on Reserves</td>
+<td>Clustered index on StarsIn</td>
 <td>58</td>
 </tr>
 </tbody></table>

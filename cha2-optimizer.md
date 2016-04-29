@@ -205,7 +205,7 @@ widgets:      [mathjax, bootstrap]
 
 ## Approach to Selections
     
-* Find the most selective access path
+* Find the **most selective access path**
 * Selective: retrieve fewest number of tuples up front (using an index)
 * Apply any remaining conditions to the tuples returned
 
@@ -487,8 +487,8 @@ foreach tuple s in S do:
 * Scan S: 500 pages
 * For each (40,000) S tuple:
   * 1.2 to read from the hash index (on average)
-  * 2.5 reservations per sailor on average (100,000/40,000)
-  * Cost to fetch reservations is 1 (for clustered) or 2.5 (unclustered)
+  * 2.5 movies per star on average (100,000/40,000)
+  * Cost to fetch movies is 1 (for clustered) or 2.5 (unclustered)
 * Total cost: 88,500 (clustered) or 148,500 (unclustered)
 
 ---
@@ -516,7 +516,7 @@ $$R(x,y) \bowtie S(y,z)$$
 ## Cost of Sort-Merge Joins
 
 * Cost: Sort(R) + Sort(S) + #Pages(R) + #Pages(S)
-  * #Pages(R) + #Pages(S) is the likely (and best) cost of the merge operation
+  * #Pages(R) + #Pages(S) is the likely (and best possible) cost of the merge operation
   * But the merge could cost as high as #Pages(R) * #Pages(S)
   * This depends entirely on the characteristics of the data
   * Worst case: There is only one distinct $y$, so $R \bowtie S \approx R \times S$
@@ -791,7 +791,7 @@ Nested loop                             | 500,500
 Push selections                         | 2,334
 Push selections, BNL join               | 334
 Push selections & projections, BNL join | ~300
-Clustered index on Reserves             | 58
+Clustered index on StarsIn              | 58
 
 ---
 

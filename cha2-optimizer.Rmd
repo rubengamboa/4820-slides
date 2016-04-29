@@ -791,7 +791,7 @@ Nested loop                             | 500,500
 Push selections                         | 2,334
 Push selections, BNL join               | 334
 Push selections & projections, BNL join | ~300
-Clustered index on Reserves             | 58
+Clustered index on StarsIn              | 58
 
 ---
 
