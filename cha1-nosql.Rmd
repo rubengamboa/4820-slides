@@ -136,6 +136,7 @@ widgets:      [mathjax, bootstrap]
 <br>
 
 No distributed system can achieve all three of these goals
+
 1. Consistency
 2. Availability
 3. Partition tolerance
