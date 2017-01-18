@@ -218,7 +218,7 @@ Wayne's World       | 1992   |      95 | comedy
 
 ```
 ("Star Wars", 1977, 124, "scifi")
-````
+```
 
 <br>
 

@@ -33,13 +33,13 @@ widgets:      [mathjax, bootstrap]
 * [High-Level Database Models: Object-Oriented Model](ch04a-object-oriented-model.html)
 * [Design Theory for Relational Databases](ch03-design-theory.html)
 * [High-Level Database Models: E/R Model and ODL](ch04-high-level-models.html)
-* [Exam 1 Results](2016/exam1-results.html)
+* Exam 1
 
 *** =right
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
 * [The Database Language SQL](ch06-sql.html)
 * [SQL in a Server Environment](ch09-db-programming.html)
-* [Exam 2 Results](2016/exam2-results.html)
+* Exam 2
 
 <hr>
 
@@ -48,6 +48,8 @@ widgets:      [mathjax, bootstrap]
 * [Query Optimization](cha2-optimizer.html)
 * Final Exam
 
+<!--
+
 <hr>
 
 * [Introduction to NoSQL](cha1-nosql.html)
@@ -55,7 +57,6 @@ widgets:      [mathjax, bootstrap]
 <hr>
 * [Final Exam Results](2016/exam3-results.html)
 
-<!--
 <hr>
 * [Advanced Topics in Relational Databases](ch10-adv-topics.html)
 -->

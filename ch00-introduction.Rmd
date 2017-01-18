@@ -4,7 +4,7 @@ title:        COSC 4820 Database Systems
 subtitle:     Course Introduction
 author:       Ruben Gamboa
 #logo:         uw-logo-large.png
-biglogo:      broncos-patriots-cg16.png
+#biglogo:      broncos-patriots-cg16.png
 job:          Professor
 highlighter:  highlight.js
 hitheme:      tomorrow
@@ -183,7 +183,7 @@ widgets:      [mathjax, bootstrap]
 ## Meetings
 
 * Come see me during office hours
-  * MWF 10-11:45am
+  * MWF 11-11:50, MW 1-2:15
   * or by appointment
 * Email is OK for private matters
 * But I prefer that you ask class-related questions by creating a new discussion thread
