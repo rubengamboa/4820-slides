@@ -1141,7 +1141,7 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
   <br><br>
 * Joining Facebook's users table with itself would take 3.2041 &times; 10<sup>15</sup> seconds, or 3.7084491 &times; 10<sup>10</sup> days
 * That would be 1.0160134 &times; 10<sup>8</sup> years
-* You would have had to start 11 million years *before* the dinosaurs went extinct to finish by now
+* You would have had to start 37 million years *before* the dinosaurs went extinct to finish by now
   <br><br>
 * That's why the conventional wisdom when dealing with very (very, very, very) large databases is that joins are a disaster
 * That may not be entirely true, but it explains why the big technology companies developed their own database systems
