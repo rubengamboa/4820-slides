@@ -218,7 +218,7 @@ Wayne's World       | 1992   |      95 | comedy
 
 ```
 ("Star Wars", 1977, 124, "scifi")
-````
+```
 
 <br>
 
@@ -1134,13 +1134,13 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 
 ## Join Lesson #4
 
-* In the third quarter of 2015, Facebook had 1.55 billion active users
+* In the third quarter of 2016, Facebook had 1.79 billion active users
   <br><br>
-* That is roughly equivalent to 120,000 Universities of Wyoming
+* That is roughly equivalent to 138,000 Universities of Wyoming
 * (There's a little over 4,000 universities in the US, including community colleges)
   <br><br>
-* Joining Facebook's users table with itself would take 2.4025 &times; 10<sup>15</sup> seconds, or 2.7806713 &times; 10<sup>10</sup> days
-* That would be 7.6182775 &times; 10<sup>7</sup> years
+* Joining Facebook's users table with itself would take 3.2041 &times; 10<sup>15</sup> seconds, or 3.7084491 &times; 10<sup>10</sup> days
+* That would be 1.0160134 &times; 10<sup>8</sup> years
 * You would have had to start 11 million years *before* the dinosaurs went extinct to finish by now
   <br><br>
 * That's why the conventional wisdom when dealing with very (very, very, very) large databases is that joins are a disaster
@@ -1318,7 +1318,7 @@ $$\pi_{\text{name}, \text{address}, \text{cert#}, \text{netWorth}}(\text{Movies}
 * Assuming the schemas $R(x,y)$ and $S(y,z)$:
   * $R \cap S = R - (R - S)$
   * $R \bowtie_\theta S = \sigma_\theta (R \times S)$
-  * $R \bowtie S = \rho_{(x,y,z)}(\pi_{x,R,y,z}(\sigma(R.y = S.y)(R \times S)))$
+  * $R \bowtie S = \rho_{(x,y,z)}(\pi_{x,R,y,z}(\sigma_{R.y = S.y}(R \times S)))$
 * It turns out we only need $\cup$, $-$, $\pi$, $\sigma$, $\times$, and $\rho$
 * But having the others is very convenient!
 
