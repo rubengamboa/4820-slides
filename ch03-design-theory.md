@@ -692,8 +692,8 @@ Wayne's World      | 1992 | Mike Meyers
 <br>
 
 * Again, this is in BCNF
-* The key is title, year
-* The only real nontrivial FD is title, year $\rightarrow$ starName
+* The key is title, year, StarName
+* There are no nontrivial FDs
 
 ---
 
@@ -1122,20 +1122,224 @@ $t_2$       | $a$   | $b$   | $c$   | $d_2$
 
 ---
 
-## Dependency Preservation
+## Example of Decomposition into BCNF
 
 * Suppose we have $R(A, B, C, D)$ with FDs
   * $A, B \rightarrow C$
-  * $C \rightarrow D$
-  * $D \rightarrow A$
-* First, notice that $A, B$ is a key, and that the other FDs violate BCNF
-  <br><br>
-* We decompose $R$ using $C \rightarrow D$ into
-  * $R_1(A,B,C)$
-  * $R_2(C,D)$
-* In this case, we do not have to decompose any more, since both relations are in BCNF
-  <br><br>
-* But, we lost the FD $D \rightarrow A$!
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+>* The first step is to find the keys
+* We do this by considering closures, and in particular $\{A,B\}^+ = \{B,C\}^+ = \{A, B, C, D\}$
+* Adding $D$ to either $\{A,B\}$ or $\{B,C\}$ wouldn't help
+* And removing any attribute from either $\{A,B\}$ or $\{B,C\}$ would narrow the closure
+* So both $\{A,B\}$ and $\{B,C\}$ are keys
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+  * Keys: $\{A,B\}$ and $\{B,C\}$
+
+>* The second step is to consider each of the FDs until we find a violation of BCNF
+* $A, B \rightarrow C$ is not a violation of BCNF, because $\{A,B\}$ is a key
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+  * Keys: $\{A,B\}$ and $\{B,C\}$
+
+>* The second step is to consider each of the FDs until we find a violation of BCNF
+* But $B \rightarrow D$ is a violation of BCNF, because $\{B\}$ is not a superkey
+* So we split $R$ into
+  * $R_1(B, D)$
+  * $R_2(B, A, C)$
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+>* The third step is to recurvisely turn each of the $R_i$ into BCNF
+* $R_1(B, D)$ is already in BCNF, since it only has two attributes
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+>* The third step is to recurvisely turn each of the $R_i$ into BCNF
+* For $R_2(B, A, C)$, we have to go back to the drawing board
+* What are the FDs for $R_2$?
+* We need to project the FDs above to $R_2$
+* In this case, we can just omit the second FD (but in general, you have to consider all possible left-hand sides for FDs)
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+* We project the FDs for $R_2(B, A, C)$
+
+Left-hand side $X$ | $X^+ \cap \{B, A, C\}$     | FD
+-------------------|----------------------------|---------------------
+$A$                | $A$                        |
+$B$                | $B$                        |
+$C$                | $C, A$                     | $C \rightarrow C, A$
+$A, B$             | $A, B, C$                  | $A, B \rightarrow C$
+$A, C$             | $A, C$                     | 
+$B, C$             | $B, C, A$                  | $B, C \rightarrow A$
+
+
+---
+
+## Example of Decomposition into BCNF
+
+* We project the FDs to $R_2(B, A, C)$
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+* So $R_2$ has these functional dependencies:
+  * $C \rightarrow C, A$
+  * $A, B \rightarrow C$
+  * $B, C \rightarrow A$
+
+> * Of course, we want a minimal basis for those, e.g.:
+  * $C \rightarrow A$
+  * $A, B \rightarrow C$
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R_2(B, A, C)$ with FDs
+  * $C \rightarrow A$
+  * $A, B \rightarrow C$
+
+>* The first step is to find the keys
+* Notice we need $B$ in any key (since it doesn't appear in the right-hand side)
+* Then we find that $\{A,B\}^+ = \{B,C\}^+ = \{A, B, C\}$
+* But $B$ by itself isn't enough, because $B^+ = \{B\}$
+* So both $\{A,B\}$ and $\{B,C\}$ are keys
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R_2(B, A, C)$ with FDs
+  * $C \rightarrow A$
+  * $A, B \rightarrow C$
+  * Keys: $\{A,B\}$ and $\{B,C\}$
+
+>* The second step is to consider each of the FDs until we find a violation of BCNF
+* Rightaway $C \rightarrow A$ is a violation of BCNF, because $\{C\}$ is not a superkey
+* So we split $R_2$ into
+  * $R_{2,1}(C, A)$
+  * $R_{2,2}(C, B)$
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R_2(B, A, C)$ with FDs
+  * $C \rightarrow A$
+  * $A, B \rightarrow C$
+  * Keys: $\{A,B\}$ and $\{B,C\}$
+
+>* Ordinarily, we would move on to the third step, which is to recursively decompose $R_{2,1}(C,A)$ and $R_{2,2}(C,B)$
+* But both of those relations have only two attributes, so we know they are already in BCNF
+
+>* So the final decomposition of $R(A,B,C,D)$ is
+  * $R_1(B, D)$
+  * $R_{2,1}(C, A)$
+  * $R_{2,2}(C, B)$
+
+---
+
+## Example of Decomposition into BCNF
+
+* Suppose we have $R_2(B, A, C)$ with FDs
+  * $C \rightarrow A$
+  * $A, B \rightarrow C$
+  * Keys: $\{A,B\}$ and $\{B,C\}$
+
+>* Ordinarily, we would move on to the third step, which is to recursively decompose $R_{2,1}(C,A)$ and $R_{2,2}(C,B)$
+* But both of those relations have only two attributes, so we know they are already in BCNF
+
+>* So the final decomposition of $R(A,B,C,D)$ is
+  * $R_1(B, D)$
+  * $R_{2,1}(C, A)$
+  * $R_{2,2}(C, B)$
+
+---
+
+## Example of Decomposition into BCNF (Important Aside)
+
+* We started with the relation $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+* We decomposed it into
+  * $R_1(B, D)$
+  * $R_{2,1}(C, A)$
+  * $R_{2,2}(C, B)$
+
+
+---
+
+## Example of Decomposition into BCNF (Important Aside)
+
+* We started with the relation $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+* We did *not* decompose $R$ into
+  * $R_1(A, B, C)$
+  * $R_2(B, D)$
+  * $R_3(C, A)$
+
+* Don't make that mistake! (A lot of students do)
+
+---
+
+## Dependency Preservation
+
+* We started with the relation $R(A, B, C, D)$ with FDs
+  * $A, B \rightarrow C$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
+
+* We decomposed it into
+  * $R_1(B, D)$
+  * $R_{2,1}(C, A)$
+  * $R_{2,2}(C, B)$
+
+* What happened to the FD
+  * $A, B \rightarrow C$?
 
 ---
 
@@ -1202,8 +1406,8 @@ OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of whi
 
 * Recall $R(A, B, C, D)$ with FDs
   * $A, B \rightarrow C$
-  * $C \rightarrow D$
-  * $D \rightarrow A$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
 * Remember that we failed to decompose it into BCNF in a way that was dependency preserving
   <br><br>
 * Now we'll decompose it into 3NF instead
@@ -1214,8 +1418,8 @@ OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of whi
 
 * We have these FDs
   * $A, B \rightarrow C$
-  * $C \rightarrow D$
-  * $D \rightarrow A$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
   <br><br>
 * No FD follows from the others, so we cannot remove any of the FDs without changing the constraints
   <br><br>
@@ -1230,13 +1434,13 @@ OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of whi
 
 * We have these FDs
   * $A, B \rightarrow C$
-  * $C \rightarrow D$
-  * $D \rightarrow A$
+  * $B \rightarrow D$
+  * $C \rightarrow A$
   <br><br>
 * So we decompose the relation $R$ into
   * $R_1(A, B, C)$
-  * $R_2(C, D)$
-  * $R_3(D, A)$
+  * $R_2(B, D)$
+  * $R_3(C, A)$
 
 ---
 
@@ -1247,8 +1451,8 @@ OUTPUT: A decomposition of $R$ into relations $R_1, R_2, \dots, R_n$, all of whi
 FD                    | Table
 ----------------------|------------------
 $A, B \rightarrow C$  | $R_1(A, B, C)$
-$C \rightarrow D$     | $R_2(C, D)$
-$D \rightarrow A$     | $R_3(D, A)$
+$B \rightarrow D$     | $R_2(B, D)$
+$C \rightarrow A$     | $R_3(C, A)$
 
 <br>
   
@@ -1256,7 +1460,6 @@ $D \rightarrow A$     | $R_3(D, A)$
 * We have to consider all the keys of $R$:
   * $A, B$
   * $B, C$
-  * $B, D$
 * That means the attributes of $R_1$ are a superkey for $R$, so we're done
 * Otherwise, we could have picked any of the key candidates and turned it into $R_4$
 
