@@ -1,0 +1,220 @@
+title:        COSC 4820 Database Systems
+subtitle:     "Exam #1 Results"
+author:       Ruben Gamboa
+#logo:         uw-logo-small.png
+#biglogo:      uw-logo-large.png
+job:          Professor
+highlighter:  highlight.js
+hitheme:      tomorrow
+mode:         selfcontained
+framework:    io2012
+widgets:      [mathjax, bootstrap]
+
+---
+
+<style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+## Exam Questions
+
+```{r init, echo=FALSE}
+library(pander)
+```
+
+```{r setup, results = "asis", echo=FALSE, warnings=FALSE}
+questions <- data.frame(
+  Question = c('q1a', 'q1b', 'q1c', 'q1d', 
+    'q2a', 'q2b', 'q2c', 
+    'q3', 
+    'q4',
+    'q5a', 'q5b', 'q5c', 'q5d', 
+    'q5e (bonus)', 'q5f (bonus)', 'q5g (bonus)'),
+  Points = c(5, 5, 5, 5, 5, 5, 5, 15, 20, 
+    10, 5, 5, 10,
+    2, 2, 1),
+  Topic = c('Reading Relational Algebra', 
+    'Reading Relational Algebra',
+    'Reading Relational Algebra', 
+    'Reading Relational Algebra',
+    'Writing Relational Algebra',
+    'Writing Relational Algebra', 
+    'Writing Relational Algebra',
+    'E/R Schema Design',
+    'E/R to SQL DDL',
+    'Closure Algorithm', 'Keys',
+    'Projecting FDs', 'BCNF Decomposition',
+    'Is BCNF Lossless?', 'Is BCNF FD-Preserving?',
+    '3NF Decomposition'
+    ),
+  stringsAsFactors = FALSE
+  )
+
+questions.abbrev <- questions[questions$Question < 'q1',]
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q1a-d', Points=sum(questions[questions$Question >= 'q1' & questions$Question < 'q2',2]), 
+    Topic='Reading Relational Algebra')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q2a-c', Points=sum(questions[questions$Question >= 'q2' & questions$Question < 'q3',2]), 
+    Topic='Writing Relational Algebra')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  questions[questions$Question >= 'q3' & questions$Question < 'q5e',])
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q5e-g (bonus)', Points=sum(questions[questions$Question >= 'q5e',2]), 
+    Topic='Lossless, FD-Preserving, 3NF Decomposition')
+    )
+
+row.names(questions.abbrev) <- NULL
+pander(questions.abbrev, style = "rmarkdown", include.rownames=FALSE)
+```
+
+---
+
+## Grade Distribution
+
+```{r exam1.grades.2017, fig.width=10, fig.height=6, echo=FALSE, cache=FALSE}
+points <- questions$Points
+exams <- data.frame(
+  'q1a'          = c(0,  0, 0,  0,  0,  3,  0, 0, 0,  0, 0,  0, 0,  0,  0,  0, 0, 0,  1,  0,  0, 0),
+  'q1b'          = c(0,  0, 0,  0,  0,  0,  0, 0, 1,  0, 0,  3, 0,  0,  0,  0, 0, 0,  0,  0,  0, 0),
+  'q1c'          = c(0,  4, 4,  4,  4,  4,  4, 0, 4,  4, 4,  4, 4,  4,  4,  4, 4, 4,  4,  4,  4, 4),
+  'q1d'          = c(0,  2, 0,  0,  2,  0,  3, 0, 0,  0, 0,  4, 0,  0,  0,  0, 0, 0,  0,  0,  0, 0),
+  'q2a'          = c(0,  2, 0,  0,  0,  0,  2, 0, 0,  0, 0,  0, 0,  0,  0,  2, 2, 0,  0,  0,  0, 4),
+  'q2b'          = c(2,  4, 2,  2,  2,  2,  2, 1, 2,  2, 2,  0, 0,  3,  2,  2, 2, 2,  0,  2,  2, 0),
+  'q2c'          = c(3,  4, 2,  2,  4,  1,  2, 4, 4,  3, 1,  2, 0,  2,  4,  4, 4, 2,  0,  4,  4, 4),
+  'q3'           = c(1,  2, 2,  4,  5,  2,  0, 1, 2,  5, 2,  0, 0,  7,  2,  2, 0, 4,  4,  0,  2, 7),
+  'q4'           = c(3, 10, 5, 16, 10, 13, 12, 0, 8, 10, 1, 12, 8,  8, 12, 18, 6, 3, 10, 20, 12, 8),
+  'q5a'          = c(0,  0, 0,  5,  0,  0,  0, 0, 0,  0, 0,  0, 0,  0,  0,  0, 0, 0,  0,  0,  0, 0),
+  'q5b'          = c(2,  2, 0,  0,  0,  2,  2, 2, 0,  2, 0,  2, 0,  0,  2,  2, 2, 2,  0,  2,  2, 2),
+  'q5c'          = c(0,  4, 0,  4,  4,  0,  4, 4, 4,  0, 4,  0, 0,  4,  4,  0, 3, 3,  0,  0,  4, 4),
+  'q5d'          = c(1,  2, 2,  7,  1,  7,  6, 3, 1,  5, 6,  2, 5,  2,  2,  7, 0, 3,  3,  2,  2, 6),
+  'q5e (bonus)'  = c(0,  1, 0,  0,  0,  0,  1, 2, 0,  0, 0,  0, 2,  2,  2,  0, 2, 2,  0,  2,  2, 0),
+  'q5f (bonus)'  = c(2,  2, 1,  0,  2,  1,  2, 1, 2,  1, 2,  0, 1,  1,  0,  0, 2, 2,  2,  2,  2, 0),
+  'q5g (bonus)'  = c(0,  1, 1,  0,  0,  0,  0, 1, 0,  0, 0,  0, 0,  0,  0,  0, 1, 1,  0,  1,  0, 0)
+  )
+g <- data.frame(q1a            = points[which(questions$Question=='q1a')]  - exams$q1a,
+                q1b            = points[which(questions$Question=='q1b')]  - exams$q1b,
+                q1c            = points[which(questions$Question=='q1c')]  - exams$q1c,
+                q1d            = points[which(questions$Question=='q1d')]  - exams$q1d,
+                q2a            = points[which(questions$Question=='q2a')]  - exams$q2a,
+                q2b            = points[which(questions$Question=='q2b')]  - exams$q2b,
+                q2c            = points[which(questions$Question=='q2c')]  - exams$q2c,
+                q3             = points[which(questions$Question=='q3' )]  - exams$q3,
+                q4             = points[which(questions$Question=='q4' )]  - exams$q4,
+                q5a            = points[which(questions$Question=='q5a')]  - exams$q5a,
+                q5b            = points[which(questions$Question=='q5b')]  - exams$q5b,
+                q5c            = points[which(questions$Question=='q5c')]  - exams$q5c,
+                q5d            = points[which(questions$Question=='q5d')]  - exams$q5d,
+                "q5e (bonus)"  =                                             exams$"q5e..bonus.",
+                "q5f (bonus)"  =                                             exams$"q5f..bonus.",
+                "q5g (bonus)"  =                                             exams$"q5g..bonus.")
+                
+g$grades <- rowSums(g)
+# g$grades
+summary(c(g$grades))
+
+cs.majors <- c(TRUE)
+# missing: NA
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Exam #1 Results')
+```
+
+---
+
+## Grade Distribution by Question
+
+```{r exam1.questions.2017, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q1a-d', nscores),
+                              rep('q2a-c', nscores),
+                              rep('q3', nscores),
+                              rep('q4', nscores),
+                              rep('q5a', nscores),
+                              rep('q5b', nscores),
+                              rep('q5c', nscores),
+                              rep('q5d', nscores),
+                              rep('q5e-g (bonus)', nscores)
+                            ),
+                 score = 100*c((rowSums(g[,which(questions$Question>='q1' & questions$Question<'q2')]) / 
+                                sum(points[which(questions$Question>='q1' & questions$Question<'q2')])),
+                               (rowSums(g[,which(questions$Question>='q2' & questions$Question<'q3')]) / 
+                                sum(points[which(questions$Question>='q2' & questions$Question<'q3')])),
+                               g$q3/points[questions$Question=='q3'], 
+                               g$q4/points[questions$Question=='q4'], 
+                               g$q5a/points[questions$Question=='q5a'], 
+                               g$q5b/points[questions$Question=='q5b'], 
+                               g$q5c/points[questions$Question=='q5c'], 
+                               g$q5d/points[questions$Question=='q5d'], 
+                               (rowSums(g[,which(questions$Question>='q5e' & questions$Question<'q6')]) / 
+                                sum(points[which(questions$Question>='q5e' & questions$Question<'q6')]))))
+plot(g2$question, g2$score)
+title('Individual Question Results')
+```
+
+---
+
+## Grade Distribution for Question 1
+
+```{r exam1.question1.2017, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q1a',  nscores),
+                              rep('q1b',  nscores),
+                              rep('q1c',  nscores),
+                              rep('q1d',  nscores)
+                              ),
+                 score = 100*c(g$q1a/points[questions$Question=='q1a'],
+                               g$q1b/points[questions$Question=='q1b'],
+                               g$q1c/points[questions$Question=='q1c'],
+                               g$q1d/points[questions$Question=='q1d']))
+plot(g2$question, g2$score)
+title('Question 1 Results')
+```
+
+---
+
+## Grade Distribution for Question 2
+
+```{r exam1.question2.2017, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q2a',  nscores),
+                              rep('q2b',  nscores),
+                              rep('q2c',  nscores)
+                              ),
+                 score = 100*c(g$q2a/points[questions$Question=='q2a'],
+                               g$q2b/points[questions$Question=='q2b'],
+                               g$q2c/points[questions$Question=='q2c']))
+plot(g2$question, g2$score)
+title('Question 2 Results')
+```
+
+---
+
+## Grade Distribution for Question 5 (Bonus)
+
+```{r exam1.question5.2017, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q5e',  nscores),
+                              rep('q5f',  nscores),
+                              rep('q5g',  nscores)
+                              ),
+                 score = 100*c(g$"q5e..bonus."/points[questions$Question=='q5e (bonus)'],
+                               g$"q5f..bonus."/points[questions$Question=='q5f (bonus)'],
+                               g$"q5g..bonus."/points[questions$Question=='q5g (bonus)']))
+plot(g2$question, g2$score)
+title('Question 5 Results')
+```
+
+
+
+
+
