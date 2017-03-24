@@ -322,8 +322,8 @@ SELECT *
 ## ANSI Date and Time Constants
 
 * DATE 'yyyy-mm-dd'
-  * DATE '2016-03-05'
-  * DATE '2016-03-10'
+  * DATE '2017-03-05'
+  * DATE '2017-03-10'
   <br><br>
 * TIME 'hh:mm:ss.ddd'
   * TIME '03:15:00'
@@ -340,7 +340,7 @@ SELECT *
   * TIME '03:15:00-6:00'
   <br><br>
 * TIMESTAMP 'yyyy-mm-dd hh:mm:ss.ddd'
-  * TIMESTAMP '2016-03-05 15:15:00'
+  * TIMESTAMP '2017-03-05 15:15:00'
 
 ---
 
@@ -351,8 +351,8 @@ SELECT *
 ```
 SELECT *
   FROM Movies
- WHERE releaseDate >= DATE '2016-03-05'
-   AND releaseDate <= DATE '2016-03-15'
+ WHERE releaseDate >= DATE '2017-03-05'
+   AND releaseDate <= DATE '2017-03-15'
 ```
 
 ---
@@ -609,7 +609,7 @@ EXCEPT
 ```
 SELECT crn
   FROM Courses
- WHERE year = 2016
+ WHERE year = 2017
    AND semester = 'Spring'
    AND dept = 'COSC'
    AND cnumber = '4820'
@@ -627,7 +627,7 @@ SELECT first_name, last_name
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = (SELECT crn
                          FROM Courses
-                        WHERE year = 2016
+                        WHERE year = 2017
                           AND semester = 'Spring'
                           AND dept = 'COSC'
                           AND cnumber = '4820')
@@ -643,7 +643,7 @@ SELECT first_name, last_name
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = (SELECT crn
                          FROM Courses
-                        WHERE year = 2016   AND semester = 'Spring'
+                        WHERE year = 2017   AND semester = 'Spring'
                           AND dept = 'COSC' AND cnumber = '4820')
 ```
 
@@ -669,7 +669,7 @@ SELECT first_name, last_name
   FROM Students, Enrolled, Courses
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = Courses.crn
-   AND year = 2016   AND semester = 'Spring'
+   AND year = 2017   AND semester = 'Spring'
    AND dept = 'COSC' AND cnumber = '4820'
 ```
 
@@ -722,7 +722,7 @@ SELECT first_name, last_name
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn IN (SELECT crn
                           FROM Courses
-                         WHERE year = 2016
+                         WHERE year = 2017
                            AND semester = 'Spring'
                            AND facultyId = (SELECT id
                                               FROM Faculty
@@ -995,7 +995,7 @@ SELECT DISTINCT starName
 * By default, this **eliminates duplicates**
   * This sort of makes sense
   * The implementation of `INTERSECT` and `EXCEPT` is most efficient when eliminating duplicates
-  * `UNION` would be more efficient with duplicates, but it follows the patter of the other set operations
+  * `UNION` would be more efficient with duplicates, but it follows the pattern of the other set operations
   <br><br>
 * Here, you can ask explicitly for bag behavior (i.e., to have the duplicates left)
 * Simply use `UNION ALL` or `INTERSECT ALL` or `EXCEPT ALL`

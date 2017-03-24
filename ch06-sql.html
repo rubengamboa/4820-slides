@@ -540,8 +540,8 @@ Studio(name , address , presC#)
 <li>DATE &#39;yyyy-mm-dd&#39;
 
 <ul>
-<li>DATE &#39;2016-03-05&#39;</li>
-<li>DATE &#39;2016-03-10&#39;
+<li>DATE &#39;2017-03-05&#39;</li>
+<li>DATE &#39;2017-03-10&#39;
 <br><br></li>
 </ul></li>
 <li>TIME &#39;hh:mm:ss.ddd&#39;
@@ -574,7 +574,7 @@ Studio(name , address , presC#)
 <li>TIMESTAMP &#39;yyyy-mm-dd hh:mm:ss.ddd&#39;
 
 <ul>
-<li>TIMESTAMP &#39;2016-03-05 15:15:00&#39;</li>
+<li>TIMESTAMP &#39;2017-03-05 15:15:00&#39;</li>
 </ul></li>
 </ul>
 
@@ -593,8 +593,8 @@ Studio(name , address , presC#)
 
 <pre><code>SELECT *
   FROM Movies
- WHERE releaseDate &gt;= DATE &#39;2016-03-05&#39;
-   AND releaseDate &lt;= DATE &#39;2016-03-15&#39;
+ WHERE releaseDate &gt;= DATE &#39;2017-03-05&#39;
+   AND releaseDate &lt;= DATE &#39;2017-03-15&#39;
 </code></pre>
 
   </article>
@@ -1037,7 +1037,7 @@ EXCEPT
 
 <pre><code>SELECT crn
   FROM Courses
- WHERE year = 2016
+ WHERE year = 2017
    AND semester = &#39;Spring&#39;
    AND dept = &#39;COSC&#39;
    AND cnumber = &#39;4820&#39;
@@ -1061,7 +1061,7 @@ EXCEPT
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = (SELECT crn
                          FROM Courses
-                        WHERE year = 2016
+                        WHERE year = 2017
                           AND semester = &#39;Spring&#39;
                           AND dept = &#39;COSC&#39;
                           AND cnumber = &#39;4820&#39;)
@@ -1081,7 +1081,7 @@ EXCEPT
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = (SELECT crn
                          FROM Courses
-                        WHERE year = 2016   AND semester = &#39;Spring&#39;
+                        WHERE year = 2017   AND semester = &#39;Spring&#39;
                           AND dept = &#39;COSC&#39; AND cnumber = &#39;4820&#39;)
 </code></pre>
 
@@ -1114,7 +1114,7 @@ EXCEPT
   FROM Students, Enrolled, Courses
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = Courses.crn
-   AND year = 2016   AND semester = &#39;Spring&#39;
+   AND year = 2017   AND semester = &#39;Spring&#39;
    AND dept = &#39;COSC&#39; AND cnumber = &#39;4820&#39;
 </code></pre>
 
@@ -1192,7 +1192,7 @@ EXCEPT
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn IN (SELECT crn
                           FROM Courses
-                         WHERE year = 2016
+                         WHERE year = 2017
                            AND semester = &#39;Spring&#39;
                            AND facultyId = (SELECT id
                                               FROM Faculty
@@ -1580,7 +1580,7 @@ and the &quot;selection&quot; conditions in the WHERE</li>
 <ul>
 <li>This sort of makes sense</li>
 <li>The implementation of <code>INTERSECT</code> and <code>EXCEPT</code> is most efficient when eliminating duplicates</li>
-<li><code>UNION</code> would be more efficient with duplicates, but it follows the patter of the other set operations
+<li><code>UNION</code> would be more efficient with duplicates, but it follows the pattern of the other set operations
 <br><br></li>
 </ul></li>
 <li>Here, you can ask explicitly for bag behavior (i.e., to have the duplicates left)</li>

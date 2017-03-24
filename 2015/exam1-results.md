@@ -40,13 +40,13 @@ bonus      |      5 | Attend Meeting
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    58.0    63.5    69.5    70.8    75.0    90.0
+##   58.00   63.50   69.50   70.79   75.00   90.00
 ```
 
-![plot of chunk exam1_grades](assets/fig/exam1_grades.png) 
+![plot of chunk exam1_grades](assets/fig/exam1_grades-1.png)
 
 ---
 
 ## Grade Distribution by Question
 
-![plot of chunk exam1_questions](assets/fig/exam1_questions.png) 
+![plot of chunk exam1_questions](assets/fig/exam1_questions-1.png)

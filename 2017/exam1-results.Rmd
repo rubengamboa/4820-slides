@@ -27,7 +27,7 @@ widgets:      [mathjax, bootstrap]
 library(pander)
 ```
 
-```{r setup, results = "asis", echo=FALSE, warnings=FALSE}
+```{r setup, results = "asis", echo=FALSE, warning=FALSE}
 questions <- data.frame(
   Question = c('q1a', 'q1b', 'q1c', 'q1d', 
     'q2a', 'q2b', 'q2c', 
