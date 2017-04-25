@@ -39,7 +39,7 @@ widgets:      [mathjax, bootstrap]
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
 * [The Database Language SQL](ch06-sql.html)
 * [SQL in a Server Environment](ch09-db-programming.html)
-* Exam 2
+* [Exam #2 Results](2017/exam2-results.html)
 
 <hr>
 
