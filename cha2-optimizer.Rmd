@@ -240,7 +240,7 @@ widgets:      [mathjax, bootstrap]
     
 * Consider this condition:
 ```
-date < 5/1/16 AND voter_id=5 AND precinct_id=3
+date < 5/1/17 AND voter_id=5 AND precinct_id=3
 ```
 * Here are two different query plans:
   * Use a B+ tree on the date field, then filter the remaining tuples using
