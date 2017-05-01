@@ -797,7 +797,7 @@ Clustered index on StarsIn              | 58
 
 ## Extended Example
 
-* Consider this query (inspired by the course project):
+* Consider this query (inspired by a previous course project):
 
 ```
 SELECT count(distinct courses.crn), sum(courses.credits)
