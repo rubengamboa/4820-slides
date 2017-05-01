@@ -448,7 +448,7 @@ date &lt; 5/1/17 AND voter_id=5 AND precinct_id=3
 <li>Use a B+ tree on the date field, then filter the remaining tuples using
         the condition voter_id=5 AND precinct_id=3</li>
 <li>Use a hash index on voter_id and precint_id and then check each tuple
-to see if it matches day&lt;4/1/13</li>
+to see if it matches day&lt;5/1/17</li>
 </ul></li>
 </ul>
 

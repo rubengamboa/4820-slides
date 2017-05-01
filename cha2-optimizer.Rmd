@@ -247,7 +247,7 @@ date < 5/1/17 AND voter_id=5 AND precinct_id=3
                 the condition voter_id=5 AND precinct_id=3
 
   * Use a hash index on voter_id and precint_id and then check each tuple
-    to see if it matches day<4/1/13
+    to see if it matches day<5/1/17
 
 <br/>
     
