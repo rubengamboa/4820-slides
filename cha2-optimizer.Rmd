@@ -773,6 +773,7 @@ SELECT MS.name
 * Cost:
   * Selection of StarsIn: 2.2 I/O ops
   * For each movie, must get matching MovieStar tuple (10*1.2)
+  * Question: How many different movies in StarsIn, and how does that translate to MovieStar? 
 * Total cost: 15 I/O operations
 
 ---
