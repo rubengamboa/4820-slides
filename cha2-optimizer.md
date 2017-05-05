@@ -701,9 +701,9 @@ SELECT MS.name
 * Main difference: push selects
 * With 5 buffers, cost of plan:
   * Scan StarsIn (1,000) + write T1 (1 page, assuming < 1,000 matches)
-  * Scan MovieStars (500) + write T2 (333 pages, if ratings are 1-5)
-  * Sort T1 (2), sort T2(2*3*333), merge (1+333)
-  * Total: 2,334 page I/Os
+  * Scan MovieStars (500) + write T2 (200 pages, if ratings are 1-5)
+  * Sort T1 (2), sort T2(2*3*200), merge (1+200)
+  * Total: 1,403 page I/Os
 
 ---&twocol
 
@@ -723,8 +723,8 @@ SELECT MS.name
 
 *** =right
 
-* Using BNL join, join cost = 1+1*333
-* Total cost = 334 I/O ops
+* Using BNL join, join cost = 1+1*200
+* Total cost = 201 I/O ops
 * If we push projections, T2 has only name and title
 * That lowers the #pages requires (albeit slightly)
 
@@ -747,7 +747,7 @@ SELECT MS.name
 *** =right
 
 * Suppose we have a clustered index on title of StarsIn
-* We get 100,000/40,000 = 25 tuples on 1 page
+* We get 1,000,000/40,000 = 25 StarsIn tuples for each MovieStar tuple
 * INL join, Filter, and Project are all pipelined, so there's no benefit to pushing the projection in
 * Pushing the selection rating >= 4 into the join would make it worse, 
   because we can't use index on MovieStars
@@ -772,8 +772,8 @@ SELECT MS.name
 
 * Cost:
   * Selection of StarsIn: 2.2 I/O ops
-  * For each movie, must get matching StarsIn tuple (25*1.2)
-* Total cost: 58 I/O operations
+  * For each movie, must get matching MovieStar tuple (10*1.2)
+* Total cost: 15 I/O operations
 
 ---
 
@@ -788,10 +788,10 @@ SELECT MS.name
 Method                                  | Cost
 ----------------------------------------|----------------
 Nested loop                             | 500,500
-Push selections                         | 2,334
-Push selections, BNL join               | 334
-Push selections & projections, BNL join | ~300
-Clustered index on StarsIn              | 58
+Push selections                         | 1,402
+Push selections, BNL join               | 201
+Push selections & projections, BNL join | ~200
+Clustered index on StarsIn              | 15
 
 ---
 

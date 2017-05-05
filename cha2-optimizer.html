@@ -1159,9 +1159,9 @@ MovieStar (name, address, genre, birthdate, rating)
 
 <ul>
 <li>Scan StarsIn (1,000) + write T1 (1 page, assuming &lt; 1,000 matches)</li>
-<li>Scan MovieStars (500) + write T2 (333 pages, if ratings are 1-5)</li>
-<li>Sort T1 (2), sort T2(2*3*333), merge (1+333)</li>
-<li>Total: 2,334 page I/Os</li>
+<li>Scan MovieStars (500) + write T2 (200 pages, if ratings are 1-5)</li>
+<li>Sort T1 (2), sort T2(2*3*200), merge (1+200)</li>
+<li>Total: 1,403 page I/Os</li>
 </ul></li>
 </ul>
 
@@ -1188,8 +1188,8 @@ MovieStar (name, address, genre, birthdate, rating)
 </div>
 <div style='float:right;width:48%;'>
   <ul>
-<li>Using BNL join, join cost = 1+1*333</li>
-<li>Total cost = 334 I/O ops</li>
+<li>Using BNL join, join cost = 1+1*200</li>
+<li>Total cost = 201 I/O ops</li>
 <li>If we push projections, T2 has only name and title</li>
 <li>That lowers the #pages requires (albeit slightly)</li>
 </ul>
@@ -1218,7 +1218,7 @@ MovieStar (name, address, genre, birthdate, rating)
 <div style='float:right;width:48%;'>
   <ul>
 <li>Suppose we have a clustered index on title of StarsIn</li>
-<li>We get 100,000/40,000 = 25 tuples on 1 page</li>
+<li>We get 1,000,000/40,000 = 25 StarsIn tuples for each MovieStar tuple</li>
 <li>INL join, Filter, and Project are all pipelined, so there&#39;s no benefit to pushing the projection in</li>
 <li>Pushing the selection rating &gt;= 4 into the join would make it worse, 
 because we can&#39;t use index on MovieStars</li>
@@ -1251,9 +1251,9 @@ because we can&#39;t use index on MovieStars</li>
 
 <ul>
 <li>Selection of StarsIn: 2.2 I/O ops</li>
-<li>For each movie, must get matching StarsIn tuple (25*1.2)</li>
+<li>For each movie, must get matching MovieStar tuple (10*1.2)</li>
 </ul></li>
-<li>Total cost: 58 I/O operations</li>
+<li>Total cost: 15 I/O operations</li>
 </ul>
 
 </div>
@@ -1283,19 +1283,19 @@ because we can&#39;t use index on MovieStars</li>
 </tr>
 <tr>
 <td>Push selections</td>
-<td>2,334</td>
+<td>1,402</td>
 </tr>
 <tr>
 <td>Push selections, BNL join</td>
-<td>334</td>
+<td>201</td>
 </tr>
 <tr>
 <td>Push selections &amp; projections, BNL join</td>
-<td>~300</td>
+<td>~200</td>
 </tr>
 <tr>
 <td>Clustered index on StarsIn</td>
-<td>58</td>
+<td>15</td>
 </tr>
 </tbody></table>
 
