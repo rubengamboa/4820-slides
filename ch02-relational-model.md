@@ -74,17 +74,17 @@ Wayne's World       | 1992   |     95 | comedy
 ```
 <Movies> 
     <Movie title="Gone With the Wind"> 
-        <Year>1939<Year>
+        <Year>1939</Year>
         <Length>231</Length>
         <Genre>drama</Genre>
     </Movie>
     <Movie title="Star Wars"> 
-        <Year>1977<Year>
+        <Year>1977</Year>
         <Length>124</Length>
         <Genre>scifi</Genre>
     </Movie>
     <Movie title="Wayne's World"> 
-        <Year>1992<Year>
+        <Year>1992</Year>
         <Length>95</Length>
         <Genre>comedy</Genre>
     </Movie>
@@ -1029,11 +1029,11 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 
 * Step 3: $\text{Movies} \bowtie \text{Studios}$
 
-Title               | Year   | Length | Genre  | Name        | ProducerC# | Studios.Name  | Address          | PresC#
---------------------|--------|--------|--------|-------------|------------|---------------|------------------|------------
-Gone With the Wind  | 1939   |    231 | drama  | MGM         | 1234       | MGM           | 101 Mogul St.    | 5678
-Star Wars           | 1977   |    124 | scifi  | Lucasfilm   | 2345       | Lucasfilm     | 1 Jedi Way       | 6789
-The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warner        | 200 Brothers Pl. | 4567       
+Title               | Year   | Length | Genre  | Name        | ProducerC# | Address          | PresC#
+--------------------|--------|--------|--------|-------------|------------|------------------|------------
+Gone With the Wind  | 1939   |    231 | drama  | MGM         | 1234       | 101 Mogul St.    | 5678
+Star Wars           | 1977   |    124 | scifi  | Lucasfilm   | 2345       | 1 Jedi Way       | 6789
+The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | 200 Brothers Pl. | 4567       
 
 * What's **natural** about the join is that attributes in `Movies` with the same name as an attribute in `Studios` are
   filtered to have equal values
@@ -1134,14 +1134,14 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 
 ## Join Lesson #4
 
-* In the third quarter of 2016, Facebook had 1.79 billion active users
+* In the third quarter of 2017, Facebook had 2.07 billion active users
   <br><br>
-* That is roughly equivalent to 138,000 Universities of Wyoming
+* That is roughly equivalent to 159,000 Universities of Wyoming
 * (There's a little over 4,000 universities in the US, including community colleges)
   <br><br>
-* Joining Facebook's users table with itself would take 3.2041 &times; 10<sup>15</sup> seconds, or 3.7084491 &times; 10<sup>10</sup> days
-* That would be 1.0160134 &times; 10<sup>8</sup> years
-* You would have had to start 37 million years *before* the dinosaurs went extinct to finish by now
+* Joining Facebook's users table with itself would take 4.2849 &times; 10<sup>15</sup> seconds, or 4.959375 &times; 10<sup>10</sup> days
+* That would be 1.3587329 &times; 10<sup>8</sup> years
+* You would have had to start 71 million years *before* the dinosaurs went extinct to finish by now
   <br><br>
 * That's why the conventional wisdom when dealing with very (very, very, very) large databases is that joins are a disaster
 * That may not be entirely true, but it explains why the big technology companies developed their own database systems

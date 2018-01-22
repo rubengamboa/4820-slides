@@ -89,7 +89,7 @@
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Building a database is extremely difficult</li>
+<li>Building a database system is extremely difficult</li>
 <li>But we&#39;ve figured out how to do it over the last several decades!
 <br><br></li>
 <li>A <strong>Database Management System</strong> or <strong>DBMS</strong> allows us to manage
@@ -97,7 +97,7 @@ large amounts of persistent data</li>
 <li>The DBMS handles a lot of details that are important, but difficult to deal with
 
 <ul>
-<li>persitent data format</li>
+<li>persistent data format</li>
 <li>handle crashes and recovery</li>
 <li>support for multiple users</li>
 </ul></li>
@@ -142,7 +142,7 @@ large amounts of persistent data</li>
 <li>The history of computers starts with <strong>ballistics</strong>
 
 <ul>
-<li>As in the ballistics equations of hitting a tank with a shell</li>
+<li>As in the ballistic equations for hitting a tank with a shell</li>
 <li>Or hitting a stationary target with a bomb</li>
 </ul></li>
 <li>But the <strong>commercial</strong> history of computers starts with databases
@@ -257,16 +257,6 @@ and all the other pieces of relational databases!</li>
 </slide>
 
 <slide class="" id="slide-10" style="background:;">
-  <article data-timings="">
-    <p class="centered">
-    <img src="assets/img/database-components.png" alt="Database Components" title="Database Components" class="img-responsive">
-</p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Two Classes of Users</h2>
   </hgroup>
@@ -285,7 +275,7 @@ and all the other pieces of relational databases!</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Query Processing Stages</h2>
   </hgroup>
@@ -304,12 +294,22 @@ and all the other pieces of relational databases!</li>
 <li>This requires both <em>logging</em> and <em>concurrency control</em>, usually via <em>locking</em>
 
 <ul>
-<li>The <strong>log manager</strong> takes care of <strong>durability</strong></li>
+<li>The <strong>log manager</strong> takes care of <strong>durability</strong> and <strong>atomicity</strong></li>
 <li>The <strong>concurrency-control manager</strong> takes care of <strong>isolation</strong></li>
 </ul></li>
 <li>The data is stored on disk files with sophisticated index and record structures, and is accessed by a <strong>record manager</strong></li>
 <li>Data is loaded onto main memory into a <strong>buffer pool</strong></li>
 </ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <article data-timings="">
+    <p class="centered">
+    <img src="assets/img/database-components.png" alt="Database Components" title="Database Components" class="img-responsive">
+</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -431,19 +431,19 @@ and all the other pieces of relational databases!</li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='NA'>
+        data-slide=10 title='Two Classes of Users'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Two Classes of Users'>
+        data-slide=11 title='Query Processing Stages'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Query Processing Stages'>
+        data-slide=12 title='NA'>
          12
       </a>
     </li>

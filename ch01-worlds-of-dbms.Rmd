@@ -44,13 +44,13 @@ widgets:      [mathjax, bootstrap]
 
 ## Why Do Databases Work So Well?
 
-* Building a database is extremely difficult
+* Building a database system is extremely difficult
 * But we've figured out how to do it over the last several decades!
   <br><br>
 * A **Database Management System** or **DBMS** allows us to manage
   large amounts of persistent data
 * The DBMS handles a lot of details that are important, but difficult to deal with
-  * persitent data format
+  * persistent data format
   * handle crashes and recovery
   * support for multiple users
 
@@ -72,7 +72,7 @@ widgets:      [mathjax, bootstrap]
 ## Brief History of Databases
 
 * The history of computers starts with **ballistics**
-  * As in the ballistics equations of hitting a tank with a shell
+  * As in the ballistic equations for hitting a tank with a shell
   * Or hitting a stationary target with a bomb
 * But the **commercial** history of computers starts with databases
   * Airline reservation systems
@@ -143,12 +143,6 @@ widgets:      [mathjax, bootstrap]
 
 ---
 
-<p class="centered">
-    <img src="assets/img/database-components.png" alt="Database Components" title="Database Components" class="img-responsive">
-</p>
-
----
-
 ## Two Classes of Users
 
 * Users can be broadly categorized into
@@ -168,10 +162,16 @@ widgets:      [mathjax, bootstrap]
    * Isolation
    * Durability
 4. This requires both *logging* and *concurrency control*, usually via *locking*
-   * The **log manager** takes care of **durability**
+   * The **log manager** takes care of **durability** and **atomicity**
    * The **concurrency-control manager** takes care of **isolation**
 5. The data is stored on disk files with sophisticated index and record structures, and is accessed by a **record manager**
 6. Data is loaded onto main memory into a **buffer pool**
+
+---
+
+<p class="centered">
+    <img src="assets/img/database-components.png" alt="Database Components" title="Database Components" class="img-responsive">
+</p>
 
 ---
 

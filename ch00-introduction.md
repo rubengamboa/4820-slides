@@ -83,13 +83,9 @@ widgets:      [mathjax, bootstrap]
 
 ## Attendance Policies
 
-* You must come to class
-* Attendance is enforced
-	* by rollcall (at first)
-	* by inspection (later)
-<br>
-
-> * Let's try it out!
+* Attendance is optional
+* But it will help you learn the material
+  * hence, pass the course
 
 ---{
     tpl: twocol
@@ -101,18 +97,16 @@ widgets:      [mathjax, bootstrap]
 
  Item                | Pct
  --------------------|----
- Class Participation | 10%
- Assignments         | 15%
- Project             | 15%
- Exam 1              | 20%
- Exam 2              | 20%
- Final Exam          | 20%
+ Assignments         | 20%
+ Project             | 20%
+ Exam 1              | 15%
+ Exam 2              | 15%
+ Final Exam          | 30%
 
 *** =right
 
-* If you can't take an exam, we can arrange for a makeup
-* You do not need an excuse to arrange for a makeup
-* Try to be here on the right day!
+* Exams must be taken on the scheduled date and time
+* I will arrange for a makeup, but only if you have a valid university excuse
 * Once you start taking an exam, you may not stop for any reason until you turn in the exam for grading
 
 ---
@@ -132,6 +126,26 @@ widgets:      [mathjax, bootstrap]
   * The exams will include primarily questions that are similar to those in the assignments
   * The exams will also include a few questions that ask you to tie together ideas learned
     in several sections
+
+---
+
+## Redemption Points
+
+* Suppose you do poorly on a question on Exam #1
+* All is **not lost**!
+
+<br />
+
+* You can recover half of the points of that question if you answer correctly a similar question 
+  in the final exam
+
+<br />
+
+* Basic rules for redemption points:
+  * You must **need** redemption (score no more than 50% of the points in a question on an exam)
+  * You must **request** redemption points in the Google Form (see syllabus)
+  * You must **be lucky** enough that there is a similar question on the final exam
+  * You must **redeem** yourself (score at least 90% on the similar question in the final exam)
 
 ---
 
@@ -183,7 +197,7 @@ widgets:      [mathjax, bootstrap]
 ## Meetings
 
 * Come see me during office hours
-  * MWF 11-11:50, MW 1-2:15
+  * T 11-12:00; WR 10-12:00
   * or by appointment
 * Email is OK for private matters
 * But I prefer that you ask class-related questions by creating a new discussion thread

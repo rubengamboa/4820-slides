@@ -33,19 +33,29 @@ widgets:      [mathjax, bootstrap]
 * [High-Level Database Models: Object-Oriented Model](ch04a-object-oriented-model.html)
 * [Design Theory for Relational Databases](ch03-design-theory.html)
 * [High-Level Database Models: E/R Model and ODL](ch04-high-level-models.html)
-* [Exam #1 Results](2017/exam1-results.html)
+* Exam #1
+
+<!-- 
+* [Exam #1 Results](2017/exam1-results.html) 
+-->
+
 
 *** =right
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
 * [The Database Language SQL](ch06-sql.html)
 * [SQL in a Server Environment](ch09-db-programming.html)
-* [Exam #2 Results](2017/exam2-results.html)
+* Exam #2
+
+<!-- 
+* [Exam #2 Results](2017/exam2-results.html) 
+-->
+
 
 <hr>
 
 * [Constraints and Triggers](ch07-constraints-triggers.html)
 * [Views and Indexes](ch08-views-indexes.html)
-* [Query Optimization](cha2-optimizer.html)
+* [Advanced Topics, e.g., Query Optimization](cha2-optimizer.html)
 * Final Exam
 
 <!--
