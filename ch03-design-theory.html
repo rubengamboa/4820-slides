@@ -774,8 +774,9 @@ Note that this algorithm terminates</p>
 <li>We claim that this instance satisfies all of the FDs in \(S\)
 <br><br></li>
 <li>Consider some FD \(C_1, C_2, \dots, C_k \rightarrow D\) in \(S\)</li>
-<li>If one of the \(C_i\) is not in \(X\), then we&#39;re done</li>
-<li>Otherwise, the algorithm would have added \(D\) so \(X\) because of this FD</li>
+<li>If one of the \(C_i\) is not in \(X\), then this FD is satisfied</li>
+<li>If \(D\) is in \(X\), then this FD is also satisfied, and we&#39;re done</li>
+<li>Otherwise, the algorithm would have added \(D\) to \(X\) because of this FD</li>
 <li>So we conclude that this case cannot happen</li>
 <li>I.e., the instance satisfies all of the FDs in \(S\)</li>
 </ul>
@@ -922,7 +923,11 @@ then \(\mathcal{A} \rightarrow \mathcal{C}\)</li>
 <li>they involve only attributes in \(\mathcal{B}\)</li>
 </ol></li>
 <li><p>Note that we&#39;re talking about FDs that <strong>follow from</strong> \(S\)</p></li>
-<li><p>This is not the same as the FDs in \(S\)</p></li>
+<li><p>This is not the same as the FDs in \(S\)</p>
+
+<ul>
+<li>Consider \(R(A,B,C)\) with FDs \(A \rightarrow B\), \(B \rightarrow C\), and think of \(\pi_{A,C}(R)\)</li>
+</ul></li>
 <li><p>Because of this, the algorithm is actually complex (and expensive)</p></li>
 </ul>
 

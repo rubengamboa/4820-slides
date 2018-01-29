@@ -528,7 +528,7 @@ Cartoons(_title_, _year_, length, genre)
 CartoonMurderMysteries(_title_, _year_, length, genre, weapon)
 </code></pre>
 
-<p>Using the single-class approach</p>
+<p>Using the single-class-per-path approach</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -579,7 +579,7 @@ CartoonMurderMysteries(_title_, _year_, weapon)
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Recall that cardinality view that
+<li>Recall the cardinality view that
 
 <ul>
 <li><strong>Aggregation</strong> really means at most one parent</li>
@@ -849,9 +849,9 @@ session.getTransaction().commit();
 <li>It calls the methods
 
 <ol>
-<li>Table Per Subclass</li>
-<li>Table Per Concrete Class</li>
-<li>Table Per Hierarchy</li>
+<li>Table Per Subclass (single-class)</li>
+<li>Table Per Concrete Class (single-class-per-path)</li>
+<li>Table Per Hierarchy (one table approach)</li>
 </ol></li>
 <li>We&#39;ll make a class called Person that generalizes both Student and Faculty</li>
 </ul>

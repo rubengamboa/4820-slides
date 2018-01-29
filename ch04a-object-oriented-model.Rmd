@@ -304,7 +304,7 @@ MurderMysteries(_title_, _year_, length, genre, weapon)
 Cartoons(_title_, _year_, length, genre)
 CartoonMurderMysteries(_title_, _year_, length, genre, weapon)
 ```
-Using the single-class approach
+Using the single-class-per-path approach
 
 ---
 
@@ -339,7 +339,7 @@ Using the just-one-class approach
 
 ## Handling Aggregations and Compositions
 
-* Recall that cardinality view that
+* Recall the cardinality view that
   * **Aggregation** really means at most one parent
   * **Composition** really means exactly one parent
   <br><br>
@@ -540,9 +540,9 @@ session.getTransaction().commit();
 
 * Hibernate supports all three ways of defining tables from subclasses
 * It calls the methods
-  1. Table Per Subclass
-  2. Table Per Concrete Class
-  3. Table Per Hierarchy
+  1. Table Per Subclass (single-class)
+  2. Table Per Concrete Class (single-class-per-path)
+  3. Table Per Hierarchy (one table approach)
 * We'll make a class called Person that generalizes both Student and Faculty
 
 ---

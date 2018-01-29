@@ -393,8 +393,9 @@ Step | $X$             | FD
 * We claim that this instance satisfies all of the FDs in $S$
   <br><br>
 * Consider some FD $C_1, C_2, \dots, C_k \rightarrow D$ in $S$
-* If one of the $C_i$ is not in $X$, then we're done
-* Otherwise, the algorithm would have added $D$ so $X$ because of this FD
+* If one of the $C_i$ is not in $X$, then this FD is satisfied
+* If $D$ is in $X$, then this FD is also satisfied, and we're done
+* Otherwise, the algorithm would have added $D$ to $X$ because of this FD
 * So we conclude that this case cannot happen
 * I.e., the instance satisfies all of the FDs in $S$
 
@@ -486,6 +487,7 @@ Step | $X$             | FD
   
 > * Note that we're talking about FDs that **follow from** $S$
 * This is not the same as the FDs in $S$
+  * Consider $R(A,B,C)$ with FDs $A \rightarrow B$, $B \rightarrow C$, and think of $\pi_{A,C}(R)$
 * Because of this, the algorithm is actually complex (and expensive)
 
 ---
