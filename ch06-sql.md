@@ -322,8 +322,8 @@ SELECT *
 ## ANSI Date and Time Constants
 
 * DATE 'yyyy-mm-dd'
-  * DATE '2017-03-05'
-  * DATE '2017-03-10'
+  * DATE '2018-03-05'
+  * DATE '2018-03-10'
   <br><br>
 * TIME 'hh:mm:ss.ddd'
   * TIME '03:15:00'
@@ -340,7 +340,7 @@ SELECT *
   * TIME '03:15:00-6:00'
   <br><br>
 * TIMESTAMP 'yyyy-mm-dd hh:mm:ss.ddd'
-  * TIMESTAMP '2017-03-05 15:15:00'
+  * TIMESTAMP '2018-03-05 15:15:00'
 
 ---
 
@@ -351,8 +351,8 @@ SELECT *
 ```
 SELECT *
   FROM Movies
- WHERE releaseDate >= DATE '2017-03-05'
-   AND releaseDate <= DATE '2017-03-15'
+ WHERE releaseDate >= DATE '2018-03-05'
+   AND releaseDate <= DATE '2018-03-15'
 ```
 
 ---
@@ -609,7 +609,7 @@ EXCEPT
 ```
 SELECT crn
   FROM Courses
- WHERE year = 2017
+ WHERE year = 2018
    AND semester = 'Spring'
    AND dept = 'COSC'
    AND cnumber = '4820'
@@ -627,7 +627,7 @@ SELECT first_name, last_name
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = (SELECT crn
                          FROM Courses
-                        WHERE year = 2017
+                        WHERE year = 2018
                           AND semester = 'Spring'
                           AND dept = 'COSC'
                           AND cnumber = '4820')
@@ -643,19 +643,19 @@ SELECT first_name, last_name
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = (SELECT crn
                          FROM Courses
-                        WHERE year = 2017   AND semester = 'Spring'
+                        WHERE year = 2018   AND semester = 'Spring'
                           AND dept = 'COSC' AND cnumber = '4820')
 ```
 
 * First, execute the innermost query, so we find the CRN for this course
-* Then, replace the subquery with the result, which is 21621
+* Then, replace the subquery with the result, which is 21287
 * Now, execute the outer query
 
 ```
 SELECT first_name, last_name
   FROM Students, Enrolled
  WHERE Students.wnumber = Enrolled.wnumber
-   AND Enrolled.crn = 21621
+   AND Enrolled.crn = 21287
 ```
 
 ---
@@ -669,7 +669,7 @@ SELECT first_name, last_name
   FROM Students, Enrolled, Courses
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn = Courses.crn
-   AND year = 2017   AND semester = 'Spring'
+   AND year = 2018   AND semester = 'Spring'
    AND dept = 'COSC' AND cnumber = '4820'
 ```
 
@@ -722,7 +722,7 @@ SELECT first_name, last_name
  WHERE Students.wnumber = Enrolled.wnumber
    AND Enrolled.crn IN (SELECT crn
                           FROM Courses
-                         WHERE year = 2017
+                         WHERE year = 2018
                            AND semester = 'Spring'
                            AND facultyId = (SELECT id
                                               FROM Faculty
@@ -870,7 +870,7 @@ SELECT starName, movieTitle, movieYear, genre
 ## SQL Theta Joins
 
 * You can place an entire theta join on the FROM clause
-* Use the JOIN ... ON synta
+* Use the JOIN ... ON syntax
 
 ```
 SELECT starName, movieTitle, movieYear, genre
