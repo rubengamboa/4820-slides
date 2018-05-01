@@ -1161,7 +1161,7 @@ MovieStar (name, address, genre, birthdate, rating)
 <li>Scan StarsIn (1,000) + write T1 (1 page, assuming &lt; 1,000 matches)</li>
 <li>Scan MovieStars (500) + write T2 (200 pages, if ratings are 1-5)</li>
 <li>Sort T1 (2), sort T2(2*3*200), merge (1+200)</li>
-<li>Total: 1,403 page I/Os</li>
+<li>Total: 1,701 (selections) + 1,403 (join) = 3,104 page I/Os</li>
 </ul></li>
 </ul>
 
@@ -1189,7 +1189,7 @@ MovieStar (name, address, genre, birthdate, rating)
 <div style='float:right;width:48%;'>
   <ul>
 <li>Using BNL join, join cost = 1+1*200</li>
-<li>Total cost = 201 I/O ops</li>
+<li>Total: 1,701 (selections) + 201 (join) = 1,902 page I/Os</li>
 <li>If we push projections, T2 has only name and title</li>
 <li>That lowers the #pages requires (albeit slightly)</li>
 </ul>
@@ -1284,15 +1284,15 @@ because we can&#39;t use index on MovieStars</li>
 </tr>
 <tr>
 <td>Push selections</td>
-<td>1,402</td>
+<td>3,104</td>
 </tr>
 <tr>
 <td>Push selections, BNL join</td>
-<td>201</td>
+<td>1,902</td>
 </tr>
 <tr>
 <td>Push selections &amp; projections, BNL join</td>
-<td>~200</td>
+<td>~1,700</td>
 </tr>
 <tr>
 <td>Clustered index on StarsIn</td>

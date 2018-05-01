@@ -703,7 +703,7 @@ SELECT MS.name
   * Scan StarsIn (1,000) + write T1 (1 page, assuming < 1,000 matches)
   * Scan MovieStars (500) + write T2 (200 pages, if ratings are 1-5)
   * Sort T1 (2), sort T2(2*3*200), merge (1+200)
-  * Total: 1,403 page I/Os
+  * Total: 1,701 (selections) + 1,403 (join) = 3,104 page I/Os
 
 ---&twocol
 
@@ -724,7 +724,7 @@ SELECT MS.name
 *** =right
 
 * Using BNL join, join cost = 1+1*200
-* Total cost = 201 I/O ops
+* Total: 1,701 (selections) + 201 (join) = 1,902 page I/Os
 * If we push projections, T2 has only name and title
 * That lowers the #pages requires (albeit slightly)
 
@@ -789,9 +789,9 @@ SELECT MS.name
 Method                                  | Cost
 ----------------------------------------|----------------
 Nested loop                             | 500,500
-Push selections                         | 1,402
-Push selections, BNL join               | 201
-Push selections & projections, BNL join | ~200
+Push selections                         | 3,104
+Push selections, BNL join               | 1,902
+Push selections & projections, BNL join | ~1,700
 Clustered index on StarsIn              | 15
 
 ---
