@@ -71,7 +71,7 @@ widgets:      [mathjax, bootstrap]
 > * Those topics are covered in the second course (next semester???) of this two-course sequence
 
 > * Finally, you will **not** learn about data mining or data warehousing
-	  * Data mining is covered in Craig Douglas's Data Mining course
+	  * Data mining is covered in the Data Mining course
 	  * Data warehousing is partially covered in the College of Business information management courses
 	  * We may do a little bit of data warehousing in Week 14 (but probably not)
 
@@ -86,6 +86,7 @@ widgets:      [mathjax, bootstrap]
 * Attendance is optional
 * But it will help you learn the material
   * hence, pass the course
+* And it's worth an extra 5% bonus on exams
 
 ---{
     tpl: twocol
@@ -121,11 +122,11 @@ widgets:      [mathjax, bootstrap]
 * Project
   * The project is the database portion of a web application
   * You will be implementing the project in pieces
-  * You can think of it as a series of related homework problems that you turn in
 * Exams
   * The exams will include primarily questions that are similar to those in the assignments
   * The exams will also include a few questions that ask you to tie together ideas learned
     in several sections
+  * Sample exams in WyoCourses (but take with a grain of salt)
 
 ---
 
@@ -197,7 +198,7 @@ widgets:      [mathjax, bootstrap]
 ## Meetings
 
 * Come see me during office hours
-  * T 11-12:00; WR 10-12:00
+  * see syllabus for times (it's complicated)
   * or by appointment
 * Email is OK for private matters
 * But I prefer that you ask class-related questions by creating a new discussion thread
