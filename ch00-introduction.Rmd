@@ -87,6 +87,9 @@ widgets:      [mathjax, bootstrap]
 * But it will help you learn the material
   * hence, pass the course
 * And it's worth an extra 5% bonus on exams
+* We use polleverywhere.com to keep track of attendance
+  * Build an account with polleverywhere.com!
+  * We'll start using it next class period
 
 ---{
     tpl: twocol
