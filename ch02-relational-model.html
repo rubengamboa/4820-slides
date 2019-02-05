@@ -2439,11 +2439,11 @@ Studios(_name_:string, address:string, presC#:integer)
 <li>Databases are very, very good at executing joins
 <br><br></li>
 <li>Suppose we need to compute \(S \bowtie S\), where \(S\) is the Students table at UW</li>
-<li>Since \(|S| \approx 13000\), the naive method takes up \(13000^2 =\) 1.69 &times; 10<sup>8</sup> steps</li>
-<li>Each step is a disk access, so even if disk I/O is 1ms, that works out to 1.69 &times; 10<sup>5</sup> seconds</li>
-<li>Which is 2816.6666667 minutes</li>
-<li>Which is 46.9444444 hours</li>
-<li>Which is 1.9560185 days
+<li>Since \(|S| \approx 14000\), the naive method takes up \(14000^2 =\) 1.96 &times; 10<sup>8</sup> steps</li>
+<li>Each step is a disk access, so even if disk I/O is 1ms, that works out to 1.96 &times; 10<sup>5</sup> seconds</li>
+<li>Which is 3266.6666667 minutes</li>
+<li>Which is 54.4444444 hours</li>
+<li>Which is 2.2685185 days
 <br><br></li>
 <li>UW&#39;s database can probably join those in a matter of seconds, or minutes at most
 <br><br></li>
@@ -2481,14 +2481,14 @@ Studios(_name_:string, address:string, presC#:integer)
   </hgroup>
   <article data-timings="">
     <ul>
-<li>In the third quarter of 2017, Facebook had 2.07 billion active users
+<li>In the first quarter of 2019, Facebook had 2.32 billion active users
 <br><br></li>
-<li>That is roughly equivalent to 159,000 Universities of Wyoming</li>
+<li>That is roughly equivalent to 166,000 Universities of Wyoming</li>
 <li>(There&#39;s a little over 4,000 universities in the US, including community colleges)
 <br><br></li>
-<li>Joining Facebook&#39;s users table with itself would take 4.2849 &times; 10<sup>15</sup> seconds, or 4.959375 &times; 10<sup>10</sup> days</li>
-<li>That would be 1.3587329 &times; 10<sup>8</sup> years</li>
-<li>You would have had to start 71 million years <em>before</em> the dinosaurs went extinct to finish by now
+<li>Joining Facebook&#39;s users table with itself would take 5.3824 &times; 10<sup>15</sup> seconds, or 6.2296296 &times; 10<sup>10</sup> days</li>
+<li>That would be 1.7067478 &times; 10<sup>8</sup> years</li>
+<li>You would have had to start 105 million years <em>before</em> the dinosaurs went extinct to finish by now
 <br><br></li>
 <li>That&#39;s why the conventional wisdom when dealing with very (very, very, very) large databases is that joins are a disaster</li>
 <li>That may not be entirely true, but it explains why the big technology companies developed their own database systems</li>

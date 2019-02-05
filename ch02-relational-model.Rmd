@@ -1106,11 +1106,11 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 * Databases are very, very good at executing joins
   <br><br>
 * Suppose we need to compute $S \bowtie S$, where $S$ is the Students table at UW
-* Since $|S| \approx 13000$, the naive method takes up $13000^2 =$ `r 13000^2` steps
-* Each step is a disk access, so even if disk I/O is 1ms, that works out to `r 13000^2/1000` seconds
-* Which is `r 13000^2/1000/60` minutes
-* Which is `r 13000^2/1000/60/60` hours
-* Which is `r 13000^2/1000/60/60/24` days
+* Since $|S| \approx 14000$, the naive method takes up $14000^2 =$ `r 14000^2` steps
+* Each step is a disk access, so even if disk I/O is 1ms, that works out to `r 14000^2/1000` seconds
+* Which is `r 14000^2/1000/60` minutes
+* Which is `r 14000^2/1000/60/60` hours
+* Which is `r 14000^2/1000/60/60/24` days
   <br><br>
 * UW's database can probably join those in a matter of seconds, or minutes at most
   <br><br>
@@ -1134,14 +1134,14 @@ The Matrix          | 1999   |    136 | scifi  | Warner      | 3456       | Warn
 
 ## Join Lesson #4
 
-* In the third quarter of 2017, Facebook had 2.07 billion active users
+* In the first quarter of 2019, Facebook had 2.32 billion active users
   <br><br>
-* That is roughly equivalent to 159,000 Universities of Wyoming
+* That is roughly equivalent to 166,000 Universities of Wyoming
 * (There's a little over 4,000 universities in the US, including community colleges)
   <br><br>
-* Joining Facebook's users table with itself would take `r (2.07e9)^2/1000` seconds, or `r (2.07e9)^2/1000/60/60/24` days
-* That would be `r (2.07e9)^2/1000/60/60/24/365` years
-* You would have had to start 71 million years *before* the dinosaurs went extinct to finish by now
+* Joining Facebook's users table with itself would take `r (2.32e9)^2/1000` seconds, or `r (2.32e9)^2/1000/60/60/24` days
+* That would be `r (2.32e9)^2/1000/60/60/24/365` years
+* You would have had to start 105 million years *before* the dinosaurs went extinct to finish by now
   <br><br>
 * That's why the conventional wisdom when dealing with very (very, very, very) large databases is that joins are a disaster
 * That may not be entirely true, but it explains why the big technology companies developed their own database systems
