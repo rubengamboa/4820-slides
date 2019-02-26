@@ -996,6 +996,491 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
 
 <slide class="" id="slide-36" style="background:;">
   <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Consider \(R(A,B,C,D,E)\) with FDs</p>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\) </li>
+</ul></li>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+<li><p>We have to consider subsets of \(\{A, B, C, D\}\)</p></li>
+<li><p>There&#39;s 16 of them!</p></li>
+<li><p>We&#39;ll go through these subsets methodically</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+<li><p>Subsets with 0 elements</p></li>
+<li><p>There&#39;s just one, \(\{\}\)</p></li>
+<li><p>No real need to consider it, since it does not generate any FDs</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+<li><p>Subsets with 1 element</p></li>
+<li><p>There&#39;s four, \(\{A\}\), \(\{B\}\), \(\{C\}\), \(\{D\}\)</p></li>
+<li><p>Since the FDs all have two attributes on the left-hand side, these
+do not create any FDs in the projection</p>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+<li><p>Subsets with 2 elements</p></li>
+<li><p>There&#39;s six, \(\{A,B\}\), \(\{A,C\}\), \(\{A,D\}\), \(\{B,C\}\), \(\{B,D\}\), \(\{C,D\}\) </p></li>
+<li><p>We&#39;ll have to consider each of these in turn</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>FDs for \(\{A,B\}\)</h3>
+
+<table><thead>
+<tr>
+<th>Step</th>
+<th>\(X\)</th>
+<th>FD</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>\(A, B\)</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>\(A, B, C\)</td>
+<td>\(A, B \rightarrow C\)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>\(A, B, C, D\)</td>
+<td>\(B, C \rightarrow D\)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>\(A, B, C, D, E\)</td>
+<td>\(C, D \rightarrow E\)</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>So \(\{A,B\}^+ = \{A, B, C, D, E\}\)</li>
+<li>The projection FDs are
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(A, B \rightarrow D\) </li>
+</ul></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>FDs for \(\{A,C\}\)</h3>
+
+<table><thead>
+<tr>
+<th>Step</th>
+<th>\(X\)</th>
+<th>FD</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>\(A, C\)</td>
+<td></td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>So \(\{A,C\}^+ = \{A, C\}\)</li>
+<li>There are no FDs starting with \(A, C \rightarrow\)</li>
+<li>The same is obviously true of \(A, D\).</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>FDs for \(\{B,C\}\)</h3>
+
+<table><thead>
+<tr>
+<th>Step</th>
+<th>\(X\)</th>
+<th>FD</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>\(B, C\)</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>\(B, C, D\)</td>
+<td>\(B, C \rightarrow D\)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>\(B, C, D, E\)</td>
+<td>\(C, D \rightarrow E\)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>\(A, B, C, D, E\)</td>
+<td>\(D, E \rightarrow A\)</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>So \(\{B,C\}^+ = \{A, B, C, D, E\}\)</li>
+<li>The projection FDs are
+
+<ul>
+<li>\(B, C \rightarrow A\) </li>
+<li>\(B, C \rightarrow D\) </li>
+</ul></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>FDs for \(\{B,D\}\)</h3>
+
+<table><thead>
+<tr>
+<th>Step</th>
+<th>\(X\)</th>
+<th>FD</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>\(B, D\)</td>
+<td></td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>So \(\{B,D\}^+ = \{B, D\}\)</li>
+<li>There are no FDs starting with \(B, D \rightarrow\)</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>FDs for \(\{C,D\}\)</h3>
+
+<table><thead>
+<tr>
+<th>Step</th>
+<th>\(X\)</th>
+<th>FD</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>\(C, D\)</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>\(C, D, E\)</td>
+<td>\(C, D \rightarrow E\)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>\(A, C, D, E\)</td>
+<td>\(D, E \rightarrow A\)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>\(A, B, C, D, E\)</td>
+<td>\(A, E \rightarrow B\)</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>So \(\{C,D\}^+ = \{A, B, C, D, E\}\)</li>
+<li>The projection FDs are
+
+<ul>
+<li>\(C, D \rightarrow A\) </li>
+<li>\(C, D \rightarrow B\) </li>
+</ul></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+<li><p>Subsets with 3 elements</p></li>
+<li><p>There&#39;s four, \(\{A,B,C\}\), \(\{A,B,D\}\), \(\{A,C,D\}\), \(\{B,C,D\}\)</p></li>
+<li><p>But we don&#39;t have to consider  \(\{A,B,C\}\), since we already
+found that \(\{A,B\}^+ = \{A, B, C, D, E\}\), so we have all possible FDs
+for \(\{A,B,C\}\)</p></li>
+<li><p>Same goes for the other three!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>What FDs are in the projection to \(R(A,B,C,D)\)?</p></li>
+<li><p>Subsets with 4 elements</p></li>
+<li><p>There&#39;s just \(\{A,B,C,D\}\)</p></li>
+<li><p>And we don&#39;t have to consider it, since there can be no FD with new
+columns on the right-hand side</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Original Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Functional Dependencies in Projection</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(A, B \rightarrow D\) </li>
+<li>\(B, C \rightarrow A\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow A\) </li>
+<li>\(C, D \rightarrow B\) </li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Projection of Functional Dependencies Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <h3>Original Functional Dependencies</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow E\) </li>
+<li>\(D, E \rightarrow A\) </li>
+<li>\(A, E \rightarrow B\)<br></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <h3>Functional Dependencies in Projection (Minimal)</h3>
+
+<ul>
+<li>\(A, B \rightarrow C\) </li>
+<li>\(B, C \rightarrow D\) </li>
+<li>\(C, D \rightarrow A\) </li>
+<li>\(C, D \rightarrow B\) </li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
     <h1>Design of Relational Database Schemas</h1>
   </hgroup>
   <article data-timings="">
@@ -1004,7 +1489,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-37" style="background:;">
+<slide class="" id="slide-51" style="background:;">
   <hgroup>
     <h2>Designing Relational Database Schemas</h2>
   </hgroup>
@@ -1027,7 +1512,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-38" style="background:;">
+<slide class="" id="slide-52" style="background:;">
   <hgroup>
     <h2>Anomalies</h2>
   </hgroup>
@@ -1104,7 +1589,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-39" style="background:;">
+<slide class="" id="slide-53" style="background:;">
   <hgroup>
     <h2>Decompositions</h2>
   </hgroup>
@@ -1133,7 +1618,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-40" style="background:;">
+<slide class="" id="slide-54" style="background:;">
   <hgroup>
     <h2>Decompositions</h2>
   </hgroup>
@@ -1155,7 +1640,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-41" style="background:;">
+<slide class="" id="slide-55" style="background:;">
   <hgroup>
     <h2>Decompositions</h2>
   </hgroup>
@@ -1301,7 +1786,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-42" style="background:;">
+<slide class="" id="slide-56" style="background:;">
   <hgroup>
     <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
@@ -1328,7 +1813,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-43" style="background:;">
+<slide class="" id="slide-57" style="background:;">
   <hgroup>
     <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
@@ -1407,7 +1892,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-44" style="background:;">
+<slide class="" id="slide-58" style="background:;">
   <hgroup>
     <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
@@ -1459,7 +1944,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-45" style="background:;">
+<slide class="" id="slide-59" style="background:;">
   <hgroup>
     <h2>Boyce-Codd Normal Form (BCNF)</h2>
   </hgroup>
@@ -1515,7 +2000,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-46" style="background:;">
+<slide class="" id="slide-60" style="background:;">
   <hgroup>
     <h2>Decomposing into BCNF</h2>
   </hgroup>
@@ -1537,7 +2022,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-47" style="background:;">
+<slide class="" id="slide-61" style="background:;">
   <hgroup>
     <h2>Decomposing into BCNF</h2>
   </hgroup>
@@ -1562,7 +2047,7 @@ FD \(LHS - A \rightarrow B\) still follows from \(S'\), then replace \(LHS \righ
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-48" style="background:;">
+<slide class="" id="slide-62" style="background:;">
   <hgroup>
     <h2>Decomposing into BCNF</h2>
   </hgroup>
@@ -1592,7 +2077,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-49" style="background:;">
+<slide class="" id="slide-63" style="background:;">
   <hgroup>
     <h2>Decomposing into BCNF</h2>
   </hgroup>
@@ -1616,7 +2101,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-50" style="background:;">
+<slide class="" id="slide-64" style="background:;">
   <hgroup>
     <h2>Decomposing into BCNF</h2>
   </hgroup>
@@ -1640,7 +2125,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-51" style="background:;">
+<slide class="" id="slide-65" style="background:;">
   <hgroup>
     <h1>Consequences of Decomposition into BCNF</h1>
   </hgroup>
@@ -1650,7 +2135,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-52" style="background:;">
+<slide class="" id="slide-66" style="background:;">
   <hgroup>
     <h2>(Wanted) Properties of BCNF Decomposition</h2>
   </hgroup>
@@ -1678,7 +2163,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-53" style="background:;">
+<slide class="" id="slide-67" style="background:;">
   <hgroup>
     <h2>No Anomalies: Redundancy</h2>
   </hgroup>
@@ -1699,7 +2184,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-54" style="background:;">
+<slide class="" id="slide-68" style="background:;">
   <hgroup>
     <h2>No Anomalies: Redundancy</h2>
   </hgroup>
@@ -1729,7 +2214,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-55" style="background:;">
+<slide class="" id="slide-69" style="background:;">
   <hgroup>
     <h2>No Anomalies: Update</h2>
   </hgroup>
@@ -1747,7 +2232,7 @@ i.e., one with a small number of relations</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-56" style="background:;">
+<slide class="" id="slide-70" style="background:;">
   <hgroup>
     <h2>No Anomalies: Deletion</h2>
   </hgroup>
@@ -1769,7 +2254,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-57" style="background:;">
+<slide class="" id="slide-71" style="background:;">
   <hgroup>
     <h2>Recoverability</h2>
   </hgroup>
@@ -1791,7 +2276,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-58" style="background:;">
+<slide class="" id="slide-72" style="background:;">
   <hgroup>
     <h2>Recoverability</h2>
   </hgroup>
@@ -1817,7 +2302,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-59" style="background:;">
+<slide class="" id="slide-73" style="background:;">
   <hgroup>
     <h2>Recoverability</h2>
   </hgroup>
@@ -1850,7 +2335,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-60" style="background:;">
+<slide class="" id="slide-74" style="background:;">
   <hgroup>
     <h2>Recoverability</h2>
   </hgroup>
@@ -1883,7 +2368,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-61" style="background:;">
+<slide class="" id="slide-75" style="background:;">
   <hgroup>
     <h2>Recoverability</h2>
   </hgroup>
@@ -1971,7 +2456,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-62" style="background:;">
+<slide class="" id="slide-76" style="background:;">
   <hgroup>
     <h2>Lossless Joins</h2>
   </hgroup>
@@ -1991,7 +2476,7 @@ information about \(B\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-63" style="background:;">
+<slide class="" id="slide-77" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2011,7 +2496,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-64" style="background:;">
+<slide class="" id="slide-78" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2033,7 +2518,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-65" style="background:;">
+<slide class="" id="slide-79" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2089,7 +2574,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-66" style="background:;">
+<slide class="" id="slide-80" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2145,7 +2630,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-67" style="background:;">
+<slide class="" id="slide-81" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2197,7 +2682,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-68" style="background:;">
+<slide class="" id="slide-82" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2249,7 +2734,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-69" style="background:;">
+<slide class="" id="slide-83" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2301,7 +2786,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-70" style="background:;">
+<slide class="" id="slide-84" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2353,7 +2838,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-71" style="background:;">
+<slide class="" id="slide-85" style="background:;">
   <hgroup>
     <h2>The Chase Test for Lossless Joins</h2>
   </hgroup>
@@ -2402,7 +2887,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-72" style="background:;">
+<slide class="" id="slide-86" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2429,7 +2914,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-73" style="background:;">
+<slide class="" id="slide-87" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2454,7 +2939,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-74" style="background:;">
+<slide class="" id="slide-88" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2485,7 +2970,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-75" style="background:;">
+<slide class="" id="slide-89" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2509,7 +2994,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-76" style="background:;">
+<slide class="" id="slide-90" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2536,7 +3021,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-77" style="background:;">
+<slide class="" id="slide-91" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2595,7 +3080,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-78" style="background:;">
+<slide class="" id="slide-92" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2630,7 +3115,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-79" style="background:;">
+<slide class="" id="slide-93" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2656,7 +3141,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-80" style="background:;">
+<slide class="" id="slide-94" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2686,7 +3171,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-81" style="background:;">
+<slide class="" id="slide-95" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2717,7 +3202,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-82" style="background:;">
+<slide class="" id="slide-96" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF</h2>
   </hgroup>
@@ -2748,7 +3233,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-83" style="background:;">
+<slide class="" id="slide-97" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF (Important Aside)</h2>
   </hgroup>
@@ -2774,7 +3259,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-84" style="background:;">
+<slide class="" id="slide-98" style="background:;">
   <hgroup>
     <h2>Example of Decomposition into BCNF (Important Aside)</h2>
   </hgroup>
@@ -2801,7 +3286,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-85" style="background:;">
+<slide class="" id="slide-99" style="background:;">
   <hgroup>
     <h2>Dependency Preservation</h2>
   </hgroup>
@@ -2832,7 +3317,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-86" style="background:;">
+<slide class="" id="slide-100" style="background:;">
   <hgroup>
     <h1>Third Normal Form (3NF)</h1>
   </hgroup>
@@ -2842,7 +3327,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-87" style="background:;">
+<slide class="" id="slide-101" style="background:;">
   <hgroup>
     <h2>Third Normal Form (3NF)</h2>
   </hgroup>
@@ -2868,7 +3353,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-88" style="background:;">
+<slide class="" id="slide-102" style="background:;">
   <hgroup>
     <h2>Third Normal Form (3NF)</h2>
   </hgroup>
@@ -2894,7 +3379,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-89" style="background:;">
+<slide class="" id="slide-103" style="background:;">
   <hgroup>
     <h2>Third Normal Form Guarantees</h2>
   </hgroup>
@@ -2916,7 +3401,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-90" style="background:;">
+<slide class="" id="slide-104" style="background:;">
   <hgroup>
     <h2>Decomposition into 3NF</h2>
   </hgroup>
@@ -2936,7 +3421,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-91" style="background:;">
+<slide class="" id="slide-105" style="background:;">
   <hgroup>
     <h2>Example Decomposition into 3NF</h2>
   </hgroup>
@@ -2958,7 +3443,7 @@ corresponding tuples in the \(R_i\)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-92" style="background:;">
+<slide class="" id="slide-106" style="background:;">
   <hgroup>
     <h2>Example Decomposition into 3NF: Step 1</h2>
   </hgroup>
@@ -2984,7 +3469,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-93" style="background:;">
+<slide class="" id="slide-107" style="background:;">
   <hgroup>
     <h2>Example Decomposition into 3NF: Step 2</h2>
   </hgroup>
@@ -3011,7 +3496,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-94" style="background:;">
+<slide class="" id="slide-108" style="background:;">
   <hgroup>
     <h2>Example Decomposition into 3NF: Step 3</h2>
   </hgroup>
@@ -3058,7 +3543,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-95" style="background:;">
+<slide class="" id="slide-109" style="background:;">
   <hgroup>
     <h2>Why the Decomposition into 3NF Works</h2>
   </hgroup>
@@ -3086,7 +3571,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-96" style="background:;">
+<slide class="" id="slide-110" style="background:;">
   <hgroup>
     <h2>Multivalued Dependencies</h2>
   </hgroup>
@@ -3096,7 +3581,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-97" style="background:;">
+<slide class="" id="slide-111" style="background:;">
   <hgroup>
     <h2>Multivalued Dependencies</h2>
   </hgroup>
@@ -3170,7 +3655,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-98" style="background:;">
+<slide class="" id="slide-112" style="background:;">
   <hgroup>
     <h2>Multivalued Dependencies</h2>
   </hgroup>
@@ -3244,7 +3729,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-99" style="background:;">
+<slide class="" id="slide-113" style="background:;">
   <hgroup>
     <h2>Multivalued Dependencies</h2>
   </hgroup>
@@ -3319,7 +3804,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-100" style="background:;">
+<slide class="" id="slide-114" style="background:;">
   <hgroup>
     <h2>Multivalued Dependencies</h2>
   </hgroup>
@@ -3392,7 +3877,7 @@ either \(A\) or \(B\) changes the constraints
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-101" style="background:;">
+<slide class="" id="slide-115" style="background:;">
   <hgroup>
     <h2>Multivalued Dependencies</h2>
   </hgroup>
@@ -3453,7 +3938,7 @@ another tuple \(v\) that
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-102" style="background:;">
+<slide class="" id="slide-116" style="background:;">
   <hgroup>
     <h2>Rules for Multivalued Dependencies</h2>
   </hgroup>
@@ -3479,7 +3964,7 @@ another tuple \(v\) that
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-103" style="background:;">
+<slide class="" id="slide-117" style="background:;">
   <hgroup>
     <h2>Caveat on Rules for Multivalued Dependencies</h2>
   </hgroup>
@@ -3508,7 +3993,7 @@ street and city/title/year (which is bogus)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-104" style="background:;">
+<slide class="" id="slide-118" style="background:;">
   <hgroup>
     <h2>More Rules for Multivalued Dependencies</h2>
   </hgroup>
@@ -3540,7 +4025,7 @@ street and city/title/year (which is bogus)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-105" style="background:;">
+<slide class="" id="slide-119" style="background:;">
   <hgroup>
     <h2>Fourth Normal Form (4NF)</h2>
   </hgroup>
@@ -3568,7 +4053,7 @@ street and city/title/year (which is bogus)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-106" style="background:;">
+<slide class="" id="slide-120" style="background:;">
   <hgroup>
     <h2>Relationship among Normal Forms</h2>
   </hgroup>
@@ -3611,7 +4096,7 @@ street and city/title/year (which is bogus)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-107" style="background:;">
+<slide class="" id="slide-121" style="background:;">
   <hgroup>
     <h1>Algorithms for MVDs</h1>
   </hgroup>
@@ -3621,7 +4106,7 @@ street and city/title/year (which is bogus)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-108" style="background:;">
+<slide class="" id="slide-122" style="background:;">
   <hgroup>
     <h2>The Closure Algorithm</h2>
   </hgroup>
@@ -3643,7 +4128,7 @@ street and city/title/year (which is bogus)</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-109" style="background:;">
+<slide class="" id="slide-123" style="background:;">
   <hgroup>
     <h2>The Chase Algorithm for MVDs</h2>
   </hgroup>
@@ -3665,7 +4150,7 @@ but sometimes the resulting tuples will not be new
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-110" style="background:;">
+<slide class="" id="slide-124" style="background:;">
   <hgroup>
     <h2>The Chase Algorithm for Inferring MVDs</h2>
   </hgroup>
@@ -3690,7 +4175,7 @@ and with \(u\) on \(\mathcal{A}-Y\), then the MVD \(X \twoheadrightarrow Y\) is 
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-111" style="background:;">
+<slide class="" id="slide-125" style="background:;">
   <hgroup>
     <h2>The Chase Algorithm for Inferring MVDs</h2>
   </hgroup>
@@ -3740,7 +4225,7 @@ unsubscripted tuple shows up.</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-112" style="background:;">
+<slide class="" id="slide-126" style="background:;">
   <hgroup>
     <h2>The Chase Algorithm for Inferring MVDs</h2>
   </hgroup>
@@ -3842,7 +4327,7 @@ unsubscripted tuple shows up.</li>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-113" style="background:;">
+<slide class="" id="slide-127" style="background:;">
   <hgroup>
     <h2>Projecting MVDs</h2>
   </hgroup>
@@ -4083,470 +4568,554 @@ a tableau as before</li>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=36 title='Design of Relational Database Schemas'>
+        data-slide=36 title='Projection of Functional Dependencies Example'>
          36
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=37 title='Designing Relational Database Schemas'>
+        data-slide=37 title='Projection of Functional Dependencies Example'>
          37
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=38 title='Anomalies'>
+        data-slide=38 title='Projection of Functional Dependencies Example'>
          38
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=39 title='Decompositions'>
+        data-slide=39 title='Projection of Functional Dependencies Example'>
          39
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=40 title='Decompositions'>
+        data-slide=40 title='Projection of Functional Dependencies Example'>
          40
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=41 title='Decompositions'>
+        data-slide=41 title='Projection of Functional Dependencies Example'>
          41
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=42 title='Boyce-Codd Normal Form (BCNF)'>
+        data-slide=42 title='Projection of Functional Dependencies Example'>
          42
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=43 title='Boyce-Codd Normal Form (BCNF)'>
+        data-slide=43 title='Projection of Functional Dependencies Example'>
          43
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=44 title='Boyce-Codd Normal Form (BCNF)'>
+        data-slide=44 title='Projection of Functional Dependencies Example'>
          44
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=45 title='Boyce-Codd Normal Form (BCNF)'>
+        data-slide=45 title='Projection of Functional Dependencies Example'>
          45
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=46 title='Decomposing into BCNF'>
+        data-slide=46 title='Projection of Functional Dependencies Example'>
          46
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=47 title='Decomposing into BCNF'>
+        data-slide=47 title='Projection of Functional Dependencies Example'>
          47
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=48 title='Decomposing into BCNF'>
+        data-slide=48 title='Projection of Functional Dependencies Example'>
          48
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=49 title='Decomposing into BCNF'>
+        data-slide=49 title='Projection of Functional Dependencies Example'>
          49
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=50 title='Decomposing into BCNF'>
+        data-slide=50 title='Design of Relational Database Schemas'>
          50
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=51 title='Consequences of Decomposition into BCNF'>
+        data-slide=51 title='Designing Relational Database Schemas'>
          51
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=52 title='(Wanted) Properties of BCNF Decomposition'>
+        data-slide=52 title='Anomalies'>
          52
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=53 title='No Anomalies: Redundancy'>
+        data-slide=53 title='Decompositions'>
          53
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=54 title='No Anomalies: Redundancy'>
+        data-slide=54 title='Decompositions'>
          54
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=55 title='No Anomalies: Update'>
+        data-slide=55 title='Decompositions'>
          55
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=56 title='No Anomalies: Deletion'>
+        data-slide=56 title='Boyce-Codd Normal Form (BCNF)'>
          56
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=57 title='Recoverability'>
+        data-slide=57 title='Boyce-Codd Normal Form (BCNF)'>
          57
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=58 title='Recoverability'>
+        data-slide=58 title='Boyce-Codd Normal Form (BCNF)'>
          58
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=59 title='Recoverability'>
+        data-slide=59 title='Boyce-Codd Normal Form (BCNF)'>
          59
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=60 title='Recoverability'>
+        data-slide=60 title='Decomposing into BCNF'>
          60
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=61 title='Recoverability'>
+        data-slide=61 title='Decomposing into BCNF'>
          61
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=62 title='Lossless Joins'>
+        data-slide=62 title='Decomposing into BCNF'>
          62
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=63 title='The Chase Test for Lossless Joins'>
+        data-slide=63 title='Decomposing into BCNF'>
          63
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=64 title='The Chase Test for Lossless Joins'>
+        data-slide=64 title='Decomposing into BCNF'>
          64
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=65 title='The Chase Test for Lossless Joins'>
+        data-slide=65 title='Consequences of Decomposition into BCNF'>
          65
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=66 title='The Chase Test for Lossless Joins'>
+        data-slide=66 title='(Wanted) Properties of BCNF Decomposition'>
          66
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=67 title='The Chase Test for Lossless Joins'>
+        data-slide=67 title='No Anomalies: Redundancy'>
          67
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=68 title='The Chase Test for Lossless Joins'>
+        data-slide=68 title='No Anomalies: Redundancy'>
          68
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=69 title='The Chase Test for Lossless Joins'>
+        data-slide=69 title='No Anomalies: Update'>
          69
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=70 title='The Chase Test for Lossless Joins'>
+        data-slide=70 title='No Anomalies: Deletion'>
          70
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=71 title='The Chase Test for Lossless Joins'>
+        data-slide=71 title='Recoverability'>
          71
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=72 title='Example of Decomposition into BCNF'>
+        data-slide=72 title='Recoverability'>
          72
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=73 title='Example of Decomposition into BCNF'>
+        data-slide=73 title='Recoverability'>
          73
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=74 title='Example of Decomposition into BCNF'>
+        data-slide=74 title='Recoverability'>
          74
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=75 title='Example of Decomposition into BCNF'>
+        data-slide=75 title='Recoverability'>
          75
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=76 title='Example of Decomposition into BCNF'>
+        data-slide=76 title='Lossless Joins'>
          76
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=77 title='Example of Decomposition into BCNF'>
+        data-slide=77 title='The Chase Test for Lossless Joins'>
          77
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=78 title='Example of Decomposition into BCNF'>
+        data-slide=78 title='The Chase Test for Lossless Joins'>
          78
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=79 title='Example of Decomposition into BCNF'>
+        data-slide=79 title='The Chase Test for Lossless Joins'>
          79
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=80 title='Example of Decomposition into BCNF'>
+        data-slide=80 title='The Chase Test for Lossless Joins'>
          80
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=81 title='Example of Decomposition into BCNF'>
+        data-slide=81 title='The Chase Test for Lossless Joins'>
          81
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=82 title='Example of Decomposition into BCNF'>
+        data-slide=82 title='The Chase Test for Lossless Joins'>
          82
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=83 title='Example of Decomposition into BCNF (Important Aside)'>
+        data-slide=83 title='The Chase Test for Lossless Joins'>
          83
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=84 title='Example of Decomposition into BCNF (Important Aside)'>
+        data-slide=84 title='The Chase Test for Lossless Joins'>
          84
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=85 title='Dependency Preservation'>
+        data-slide=85 title='The Chase Test for Lossless Joins'>
          85
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=86 title='Third Normal Form (3NF)'>
+        data-slide=86 title='Example of Decomposition into BCNF'>
          86
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=87 title='Third Normal Form (3NF)'>
+        data-slide=87 title='Example of Decomposition into BCNF'>
          87
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=88 title='Third Normal Form (3NF)'>
+        data-slide=88 title='Example of Decomposition into BCNF'>
          88
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=89 title='Third Normal Form Guarantees'>
+        data-slide=89 title='Example of Decomposition into BCNF'>
          89
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=90 title='Decomposition into 3NF'>
+        data-slide=90 title='Example of Decomposition into BCNF'>
          90
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=91 title='Example Decomposition into 3NF'>
+        data-slide=91 title='Example of Decomposition into BCNF'>
          91
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=92 title='Example Decomposition into 3NF: Step 1'>
+        data-slide=92 title='Example of Decomposition into BCNF'>
          92
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=93 title='Example Decomposition into 3NF: Step 2'>
+        data-slide=93 title='Example of Decomposition into BCNF'>
          93
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=94 title='Example Decomposition into 3NF: Step 3'>
+        data-slide=94 title='Example of Decomposition into BCNF'>
          94
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=95 title='Why the Decomposition into 3NF Works'>
+        data-slide=95 title='Example of Decomposition into BCNF'>
          95
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=96 title='Multivalued Dependencies'>
+        data-slide=96 title='Example of Decomposition into BCNF'>
          96
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=97 title='Multivalued Dependencies'>
+        data-slide=97 title='Example of Decomposition into BCNF (Important Aside)'>
          97
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=98 title='Multivalued Dependencies'>
+        data-slide=98 title='Example of Decomposition into BCNF (Important Aside)'>
          98
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=99 title='Multivalued Dependencies'>
+        data-slide=99 title='Dependency Preservation'>
          99
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=100 title='Multivalued Dependencies'>
+        data-slide=100 title='Third Normal Form (3NF)'>
          100
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=101 title='Multivalued Dependencies'>
+        data-slide=101 title='Third Normal Form (3NF)'>
          101
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=102 title='Rules for Multivalued Dependencies'>
+        data-slide=102 title='Third Normal Form (3NF)'>
          102
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=103 title='Caveat on Rules for Multivalued Dependencies'>
+        data-slide=103 title='Third Normal Form Guarantees'>
          103
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=104 title='More Rules for Multivalued Dependencies'>
+        data-slide=104 title='Decomposition into 3NF'>
          104
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=105 title='Fourth Normal Form (4NF)'>
+        data-slide=105 title='Example Decomposition into 3NF'>
          105
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=106 title='Relationship among Normal Forms'>
+        data-slide=106 title='Example Decomposition into 3NF: Step 1'>
          106
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=107 title='Algorithms for MVDs'>
+        data-slide=107 title='Example Decomposition into 3NF: Step 2'>
          107
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=108 title='The Closure Algorithm'>
+        data-slide=108 title='Example Decomposition into 3NF: Step 3'>
          108
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=109 title='The Chase Algorithm for MVDs'>
+        data-slide=109 title='Why the Decomposition into 3NF Works'>
          109
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=110 title='The Chase Algorithm for Inferring MVDs'>
+        data-slide=110 title='Multivalued Dependencies'>
          110
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=111 title='The Chase Algorithm for Inferring MVDs'>
+        data-slide=111 title='Multivalued Dependencies'>
          111
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=112 title='The Chase Algorithm for Inferring MVDs'>
+        data-slide=112 title='Multivalued Dependencies'>
          112
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=113 title='Projecting MVDs'>
+        data-slide=113 title='Multivalued Dependencies'>
          113
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=114 title='Multivalued Dependencies'>
+         114
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=115 title='Multivalued Dependencies'>
+         115
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=116 title='Rules for Multivalued Dependencies'>
+         116
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=117 title='Caveat on Rules for Multivalued Dependencies'>
+         117
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=118 title='More Rules for Multivalued Dependencies'>
+         118
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=119 title='Fourth Normal Form (4NF)'>
+         119
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=120 title='Relationship among Normal Forms'>
+         120
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=121 title='Algorithms for MVDs'>
+         121
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=122 title='The Closure Algorithm'>
+         122
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=123 title='The Chase Algorithm for MVDs'>
+         123
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=124 title='The Chase Algorithm for Inferring MVDs'>
+         124
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=125 title='The Chase Algorithm for Inferring MVDs'>
+         125
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=126 title='The Chase Algorithm for Inferring MVDs'>
+         126
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=127 title='Projecting MVDs'>
+         127
       </a>
     </li>
   </ul>

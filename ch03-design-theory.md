@@ -523,6 +523,264 @@ OUTPUT: A set (basis) $S'$ of FDs for $\pi_{\mathcal{B}}(R)$
 
 ---
 
+## Projection of Functional Dependencies Example
+
+* Consider $R(A,B,C,D,E)$ with FDs
+  * $A, B \rightarrow C$ 
+  * $B, C \rightarrow D$ 
+  * $C, D \rightarrow E$ 
+  * $D, E \rightarrow A$ 
+  * $A, E \rightarrow B$ 
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+---
+
+## Projection of Functional Dependencies Example
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+* We have to consider subsets of $\{A, B, C, D\}$
+* There's 16 of them!
+* We'll go through these subsets methodically
+
+---
+
+## Projection of Functional Dependencies Example
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+* Subsets with 0 elements
+* There's just one, $\{\}$
+* No real need to consider it, since it does not generate any FDs
+
+---
+
+## Projection of Functional Dependencies Example
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+* Subsets with 1 element
+* There's four, $\{A\}$, $\{B\}$, $\{C\}$, $\{D\}$
+* Since the FDs all have two attributes on the left-hand side, these
+  do not create any FDs in the projection
+  * $A, B \rightarrow C$ 
+  * $B, C \rightarrow D$ 
+  * $C, D \rightarrow E$ 
+  * $D, E \rightarrow A$ 
+  * $A, E \rightarrow B$   
+
+---
+
+## Projection of Functional Dependencies Example
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+* Subsets with 2 elements
+* There's six, $\{A,B\}$, $\{A,C\}$, $\{A,D\}$, $\{B,C\}$, $\{B,D\}$, $\{C,D\}$ 
+* We'll have to consider each of these in turn
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### FDs for $\{A,B\}$
+
+Step | $X$             | FD            
+-----|-----------------|---------------------
+   0 | $A, B$          |               
+   1 | $A, B, C$       | $A, B \rightarrow C$
+   2 | $A, B, C, D$    | $B, C \rightarrow D$
+   3 | $A, B, C, D, E$ | $C, D \rightarrow E$
+
+* So $\{A,B\}^+ = \{A, B, C, D, E\}$
+* The projection FDs are
+  * $A, B \rightarrow C$ 
+  * $A, B \rightarrow D$ 
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### FDs for $\{A,C\}$
+
+Step | $X$             | FD            
+-----|-----------------|---------------------
+   0 | $A, C$          |               
+
+* So $\{A,C\}^+ = \{A, C\}$
+* There are no FDs starting with $A, C \rightarrow$
+* The same is obviously true of $A, D$.
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### FDs for $\{B,C\}$
+
+Step | $X$             | FD            
+-----|-----------------|---------------------
+   0 | $B, C$          |               
+   1 | $B, C, D$       | $B, C \rightarrow D$
+   2 | $B, C, D, E$    | $C, D \rightarrow E$
+   3 | $A, B, C, D, E$ | $D, E \rightarrow A$
+
+* So $\{B,C\}^+ = \{A, B, C, D, E\}$
+* The projection FDs are
+  * $B, C \rightarrow A$ 
+  * $B, C \rightarrow D$ 
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### FDs for $\{B,D\}$
+
+Step | $X$             | FD            
+-----|-----------------|---------------------
+   0 | $B, D$          |               
+
+* So $\{B,D\}^+ = \{B, D\}$
+* There are no FDs starting with $B, D \rightarrow$
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### FDs for $\{C,D\}$
+
+Step | $X$             | FD            
+-----|-----------------|---------------------
+   0 | $C, D$          |               
+   1 | $C, D, E$       | $C, D \rightarrow E$
+   2 | $A, C, D, E$    | $D, E \rightarrow A$
+   3 | $A, B, C, D, E$ | $A, E \rightarrow B$
+
+* So $\{C,D\}^+ = \{A, B, C, D, E\}$
+* The projection FDs are
+  * $C, D \rightarrow A$ 
+  * $C, D \rightarrow B$ 
+
+---
+
+## Projection of Functional Dependencies Example
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+* Subsets with 3 elements
+* There's four, $\{A,B,C\}$, $\{A,B,D\}$, $\{A,C,D\}$, $\{B,C,D\}$
+* But we don't have to consider  $\{A,B,C\}$, since we already
+  found that $\{A,B\}^+ = \{A, B, C, D, E\}$, so we have all possible FDs
+  for $\{A,B,C\}$
+* Same goes for the other three!
+
+---
+
+## Projection of Functional Dependencies Example
+
+* What FDs are in the projection to $R(A,B,C,D)$?
+
+* Subsets with 4 elements
+* There's just $\{A,B,C,D\}$
+* And we don't have to consider it, since there can be no FD with new
+  columns on the right-hand side
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Original Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### Functional Dependencies in Projection
+
+* $A, B \rightarrow C$ 
+* $A, B \rightarrow D$ 
+* $B, C \rightarrow A$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow A$ 
+* $C, D \rightarrow B$ 
+
+---&twocol
+
+## Projection of Functional Dependencies Example
+
+*** =left
+### Original Functional Dependencies
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow E$ 
+* $D, E \rightarrow A$ 
+* $A, E \rightarrow B$   
+
+*** =right
+### Functional Dependencies in Projection (Minimal)
+
+* $A, B \rightarrow C$ 
+* $B, C \rightarrow D$ 
+* $C, D \rightarrow A$ 
+* $C, D \rightarrow B$ 
+
+---
+
 # Design of Relational Database Schemas
 
 ---
