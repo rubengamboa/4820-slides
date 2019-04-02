@@ -49,7 +49,7 @@ widgets:      [mathjax, bootstrap]
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   35.00   63.00   72.00   73.02   82.00   99.00
+##   35.00   63.00   72.00   73.12   82.00   99.00
 ```
 
 ![plot of chunk exam1.grades.2019](assets/fig/exam1.grades.2019-1.png)
