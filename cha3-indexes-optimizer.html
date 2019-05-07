@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSC 4820 Database Systems</title>
+  <meta charset="utf-8">
+  <meta name="description" content="COSC 4820 Database Systems">
+  <meta name="author" content="Ruben Gamboa">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>COSC 4820 Database Systems</h1>
+    <h2>Indexes and Introduction to Query Optimization</h2>
+    <p>Ruben Gamboa<br/>Professor</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+<h1>Indexes in SQL</h1>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Indexes in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An <strong>index</strong> is a <strong>data structure</strong> that makes it more efficient to retrieve tuples that have a given value 
+for a given attribute
+<br><br></li>
+<li>For example, an index on the <strong>Student ID</strong> attribute would make it efficient to find a student with W# &quot;W123456789&quot;</li>
+<li>Or an index on <strong>phone number</strong> would make it efficient to find a student or students with phone number &quot;307-234-5678&quot;</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Indexes in SQL</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>In memory, you would solve this problem by using a data structure such as
+
+<ol>
+<li>a sorted array</li>
+<li>a (binary) search tree</li>
+<li>a hash table
+<br><br></li>
+</ol></li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>Actually, all of these are used in databases</p>
+
+<ol>
+<li>A sorted file</li>
+<li>A B-tree with as many children as fit in a disk page</li>
+<li>A hash table, with &quot;buckets&quot; mapping to different disk pages
+<br><br></li>
+</ol></li>
+<li><p>Note: Sorted files and B-trees can handle comparisons with &lt;, &lt;=, &gt;, &gt;=, and =</p></li>
+<li><p>But hash tables can only handle equality checks</p></li>
+<li><p>And (rule of thumb) they are more efficient than the others</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Motivation for indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we need to compute \(S \bowtie S\), where \(S\) is the Students table at UW</li>
+<li>Since \(|S| \approx 14000\), the naive method takes up \(14000^2 =\) 1.96 &times; 10<sup>8</sup> steps</li>
+<li>Each step is a disk access, so even if disk I/O is 1ms, that works out to 1.96 &times; 10<sup>5</sup> seconds</li>
+<li>Which is 3266.6666667 minutes</li>
+<li>Which is 54.4444444 hours</li>
+<li>Which is 2.2685185 days
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>That&#39;s a little unfair</li>
+<li><p>Instead of reading each tuple at a time, we can read many tuples at the same time, since they are 
+on the same disk page</p></li>
+<li><p>Disk I/Os is what matters, so we&#39;ll stop worrying about seconds</p></li>
+<li><p>After all, disks get faster!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Motivation for indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Suppose we need to compute \(S \bowtie S\), where \(S\) is the Students table at UW</li>
+<li>Suppose each disk page can handle 100 students</li>
+<li><p>Since \(|S| \approx 14000\) or 140 pages, the <strong>Block Nested Loop</strong> join method takes up \(140+140^2 =\) 1.974 &times; 10<sup>4</sup> disk I/Os
+<br><br></p></li>
+<li><p>That&#39;s a lot better, but it&#39;s still quadratic!</p></li>
+<li><p>A good index will bring that <strong>up</strong> to 3.514 &times; 10<sup>4</sup> disk I/Os</p></li>
+<li><p>But it&#39;s <strong>linear</strong></p></li>
+<li><p>You&#39;d see an improvement in a larger school</p></li>
+<li><p>E.g., with 100,000 students, it becomes</p>
+
+<ul>
+<li>Without an index: \(1000^2 =\) 10<sup>6</sup> disk I/Os</li>
+<li>With an index: 2.51 &times; 10<sup>5</sup> disk I/Os</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Motivation for indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The &quot;hard&quot; numbers in the previous slides involve joins</li>
+<li><p>Here&#39;s a similar argument with selections</p></li>
+<li><p>Suppose we need to compute \(\sigma(S)\), where \(S\) is the Students table at UW</p></li>
+<li><p>Suppose each disk page can handle 100 students</p></li>
+<li><p>Since \(|S| \approx 14000\) or 140 pages, without an index, we can execute the selection with \(140\) disk I/Os</p></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>A good (and applicable) index will bring that down to 2.5 disk I/Os!</li>
+<li>Actually, it could be a few more, depending on the <strong>selectivity</strong> of the index (more on this later)
+
+<ul>
+<li>If we&#39;re looking for a single record, then 2.5 disk I/Os is about right</li>
+<li>If we&#39;re looking for all students in COSC, it may take \(300\) disk I/Os!</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Motivation for indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Indexes can be used to speed up queries that involve selections, e.g.,</li>
+</ul>
+
+<pre><code>SELECT title, year
+  FROM Movies
+ WHERE year = 2000
+</code></pre>
+
+<ul>
+<li>They can also be used to speed up queries involving joins</li>
+</ul>
+
+<pre><code>SELECT title, year, name
+  FROM Movies JOIN MovieExecs ON producerC# = cert#
+ WHERE year = 2000
+</code></pre>
+
+<ul>
+<li>And indexes can speed up checking of integrity constraints, e.g., W# must be unique</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Declaring Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Making an index is as easy as calling <code>CREATE INDEX</code></li>
+</ul>
+
+<pre><code>CREATE INDEX MovieYearIdx ON Movies(year)
+</code></pre>
+
+<ul>
+<li>You would not have to make an index on cert#, because databases automatically create an index on the PRIMARY KEY</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Multidimensional Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>You can create an index that spans more than one attribute</li>
+</ul>
+
+<pre><code>CREATE INDEX StudentNameIdx ON Students(first_name, last_name)
+</code></pre>
+
+<ul>
+<li>The order of the attributes matters!</li>
+<li>If you know the first_name, but not the last_name, you may still be ab;e to use the index above effectively</li>
+<li>But if you know the last_name and not the first_name, this index is useless
+<br><br></li>
+</ul>
+
+<ul class = "build incremental">
+<li>Note that if the index is a hash index, then knowing one or the other does not help!</li>
+<li>This only helps for indexes that have a sort order, e.g., sorted files or tree indexes</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Dropping Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>No surprises here:</li>
+</ul>
+
+<pre><code>DROP INDEX MovieYearIdx
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h1>What Indexes to Pick?</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>What Indexes to Pick?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The choices you make when picking indexes will likely determine whether the database performance is acceptable or not
+<br><br></li>
+<li>One approach is to create all possible indexes! (Why not?)
+
+<ul>
+<li>If you have a table with 10 attributes, that&#39;s 1023 indexes</li>
+<li>If you have a table with 20 attributes, that&#39;s 1.048575 &times; 10<sup>6</sup> indexes
+<br><br></li>
+</ul></li>
+<li>OK, that may be too much</li>
+<li>How about an index on each column?</li>
+<li>10 attributes means 10 indexes, 20 attributes means 20 indexes
+<br><br></li>
+<li>This is manageable, but consider that each update to the database needs to update each of the indexes!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Basic Tradeoffs</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Indexes may speed up queries with selections and joins
+<br><br></li>
+<li>Indexes may slow down insertions, deletions, and updates</li>
+</ul>
+
+<p><br></p>
+
+<ul class = "build incremental">
+<li>These are just guidelines!</li>
+<li>An index may slow down a query, e.g, adding an index on &quot;gender&quot; may confuse the optimizer</li>
+<li>An index may speed up an insertion, e.g., by making a constraint check faster</li>
+</ul>
+
+<p><br></p>
+
+<ul class = "build incremental">
+<li>We&#39;ll now discuss some indexes that are usually good ideas</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Primary Key Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It is usually a good idea to have an index on a primary key
+
+<ul>
+<li>Queries typically join on primary keys, so the index will be used a lot</li>
+<li>The index returns at most one tuple, so at most one page will need to be read
+<br></li>
+</ul></li>
+<li>Suppose we need to compute \(S \bowtie S\), where \(S\) is the Students table at UW</li>
+<li>Suppose each disk page can handle 100 students</li>
+<li>Since \(|S| \approx 14000\) or 140 pages, the <strong>Index Nested Loop</strong> join method takes up
+
+<ul>
+<li>\(140\) disk I/Os to read the entire table</li>
+<li>for each tuple, at most one more disk I/O to find the matching tuple</li>
+</ul></li>
+<li>The grand total is \(140 + 14000 \times 1 =\) 1.414 &times; 10<sup>4</sup> disk I/Os</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Primary Key Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Actually, the analysis is slightly wrong</li>
+<li>We counted the disk I/Os to read the tuples, but <strong>we never counted the disk I/Os for the index itself</strong></li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Rule of thumb: Each lookup on a tree-based index costs 3 disk I/Os (but it would be probably be just 2 on 14,000 rows)</li>
+<li>Rule of thumb: Each lookup on a hash-based index costs 1.5 disk I/Os</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>Using these rough estimates, we find
+
+<ul>
+<li>Using a tree index: \(140 + 14000 \times (1 + 3) =\) 5.614 &times; 10<sup>4</sup> disk I/Os</li>
+<li>Using a hash index: \(140 + 14000 \times (1 + 1.5) =\) 3.514 &times; 10<sup>4</sup> disk I/Os</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Primary Key Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>These indexes are such a good idea that databases routinely build them for us!</li>
+<li>So you should not to build your own primary key indexes, <strong>ever</strong>
+<br><br></li>
+<li>If you use synthetic keys, then the comparison \(K_1 < K_2\) is probably not meaningful</li>
+<li>I.e., all lookups will be based on equality (\(K1 = \dots\))</li>
+<li>That means you should be using hash indexes on <em>synthetic</em> primary keys</li>
+</ul>
+
+<ul class = "build incremental">
+<li>Hint: The default is usually a tree index</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>Clustered Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>An index is <strong>clustered</strong> if all the entries for a given value are on one (or just a very few) pages</li>
+<li>Extreme case: If there&#39;s only one matching tuple, then of course it&#39;s on only one disk page</li>
+<li>Another case: If the data is sorted on the index attributes, then it&#39;s clustered</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Clustered Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img width="70%" src="assets/img/indexes-unclustered.png" title="Unclustered Index" alt="Unclustered Index">
+    <br>    
+    An Unclustered Index
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Clustered Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="centered">
+    <img width="70%" src="assets/img/indexes-clustered.png" title="Clustered Index" alt="Clustered Index">
+    <br>    
+    A Clustered Index
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>Clustered Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT title, year
+  FROM Movies
+ WHERE year = 2000
+</code></pre>
+
+<ul>
+<li>If the index is clustered, an index on year is very likely to be efficient
+
+<ul>
+<li>How likely depends on how <strong>selective</strong> year is in this table</li>
+<li>I.e., if there are only movies from the year 2000, then the index is useless (selectivity 100%)</li>
+<li>But if there are movies from all years from 1980-2010, then the index is good (selectivity \(\approx\) 3%)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Clustered Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT title, year
+  FROM Movies
+ WHERE year = 2000
+</code></pre>
+
+<ul>
+<li>If the index is unclustered, an index on year may be worse than useless
+
+<ul>
+<li>Even if there is data from 1980-2010, we still have to read each tuple separately</li>
+<li>That means we need \(0.03 \times N\) disk I/Os</li>
+<li>If a block holds more than 33 records, we would be better off ignoring the index!</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Picking Indexes</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It&#39;s hard to pick indexes in a vacuum</li>
+<li>What you really need is a list of queries that are important to your application(s)</li>
+<li>Also, these queries should be weighted, since some queries may be <strong>more important or frequent</strong> than others</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>With this information, you can compare the cost of implementing different indexes</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Q1, with probability \(.6\)</li>
+</ul>
+
+<pre><code>SELECT movieTitle, movieYear
+  FROM StarsIn
+ WHERE starName = ?
+</code></pre>
+
+<ul>
+<li>Q2, with probability \(.3\)</li>
+</ul>
+
+<pre><code>SELECT starName
+  FROM StarsIn
+ WHERE movieTitle = ? AND movieYear = ?
+</code></pre>
+
+<ul>
+<li>Q3, with probability \(.1\)</li>
+</ul>
+
+<pre><code>INSERT INTO StarsIn VALUES(?,?,?)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  <hgroup>
+    <h2>Example (Assumptions)</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>StarsIn takes up 10 pages</li>
+<li>Typically, a star appears in 3 movies and each movie has 3 stars</li>
+<li>The 3 movies a star is in will be in different pages of StarsIn, so it will take 3 disk I/Os 
+to fetch these 3 movies, even with an index</li>
+<li>1.5 disk accesses are required to read the index for an equality lookup</li>
+<li>For inserts, we need 1 disk I/O to read the original page, 1 disk I/O to write the modified page,
+and 2.5 disk I/Os to update the index (1.5 read, 1 write) -- for a total of 4.5 disk I/Os</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <table><thead>
+<tr>
+<th>Query</th>
+<th>No Index</th>
+<th>starName Index</th>
+<th>movieTitle Index</th>
+<th>Both Indexes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Q1</td>
+<td>10</td>
+<td>4.5</td>
+<td>10</td>
+<td>4.5</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>10</td>
+<td>10</td>
+<td>4.5</td>
+<td>4.5</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>2</td>
+<td>4.5</td>
+<td>4.5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>9.2</td>
+<td>6.15</td>
+<td>7.8</td>
+<td>4.75</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Q1, with probability \(.6\)</li>
+</ul>
+
+<pre><code>SELECT movieTitle, movieYear
+  FROM StarsIn
+ WHERE starName = ?
+</code></pre>
+
+<ul>
+<li>Q2, with probability \(.3\)</li>
+</ul>
+
+<pre><code>SELECT starName
+  FROM StarsIn
+ WHERE movieTitle = ? AND movieYear = ?
+</code></pre>
+
+<ul>
+<li>Q3, with probability \(.1\)</li>
+</ul>
+
+<pre><code>INSERT INTO StarsIn VALUES(?,?,?)
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;'>
+  <table><thead>
+<tr>
+<th>Query</th>
+<th>No Index</th>
+<th>starName Index</th>
+<th>movieTitle Index</th>
+<th>Both Indexes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Q1</td>
+<td>10</td>
+<td>4.5</td>
+<td>10</td>
+<td>4.5</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>10</td>
+<td>10</td>
+<td>4.5</td>
+<td>4.5</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>2</td>
+<td>4.5</td>
+<td>4.5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>6</td>
+<td>5.6</td>
+<td>6.15</td>
+<td>5.75</td>
+</tr>
+</tbody></table>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Q1, with probability \(.3\)</li>
+</ul>
+
+<pre><code>SELECT movieTitle, movieYear
+  FROM StarsIn
+ WHERE starName = ?
+</code></pre>
+
+<ul>
+<li>Q2, with probability \(.2\)</li>
+</ul>
+
+<pre><code>SELECT starName
+  FROM StarsIn
+ WHERE movieTitle = ? AND movieYear = ?
+</code></pre>
+
+<ul>
+<li>Q3, with probability \(.5\)</li>
+</ul>
+
+<pre><code>INSERT INTO StarsIn VALUES(?,?,?)
+</code></pre>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>Picking Indexes Globally</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>We only considered two indexes</li>
+<li>But what if we had dozens of tables with dozens of attributes?</li>
+</ul>
+
+<p><br></p>
+
+<ul>
+<li>This is where automated tools come in</li>
+<li>A typical approach is to choose indexes <strong>greedily</strong>
+
+<ol>
+<li>First, fix a workload of queries</li>
+<li>Consider the cost of executing these queries with no index</li>
+<li>Now consider the cost of executing these queries with one (out of many possible) indexes</li>
+<li>Pick the index that works best</li>
+<li>Keep adding one index at a time, until it stops helping</li>
+</ol></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  <hgroup>
+    <h1>The Query Optimizer: Cost Estimation</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  <hgroup>
+    <h2>Approach to Selections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Find the <strong>most selective access path</strong></li>
+<li>Selective: retrieve fewest number of tuples up front (using an index)</li>
+<li>Apply any remaining conditions to the tuples returned</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>In other words, pick most selective index, and filter remaining tuples</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Yeah, that&#39;s the big reveal</li>
+<li>Now, onto the details</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  <hgroup>
+    <h2>Approach to Selections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What is the <strong>most selective access path</strong>?</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Answer: An index or file scan that (we estimate) will require the fewest page I/O operations</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>The remaining terms on the condition are applied to the tuples read with the most selective access path</li>
+<li>But the remaining terms do not affect the #tuples or #pages fetched</li>
+<li>So the cost of the other terms is <em>zero</em> (since we only count I/O)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  <hgroup>
+    <h2>Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider this condition:
+<code>
+date &lt; 5/1/19 AND voter_id=5 AND precinct_id=3
+</code></li>
+<li><p>Here are two different query plans:</p>
+
+<ul>
+<li>Use a B+ tree on the date field, then filter the remaining tuples using
+        the condition voter_id=5 AND precinct_id=3</li>
+<li>Use a hash index on voter_id and precint_id and then check each tuple
+to see if it matches day&lt;5/1/19</li>
+</ul></li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li><strong>Main Question:</strong> Which is better?  How do we even think about answering this question?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  <hgroup>
+    <h2>Implementing Selections</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Cost of using an index for selection depends on
+
+<ul>
+<li>#matching tuples</li>
+<li>clustering</li>
+</ul></li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li><strong>Cost of finding</strong> matching tuples is usually small</li>
+<li><strong>Cost of retrieving</strong> matching tuples is 
+
+<ul>
+<li>small for clustered index</li>
+<li>large for unclustered index (linear in #matches)</li>
+<li>totally impractical for unclustered index when many tuples match</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  <hgroup>
+    <h2>Cost Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT *
+  FROM MovieStars
+ WHERE name &lt; &#39;C&#39;
+</code></pre>
+
+<ul>
+<li>&quot;Benign&quot; assumptions:</li>
+<li>Uniform distribution of names</li>
+<li>I.e., about 10% (2/26) of tuples qualify</li>
+<li>40,000 tuples in 500 pages (80 per page)</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Note: Catalog knows min and max of names, so it can compute the percentage
+using the uniformity assumption</li>
+<li>Note: But if uniformity assumption isn&#39;t realistic, keep histograms instead!</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  <hgroup>
+    <h2>Cost Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT *
+  FROM MovieStars
+ WHERE name &lt; &#39;C&#39;
+</code></pre>
+
+<ul>
+<li>I.e., about 10% (2/26) of tuples qualify</li>
+<li>40,000 tuples in 500 pages (80 per page)</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Cost estimates:
+
+<ul>
+<li><strong>Clustered index:</strong> a little more than 50 I/Os (e.g., 3+50)</li>
+<li><strong>Unclustered index:</strong> a little more than 4,000 I/Os (e.g., 3+4,000)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  <hgroup>
+    <h2>Implementing Joins: Nested Loop Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[R(x,y) \bowtie S(y,z)\]</p>
+
+<pre><code>foreach tuple r in R do:
+    foreach tuple s in S where r.y=s.y do:
+        add &lt;r,s&gt; to result
+</code></pre>
+
+<ul>
+<li>If there is an index on the join column of one relation (i.e., on column y of relation S), 
+make it the inner relation to exploit the index:</li>
+<li>Cost: #Pages(R) + #Tuples(R)*(IndexLookup(S)+Lookup(S))</li>
+<li>Cost assumptions: 
+
+<ul>
+<li>R: 100,000 tuples in 100 pages (1,000 per page)</li>
+<li>S: 40,000 tuples in 500 pages (80 per page)</li>
+<li>index cost is 1.2 (hash) or 2-3 (tree)</li>
+<li>read matching tuple of S is 1</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  <hgroup>
+    <h2>Implementing Joins: Nested Loop Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[R(x,y) \bowtie S(y,z)\]</p>
+
+<pre><code>foreach tuple r in R do:
+    foreach tuple s in S where r.y=s.y do:
+        add &lt;r,s&gt; to result
+</code></pre>
+
+<ul>
+<li>Hash index, column y of table S</li>
+<li>Scan R: 1,000 pages</li>
+<li>For each (100,000) R tuple:
+
+<ul>
+<li>1.2 to read from the hash index on S.y (on average)</li>
+<li>1 to get corresponding tuple from S</li>
+</ul></li>
+<li>Total cost: 221,000</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  <hgroup>
+    <h2>Implementing Joins: Nested Loop Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[R(x,y) \bowtie S(y,z)\]</p>
+
+<pre><code>foreach tuple s in S do:
+    foreach tuple r in R where r.y=s.y do:
+        add &lt;r,s&gt; to result
+</code></pre>
+
+<ul>
+<li>Hash index, column y of table R</li>
+<li>Scan S: 500 pages</li>
+<li>For each (40,000) S tuple:
+
+<ul>
+<li>1.2 to read from the hash index (on average)</li>
+<li>2.5 movies per star on average (100,000/40,000)</li>
+<li>Cost to fetch movies is 1 (for clustered) or 2.5 (unclustered)</li>
+</ul></li>
+<li>Total cost: 88,500 (clustered) or 148,500 (unclustered)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  <hgroup>
+    <h2>Implementing Joins: Sort-Merge Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>\[R(x,y) \bowtie S(y,z)\]</p>
+
+<ul>
+<li>Basic Idea: Sort both \(R(x,y)\) and \(S(y,z)\) on \(y\)
+
+<ul>
+<li>Note: It&#39;s possible that \(R\) or \(S\) is already sorted on \(y\)</li>
+</ul></li>
+<li>Then read the sorted versions of \(R\) and \(S\) as in merge sort</li>
+<li>The merge implements the join</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Some \(y\) values will be in both \(R\) and \(S\), e.g., \(y_1\), \(y_2\), ..., \(y_n\)</li>
+<li>For each \(y_i\), let \(X_i\equiv\{x \mid \langle x, y_i \rangle \in R\}\) and \(Z_i\equiv\{z \mid \langle y_i,z \rangle \in S\}\)</li>
+<li>The answer is the cross product \(X_i \times \{y_i\} \times Z_i\)</li>
+<li>We can implement that cross product by scanning \(R\) only once, but 
+possibly scanning each \(Z_i\) once per tuple in \(X_i\)</li>
+<li>Hopefully,all or most of the pages of \(Z_i\) remain in memory, so we can do a single scan of \(S\) as well</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  <hgroup>
+    <h2>Cost of Sort-Merge Joins</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Cost: Sort(R) + Sort(S) + #Pages(R) + #Pages(S)</p>
+
+<ul>
+<li>#Pages(R) + #Pages(S) is the likely (and best possible) cost of the merge operation</li>
+<li>But the merge could cost as high as #Pages(R) * #Pages(S)</li>
+<li>This depends entirely on the characteristics of the data</li>
+<li>Worst case: There is only one distinct \(y\), so \(R \bowtie S \approx R \times S\)</li>
+</ul></li>
+<li><p>Cost of sorting depends on how much data we can load into memory</p></li>
+<li><p>External sorts require a number of passes</p></li>
+<li><p>For these tables, 2 passes should be enough</p></li>
+<li><p>Each pass reads and writes data, so the total cost is</p></li>
+<li><p>Cost: \(2\cdot2\cdot1,000 + 2\cdot2\cdot500 + 1,000 + 500 = 7,500\) I/O operations</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  <hgroup>
+    <h2>Index Join or Sort-Merge Join?</h2>
+  </hgroup>
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th>Join Type</th>
+<th>Cost</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Index Join</td>
+<td>221,000 I/O ops</td>
+</tr>
+<tr>
+<td>Sort-Merge Join</td>
+<td>7,500 I/O ops</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Easy call, right?</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Not so fast!</li>
+<li>Suppose the join appears in the query \(\sigma(R \bowtie S)\)</li>
+<li>And suppose the selection filters the movies for a specific movie star or even a few stars</li>
+<li>Index join could be orders of magnitude faster than sort-merge join!
+
+<ul>
+<li>Sort-merge still has to scan all records, while index join may fetch only the necessary records</li>
+</ul></li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Moral of the story: <strong>Optimization must be global</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  <hgroup>
+    <h1>System R Optimizer</h1>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  <hgroup>
+    <h2>System R Optimizer</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>System R project developed the first query optimizer</li>
+<li>It is still the most widely used approach today</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Works really well for queries with at most 10 joins</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li><strong>Cost estimations:</strong>
+
+<ul>
+<li>Statistics (in system catalog) used to estimate <strong>cost of operations</strong> and <strong>result sizes</strong></li>
+<li>Cost considers a combination of CPU and I/O costs</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  <hgroup>
+    <h2>System R Optimizer: Query Plans</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p><strong>Query plan space:</strong></p>
+
+<ul>
+<li>It&#39;s too big</li>
+<li>I.e., there are too many (exponential) possible query plans, so there is not enough time to consider them all</li>
+</ul></li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li><strong>Solution:</strong> consider only <strong>left-deep</strong> plans
+
+<ul>
+<li>The tree looks more like a linked list!</li>
+<li>This allows output of each operator to be <strong>pipelined</strong> into the next operator 
+without storing results in temporary tables</li>
+<li>This depends on the cursor interface</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  <hgroup>
+    <h2>System R Optimizer: Cost Estimator</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Optimizer must estimate cost of each plan considered</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li><p>Estimate cost of each operation in query plan</p>
+
+<ul>
+<li>We&#39;ve already discussed how to estimate the cost of operations
+(sequential scan, index scan, joins, etc.)</li>
+<li>This depends on the size of the inputs</li>
+</ul></li>
+<li><p>Must also estimate size of result for each operation in tree!</p>
+
+<ul>
+<li>Use information about the input relations</li>
+<li>Make &quot;reasonable&quot; assumptions</li>
+<li>Assumption: uniformity of data</li>
+<li>Assumption: independence of conditions in selections and joins</li>
+</ul></li>
+<li><p>Quality of optimizer is empirical: Does it find good query plans for typical queries?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  <hgroup>
+    <h2>Size Estimator</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT attributes
+  FROM relations
+ WHERE cond1 AND cond2 AND ... AND condk
+</code></pre>
+
+<ul>
+<li> Maximum #tuples in result is the cardinality of the cross product of relations in the FROM clause</li>
+<li> I.e., worst case is always the cross product</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li> <strong>Reduction factor (RF)</strong> associated with each condition reflects the impact of the condition in reducing the result size</li>
+<li><p>Cardinality of result = Max #tuples * RF1 * RF2 * ... * RFk</p></li>
+<li><p>Assumes conditions are independent</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  <hgroup>
+    <h2>Reduction Factors</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The secret to having good size estimators is to know the reduction factors of different types of conditions</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Condition</th>
+<th>Reduction Factor</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>col = value</td>
+<td>\(1 / NKeys(I)\), for some index \(I\) on col</td>
+</tr>
+<tr>
+<td>col1 = col2</td>
+<td>\(1 / \max(NKeys(I_1),NKeys(I_2))\), for indexes \(I_1\) and \(I_2\) on col1 and col2</td>
+</tr>
+<tr>
+<td>col1 &gt; value</td>
+<td>\(\frac{High(I)-value}{High(I)-Low(I)}\), for some index \(I\) on col</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  <hgroup>
+    <h2>Examples: Sample Schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>StarsIn (name, title, year)
+MovieStar (name, address, genre, birthdate, rating)
+</code></pre>
+
+<ul>
+<li><p>Similar to old schema, but with <em>rating</em> added to MovieStar</p></li>
+<li><p>StarsIn</p>
+
+<ul>
+<li>Each tuple is 40 bytes long, 1,000 tuples per page, 1,000 pages</li>
+</ul></li>
+<li><p>MovieStar</p>
+
+<ul>
+<li>Each tuple is 500 bytes long, 80 tuples per page, 500 pages</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  <hgroup>
+    <h2>Motivating Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT MS.name
+  FROM StarsIn AS SI, MovieStars AS MS
+ WHERE SI.name = MS.name AND SI.title=&#39;Star Wars&#39; AND MS.rating&gt;=4
+</code></pre>
+
+<div style='float:left;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/query-plan-1-new.png" title="Query Plan #1" alt="Query Plan #1">
+</div>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Cost: 500 + 500*1,000 I/Os </li>
+<li>Scan MovieStars, then Scan StarsIn for each MovieStar block</li>
+<li>Actually not the worst plan!</li>
+<li>Can be improved considerably, e.g., by using indexes</li>
+<li>Goal is to find more efficient plan that computes the same answer</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  <hgroup>
+    <h2>Alternative Plan #1</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT MS.name
+  FROM StarsIn AS SI, MovieStars AS MS
+ WHERE SI.name = MS.name AND SI.title=&#39;Star Wars&#39; AND MS.rating&gt;=4
+</code></pre>
+
+<div style='float:left;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/query-plan-2-new.png" title="Alternative Query Plan #1" alt="Alternative Query Plan #1">
+</div>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Main difference: push selects</li>
+<li>With 5 buffers, cost of plan:
+
+<ul>
+<li>Scan StarsIn (1,000) + write T1 (1 page, assuming &lt; 1,000 matches)</li>
+<li>Scan MovieStars (500) + write T2 (200 pages, if ratings are 1-5)</li>
+<li>Sort T1 (2), sort T2(2*3*200), merge (1+200)</li>
+<li>Total: 1,701 (selections) + 1,403 (join) = 3,104 page I/Os</li>
+</ul></li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  <hgroup>
+    <h2>Alternative Plan #1</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT MS.name
+  FROM StarsIn AS SI, MovieStars AS MS
+ WHERE SI.name = MS.name AND SI.title=&#39;Star Wars&#39; AND MS.rating&gt;=4
+</code></pre>
+
+<div style='float:left;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/query-plan-2b-new.png" title="Alternative Query Plan #1" alt="Alternative Query Plan #1">
+</div>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Using BNL join, join cost = 1+1*200</li>
+<li>Total: 1,701 (selections) + 201 (join) = 1,902 page I/Os</li>
+<li>If we push projections, T2 has only name and title</li>
+<li>That lowers the #pages requires (albeit slightly)</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  <hgroup>
+    <h2>Alternative Plan #2</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT MS.name
+  FROM StarsIn AS SI, MovieStars AS MS
+ WHERE SI.name = MS.name AND SI.title=&#39;Star Wars&#39; AND MS.rating&gt;=4
+</code></pre>
+
+<div style='float:left;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/query-plan-3-new.png" title="Alternative Query Plan #2" alt="Alternative Query Plan #2">
+</div>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Suppose we have a clustered index on title of StarsIn</li>
+<li>We get 1,000,000/40,000 = 25 StarsIn tuples for each MovieStar tuple</li>
+<li>INL join, Filter, and Project are all pipelined, so there&#39;s no benefit to pushing the projection in</li>
+<li>Pushing the selection rating &gt;= 4 into the join would make it worse, 
+because we can&#39;t use index on MovieStars</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  <hgroup>
+    <h2>Alternative Plan #2</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT MS.name
+  FROM StarsIn AS SI, MovieStars AS MS
+ WHERE SI.name = MS.name AND SI.title=&#39;Star Wars&#39; AND MS.rating&gt;=4
+</code></pre>
+
+<div style='float:left;width:48%;'>
+  <div class="centered">
+    <img src="assets/img/query-plan-3-new.png" title="Alternative Query Plan #2" alt="Alternative Query Plan #2">
+</div>
+
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Cost:
+
+<ul>
+<li>Selection of StarsIn: 2.2 I/O ops</li>
+<li>For each movie, must get matching MovieStar tuple (10*1.2)</li>
+<li>Question: How many different movies in StarsIn, and how does that translate to MovieStar? </li>
+</ul></li>
+<li>Total cost: 15 I/O operations</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT MS.name
+  FROM StarsIn AS SI, MovieStars AS MS
+ WHERE SI.name = MS.name AND SI.title=&#39;Star Wars&#39; AND MS.rating&gt;=4
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Method</th>
+<th>Cost</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Nested loop</td>
+<td>500,500</td>
+</tr>
+<tr>
+<td>Push selections</td>
+<td>3,104</td>
+</tr>
+<tr>
+<td>Push selections, BNL join</td>
+<td>1,902</td>
+</tr>
+<tr>
+<td>Push selections &amp; projections, BNL join</td>
+<td>~1,700</td>
+</tr>
+<tr>
+<td>Clustered index on StarsIn</td>
+<td>15</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Consider this query (inspired by a previous course project):</li>
+</ul>
+
+<pre><code>SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li>What is the best way to execute it?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li>First, find all <strong>courses</strong> with subject=COSC</li>
+<li>Then, use that to find all the <strong>enrolled</strong> records for COSC courses</li>
+<li>Finally, look up the <strong>students</strong> enrolled in those courses</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>That&#39;s my buest guess, but let&#39;s ask the database to <strong>EXPLAIN</strong> its plan</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>students</td>
+<td>index</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>12</td>
+<td></td>
+<td>10473</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>enrolled</td>
+<td>ref</td>
+<td>PRIMARY,wnumber</td>
+<td>wnumber</td>
+<td>12</td>
+<td>students.wnumber</td>
+<td>2</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>courses</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>7</td>
+<td>enrolled.crn</td>
+<td>1</td>
+<td>Using where</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>Note that the only tables we actually read is <strong>courses</strong> and <strong>enrolled</strong></li>
+<li>We only read the index for <strong>students</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li>Why aren&#39;t we following the &quot;obvious&quot; efficient plan?</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Problem: possible_keys for <strong>courses</strong> does not include <strong>subject</strong></li>
+<li>So our imagined &quot;optimal&quot; query plan is no good</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-58" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<pre><code>CREATE INDEX courses_subject_idx 
+ USING HASH 
+    ON courses (subject)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-59" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>courses</td>
+<td>ref</td>
+<td>PRIMARY,<br/>courses_subject_idx</td>
+<td>courses_subject_idx</td>
+<td>7</td>
+<td>const</td>
+<td>58</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>enrolled</td>
+<td>ref</td>
+<td>PRIMARY,wnumber</td>
+<td>PRIMARY</td>
+<td>7</td>
+<td>courses.crn</td>
+<td>9</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>students</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>12</td>
+<td>enrolled.wnumber</td>
+<td>1</td>
+<td>Using index</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<ul>
+<li><strong>Enrolled</strong> has a PRIMARY index (on crn &amp; wnumber), and a SECONDARY index on wnumber</li>
+<li>But no indexes on crn</li>
+<li>Would that help?</li>
+</ul>
+
+<pre><code>CREATE INDEX enrolled_crn_idx 
+ USING HASH 
+    ON enrolled (crn)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>EXPLAIN
+SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>courses</td>
+<td>ref</td>
+<td>PRIMARY,<br/>courses_subject_idx</td>
+<td>courses_subject_idx</td>
+<td>7</td>
+<td>const</td>
+<td>58</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>enrolled</td>
+<td>ref</td>
+<td>PRIMARY,wnumber,<br/>enrolled_crn_idx</td>
+<td>enrolled_crn_idx</td>
+<td>7</td>
+<td>courses.crn</td>
+<td>6</td>
+<td>Using index</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>students</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>12</td>
+<td>enrolled.wnumber</td>
+<td>1</td>
+<td>Using index</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>BTW, the only table actually read is <strong>courses</strong></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  <hgroup>
+    <h2>Extended Example</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code>SELECT count(distinct courses.crn), sum(courses.credits)
+  FROM enrolled, students, courses
+ WHERE enrolled.wnumber = students.wnumber
+   AND enrolled.crn = courses.crn
+   AND courses.subject = &#39;COSC&#39;
+</code></pre>
+
+<table><thead>
+<tr>
+<th>Index</th>
+<th>Cost</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>S(w#), E(crn,<em>wnumber</em>)</td>
+<td>20,946</td>
+</tr>
+<tr>
+<td>C(subj), E(crn,<em>wnumber</em>), S(w#)</td>
+<td>522</td>
+</tr>
+<tr>
+<td>C(subj), E(crn), S(w#)</td>
+<td>348</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The are several alternative evaluation algorithms for each relational operator</li>
+<li>A query is evaluated by converting to a tree of operators and evaluating the operators in the tree</li>
+<li>You must understand query optimization in order to fully understand the performance impact of a 
+given database design (relations, indexes) on a workload (set of queries)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-64" style="background:;">
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>To optimize a query:</li>
+</ul>
+
+<p><br/></p>
+
+<ul>
+<li>Consider a set of alternative plans
+
+<ul>
+<li>Must prune search space</li>
+<li>Typically: only consider left-deep plans</li>
+</ul></li>
+<li>Estimate cost of each considered plan
+
+<ul>
+<li>Must estimate size of result and cost for each plan node</li>
+<li>Key issues: Statistics, indexes, operator implementations</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Indexes in SQL'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Indexes in SQL'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Motivation for indexes'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Motivation for indexes'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Motivation for indexes'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Motivation for indexes'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Declaring Indexes'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Multidimensional Indexes'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Dropping Indexes'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='What Indexes to Pick?'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='What Indexes to Pick?'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Basic Tradeoffs'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Primary Key Indexes'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Primary Key Indexes'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Primary Key Indexes'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Clustered Indexes'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Clustered Indexes'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Clustered Indexes'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Clustered Indexes'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Clustered Indexes'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Picking Indexes'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Example'>
+         23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Example (Assumptions)'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Example'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Example'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Picking Indexes Globally'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='The Query Optimizer: Cost Estimation'>
+         28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Approach to Selections'>
+         29
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='Approach to Selections'>
+         30
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='Example'>
+         31
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='Implementing Selections'>
+         32
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Cost Example'>
+         33
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='Cost Example'>
+         34
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Implementing Joins: Nested Loop Joins'>
+         35
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Implementing Joins: Nested Loop Joins'>
+         36
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='Implementing Joins: Nested Loop Joins'>
+         37
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='Implementing Joins: Sort-Merge Joins'>
+         38
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Cost of Sort-Merge Joins'>
+         39
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Index Join or Sort-Merge Join?'>
+         40
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='System R Optimizer'>
+         41
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='System R Optimizer'>
+         42
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='System R Optimizer: Query Plans'>
+         43
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='System R Optimizer: Cost Estimator'>
+         44
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Size Estimator'>
+         45
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Reduction Factors'>
+         46
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Examples: Sample Schema'>
+         47
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Motivating Example'>
+         48
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Alternative Plan #1'>
+         49
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Alternative Plan #1'>
+         50
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='Alternative Plan #2'>
+         51
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='Alternative Plan #2'>
+         52
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='Summary'>
+         53
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='Extended Example'>
+         54
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='Extended Example'>
+         55
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Extended Example'>
+         56
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='Extended Example'>
+         57
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='Extended Example'>
+         58
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Extended Example'>
+         59
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Extended Example'>
+         60
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Extended Example'>
+         61
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Extended Example'>
+         62
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Summary'>
+         63
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=64 title='Summary'>
+         64
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

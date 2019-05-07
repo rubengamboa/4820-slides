@@ -37,7 +37,6 @@ widgets:      [mathjax, bootstrap]
 
 <!-- 
 * Exam #1
-* [Exam #1 Results](2018/exam1-results.html) 
 -->
 
 
@@ -45,18 +44,16 @@ widgets:      [mathjax, bootstrap]
 * [Algebraic and Logical Query Languages](ch05-query-languages.html)
 * [The Database Language SQL](ch06-sql.html)
 * [SQL in a Server Environment](ch09-db-programming.html)
-* Exam #2
+* [Exam #2 Results](2019/exam2-results.html) 
 
 <!-- 
-* [Exam #2 Results](2017/exam2-results.html) 
+* Exam #2
 -->
-
 
 <hr>
 
 * [Constraints and Triggers](ch07-constraints-triggers.html)
-* [Views and Indexes](ch08-views-indexes.html)
-* [Advanced Topics, e.g., Query Optimization](cha2-optimizer.html)
+* [Indexes and the Query Optimizer](cha3-indexes-optimizer.html)
 * Final Exam
 
 <!--

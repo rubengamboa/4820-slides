@@ -1,0 +1,326 @@
+title:        COSC 4820 Database Systems
+subtitle:     "Exam #2 Results"
+author:       Ruben Gamboa
+#logo:         uw-logo-small.png
+#biglogo:      uw-logo-large.png
+job:          Professor
+highlighter:  highlight.js
+hitheme:      tomorrow
+mode:         selfcontained
+framework:    io2012
+widgets:      [mathjax, bootstrap]
+
+---
+
+<style>
+.title-slide {
+     background-color: #EDE0CF; /* CBE7A5; #EDE0CF; ; #CA9F9D*/
+     background-image: url(assets/img/uw-logo-large.png);
+     background-repeat: no-repeat;
+     background-position: center top;
+   }
+</style>
+
+## Exam Questions
+
+```{r init, echo=FALSE}
+library(pander)
+```
+
+```{r setup, results = "asis", echo=FALSE, warning=FALSE}
+questions <- data.frame(
+  Question = c('q1a', 'q1b',
+    'q2a', 'q2b', 'q2c',
+    'q3a', 'q3b', 'q3c', 'q3d',
+    'q4a', 'q4b', 'q4c', 'q4d', 'q4e', 'q4f', 'q4g', 'q4h', 
+    'q5',
+    'q6',
+    'q7a', 'q7b', 'q7c', 'q7d',
+    'q8a', 'q8b', 'q8c', 'q8d'),
+  Points = c(5, 5,
+    3, 3, 3, 
+    3, 3, 3, 3, 
+    3, 3, 3, 3, 3, 3, 3, 3, 
+    10,
+    10,
+    3, 3, 3, 3,
+    3, 3, 3, 4),
+  Topic = c('Relational Algebra', 'Relational Algebra',
+    'Reading Datalog', 'Reading Datalog', 'Writing Datalog',
+    'Reading SQL', 'Reading SQL', 'Reading SQL', 'Reading SQL', 
+    'Writing SQL', 'Writing SQL', 'Writing SQL', 'Writing SQL', 'Writing SQL', 'Writing SQL', 'Writing SQL', 'Writing SQL',
+    'SQL Injection',
+    'Exceptions',
+    'ACID', 'ACID', 'ACID', 'ACID',
+    'Isolation Levels', 'Isolation Levels', 'Isolation Levels', 'Isolation Levels'
+    ),
+  stringsAsFactors = FALSE
+  )
+
+questions.abbrev <-   data.frame(Question='q1a-b', Points=sum(questions[questions$Question >= 'q1' & questions$Question < 'q2',2]), 
+    Topic='Relational Algebra')
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q2a-c', Points=sum(questions[questions$Question >= 'q2' & questions$Question < 'q3',2]), 
+    Topic='Datalog')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q3a-d', Points=sum(questions[questions$Question >= 'q3' & questions$Question < 'q4',2]), 
+    Topic='Reading SQL')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q4a-h', Points=sum(questions[questions$Question >= 'q4' & questions$Question < 'q5',2]), 
+    Topic='Writing SQL')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q5', Points=sum(questions[questions$Question >= 'q5' & questions$Question < 'q6',2]), 
+    Topic='SQL Injection')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q6', Points=sum(questions[questions$Question >= 'q6' & questions$Question < 'q7',2]), 
+    Topic='Exceptions')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q7a-d', Points=sum(questions[questions$Question >= 'q7' & questions$Question < 'q8',2]), 
+    Topic='ACID')
+    )
+questions.abbrev <- rbind(questions.abbrev,
+  data.frame(Question='q8a-d', Points=sum(questions[questions$Question >= 'q8' & questions$Question < 'q9',2]), 
+    Topic='Isolation Levels')
+    )
+
+row.names(questions.abbrev) <- NULL
+pander(questions.abbrev, style = "rmarkdown", include.rownames=FALSE)
+```
+
+---
+
+## Grade Distribution
+
+```{r exam2.grades.2019, fig.width=10, fig.height=6, echo=FALSE, cache=FALSE}
+points <- questions$Points
+exams <- data.frame(
+  'q1a'          = c(3, 2, 0, 3, 1, 0, 0, 2, 0, 1, 5, 0, 0, 0, 0, 4, 1, 3, 0, 3, 1, 0, 0, 0, 4, 0, 5, 0, 0, 0, 1, 1, 0, 5, 0, 5, 1, 3, 1),
+  'q1b'          = c(4, 4, 4, 3, 3, 4, 4, 3, 3, 4, 5, 0, 1, 2, 5, 4, 3, 4, 1, 5, 2, 4, 2, 2, 4, 2, 4, 4, 3, 5, 4, 4, 2, 5, 2, 5, 1, 4, 2),
+  'q2a'          = c(1, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 3, 0, 1, 0, 0, 0, 0, 0, 1, 0),
+  'q2b'          = c(1, 3, 1, 1, 0, 1, 2, 2, 1, 1, 1, 2, 0, 0, 1, 2, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 3, 1, 2, 3, 0, 1, 1, 3, 1, 1, 1, 3, 1),
+  'q2c'          = c(2, 3, 2, 1, 0, 1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 1, 0, 1, 3, 0, 2, 0, 3, 0, 1, 3, 0, 0, 1, 3, 0, 1, 0, 3, 2),
+  'q3a'          = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+  'q3b'          = c(0, 0, 0, 0, 0, 0, 2, 0, 1, 0, 0, 3, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0),
+  'q3c'          = c(3, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0),
+  'q3d'          = c(1, 1, 1, 2, 0, 1, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 0, 2, 0, 2, 1, 0, 1, 1, 2, 2, 2, 0, 1, 2, 0, 1, 2, 1, 1, 1, 1, 2, 2),
+  'q4a'          = c(0, 1, 0, 0, 0, 0, 2, 1, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 1, 2, 0, 0, 0, 0, 2, 1, 0, 0, 1, 0, 2, 0, 0, 0),
+  'q4b'          = c(1, 3, 1, 2, 0, 1, 3, 2, 0, 3, 3, 2, 0, 0, 0, 2, 1, 1, 0, 2, 0, 1, 1, 1, 0, 3, 1, 1, 1, 3, 2, 2, 1, 2, 1, 2, 0, 0, 3),
+  'q4c'          = c(3, 2, 0, 2, 1, 0, 0, 2, 1, 1, 3, 2, 0, 1, 3, 2, 1, 1, 0, 3, 2, 1, 2, 1, 2, 0, 2, 0, 0, 3, 1, 0, 1, 1, 2, 2, 0, 0, 2),
+  'q4d'          = c(1, 1, 0, 1, 0, 0, 2, 1, 0, 1, 3, 0, 0, 0, 0, 2, 1, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 2, 1, 2, 1, 1, 0, 2, 0, 0, 1),
+  'q4e'          = c(2, 1, 0, 2, 0, 0, 2, 2, 0, 1, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 2, 2, 1, 0, 1, 0, 3, 0, 2, 1),
+  'q4f'          = c(3, 3, 1, 3, 1, 2, 2, 2, 3, 0, 3, 0, 0, 2, 2, 3, 3, 3, 2, 0, 3, 3, 1, 3, 2, 2, 3, 1, 3, 3, 1, 2, 1, 3, 1, 3, 1, 3, 3),
+  'q4g'          = c(2, 2, 0, 2, 0, 2, 1, 2, 1, 1, 2, 2, 0, 2, 2, 2, 2, 2, 0, 1, 0, 3, 0, 3, 2, 2, 2, 2, 2, 3, 2, 2, 0, 3, 0, 2, 1, 2, 3),
+  'q4h'          = c(0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2, 0, 3, 0, 1, 0, 2, 1),
+  'q5'           = c(0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 7, 0, 0, 1, 4, 8, 0, 2, 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 0, 2, 0, 0, 5, 0, 5, 0, 0, 6),
+  'q6'           = c(0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 7, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+  'q7a'          = c(2, 2, 1, 0, 0, 2, 2, 3, 2, 0, 2, 3, 0, 0, 0, 2, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 2, 2, 0, 2, 0, 2, 0, 2, 0, 2, 1),
+  'q7b'          = c(2, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 3, 0, 2, 0, 2, 0),
+  'q7c'          = c(2, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 3, 3, 2, 2, 2, 0, 0, 0, 1, 2, 1, 3, 2, 2, 2, 1, 0, 2, 1, 3, 0, 0, 0, 2, 3),
+  'q7d'          = c(2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 3, 1, 0, 0, 1, 3, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 2, 0, 1, 0, 0, 3),
+  'q8a'          = c(0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 2, 0),
+  'q8b'          = c(1, 0, 0, 0, 0, 0, 0, 2, 1, 0, 3, 0, 0, 0, 0, 3, 0, 2, 2, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 1, 3),
+  'q8c'          = c(0, 0, 1, 1, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 3, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 3, 2, 1, 0, 0, 0, 2, 0, 3, 3),
+  'q8d'          = c(1, 0, 0, 0, 0, 0, 2, 4, 1, 0, 3, 0, 0, 0, 1, 4, 1, 2, 2, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0, 3)
+  ) 
+g <- data.frame(q1a            = points[which(questions$Question=='q1a')]  - exams$q1a,
+                q1b            = points[which(questions$Question=='q1b')]  - exams$q1b,
+                q2a            = points[which(questions$Question=='q2a')]  - exams$q2a,
+                q2b            = points[which(questions$Question=='q2b')]  - exams$q2b,
+                q2c            = points[which(questions$Question=='q2c')]  - exams$q2c,
+                q3a            = points[which(questions$Question=='q3a')]  - exams$q3a,
+                q3b            = points[which(questions$Question=='q3b')]  - exams$q3b,
+                q3c            = points[which(questions$Question=='q3c')]  - exams$q3c,
+                q3d            = points[which(questions$Question=='q3d')]  - exams$q3d,
+                q4a            = points[which(questions$Question=='q4a')]  - exams$q4a,
+                q4b            = points[which(questions$Question=='q4b')]  - exams$q4b,
+                q4c            = points[which(questions$Question=='q4c')]  - exams$q4c,
+                q4d            = points[which(questions$Question=='q4d')]  - exams$q4d,
+                q4e            = points[which(questions$Question=='q4e')]  - exams$q4e,
+                q4f            = points[which(questions$Question=='q4f')]  - exams$q4f,
+                q4g            = points[which(questions$Question=='q4g')]  - exams$q4g,
+                q4h            = points[which(questions$Question=='q4h')]  - exams$q4h,
+                q5             = points[which(questions$Question=='q5')]   - exams$q5,
+                q6             = points[which(questions$Question=='q6')]   - exams$q6,
+                q7a            = points[which(questions$Question=='q7a')]  - exams$q7a,
+                q7b            = points[which(questions$Question=='q7b')]  - exams$q7b,
+                q7c            = points[which(questions$Question=='q7c')]  - exams$q7c,
+                q7d            = points[which(questions$Question=='q7d')]  - exams$q7d,
+                q8a            = points[which(questions$Question=='q8a')]  - exams$q8a,
+                q8b            = points[which(questions$Question=='q8b')]  - exams$q8b,
+                q8c            = points[which(questions$Question=='q8c')]  - exams$q8c,
+                q8d            = points[which(questions$Question=='q8d')]  - exams$q8d)
+                
+g$grades <- rowSums(g)
+# g$grades
+summary(c(g$grades))
+
+cs.majors <- c(TRUE)
+# missing: NA
+
+g$lgrades <- ifelse (g$grades<60, 'F', ifelse (g$grades<70, 'D', ifelse (g$grades<80, 'C', ifelse (g$grades<90, 'B', 'A'))))
+g$lgrades <- factor(g$lgrades, c('F', 'D', 'C', 'B', 'A'))
+barplot(table(g$lgrades))
+title('Exam #2 Results')
+```
+
+---
+
+## Grade Distribution by Question
+
+```{r exam2.questions.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q1a-b', nscores),
+                              rep('q2a-c', nscores),
+                              rep('q3a-d', nscores),
+                              rep('q4a-h', nscores),
+                              rep('q5', nscores),
+                              rep('q6', nscores),
+                              rep('q7a-d', nscores),
+                              rep('q8a-d', nscores)
+                            ),
+                 score = 100*c((rowSums(g[,which(questions$Question>='q1' & questions$Question<'q2')]) / 
+                                sum(points[which(questions$Question>='q1' & questions$Question<'q2')])),
+                               (rowSums(g[,which(questions$Question>='q2' & questions$Question<'q3')]) / 
+                                sum(points[which(questions$Question>='q2' & questions$Question<'q3')])),
+                               (rowSums(g[,which(questions$Question>='q3' & questions$Question<'q4')]) / 
+                                sum(points[which(questions$Question>='q3' & questions$Question<'q4')])),
+                               (rowSums(g[,which(questions$Question>='q4' & questions$Question<'q5')]) / 
+                                sum(points[which(questions$Question>='q4' & questions$Question<'q5')])),
+                               (g[,which(questions$Question>='q5' & questions$Question<'q6')] / 
+                                sum(points[which(questions$Question>='q5' & questions$Question<'q6')])),
+                               (g[,which(questions$Question>='q6' & questions$Question<'q7')] / 
+                                sum(points[which(questions$Question>='q6' & questions$Question<'q7')])),
+                               (rowSums(g[,which(questions$Question>='q7' & questions$Question<'q8')]) / 
+                                sum(points[which(questions$Question>='q7' & questions$Question<'q8')])),
+                               (rowSums(g[,which(questions$Question>='q8' & questions$Question<'q9')]) / 
+                                sum(points[which(questions$Question>='q8' & questions$Question<'q9')]))
+                ))
+plot(g2$question, g2$score)
+title('Individual Question Results')
+```
+
+---
+
+## Grade Distribution for Question 1
+
+```{r exam2.question1.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q1a',  nscores),
+                              rep('q1b',  nscores)
+                              ),
+                 score = 100*c(g$q1a/points[questions$Question=='q1a'],
+                               g$q1b/points[questions$Question=='q1b']))
+plot(g2$question, g2$score)
+title('Question 1 Results')
+```
+
+---
+
+## Grade Distribution for Question 2
+
+```{r exam2.question2.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q2a',  nscores),
+                              rep('q2b',  nscores),
+                              rep('q2c',  nscores)
+                              ),
+                 score = 100*c(g$q2a/points[questions$Question=='q2a'],
+                               g$q2b/points[questions$Question=='q2b'],
+                               g$q2c/points[questions$Question=='q2c']))
+plot(g2$question, g2$score)
+title('Question 2 Results')
+```
+
+---
+
+## Grade Distribution for Question 3
+
+```{r exam2.question3.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q3a',  nscores),
+                              rep('q3b',  nscores),
+                              rep('q3c',  nscores),
+                              rep('q3d',  nscores)
+                              ),
+                 score = 100*c(g$q3a/points[questions$Question=='q3a'],
+                               g$q3b/points[questions$Question=='q3b'],
+                               g$q3c/points[questions$Question=='q3c'],
+                               g$q3d/points[questions$Question=='q3d']
+                               ))
+plot(g2$question, g2$score)
+title('Question 3 Results')
+```
+
+---
+
+## Grade Distribution for Question 4
+
+```{r exam2.question4.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q4a',  nscores),
+                              rep('q4b',  nscores),
+                              rep('q4c',  nscores),
+                              rep('q4d',  nscores),
+                              rep('q4e',  nscores),
+                              rep('q4f',  nscores),
+                              rep('q4g',  nscores),
+                              rep('q4h',  nscores)
+                              ),
+                 score = 100*c(g$q4a/points[questions$Question=='q4a'],
+                               g$q4b/points[questions$Question=='q4b'],
+                               g$q4b/points[questions$Question=='q4c'],
+                               g$q4b/points[questions$Question=='q4d'],
+                               g$q4b/points[questions$Question=='q4e'],
+                               g$q4b/points[questions$Question=='q4f'],
+                               g$q4b/points[questions$Question=='q4g'],
+                               g$q4b/points[questions$Question=='q4h']
+                               ))
+plot(g2$question, g2$score)
+title('Question 4 Results')
+```
+
+---
+
+## Grade Distribution for Question 7
+
+```{r exam2.question7.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q7a',  nscores),
+                              rep('q7b',  nscores),
+                              rep('q7c',  nscores),
+                              rep('q7d',  nscores)
+                              ),
+                 score = 100*c(g$q7a/points[questions$Question=='q7a'],
+                               g$q7b/points[questions$Question=='q7b'],
+                               g$q7c/points[questions$Question=='q7c'],
+                               g$q7d/points[questions$Question=='q7d']
+                               ))
+plot(g2$question, g2$score)
+title('Question 7 Results')
+```
+
+---
+
+## Grade Distribution for Question 8
+
+```{r exam2.question8.2019, fig.width=10, fig.height=8, echo=FALSE, cache=FALSE}
+nscores <- nrow(g)
+g2 <- data.frame(question = c(rep('q8a',  nscores),
+                              rep('q8b',  nscores),
+                              rep('q8c',  nscores),
+                              rep('q8d',  nscores)
+                              ),
+                 score = 100*c(g$q8a/points[questions$Question=='q8a'],
+                               g$q8b/points[questions$Question=='q8b'],
+                               g$q8c/points[questions$Question=='q8c'],
+                               g$q8d/points[questions$Question=='q8d']
+                               ))
+plot(g2$question, g2$score)
+title('Question 8 Results')
+```
+
